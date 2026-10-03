@@ -2,7 +2,7 @@
 
 ## Our standard
 
-Everyone participating in the Kailash OS website project — issues, pull requests,
+Everyone participating in the Kailash OS project — issues, pull requests,
 discussions, and the docs site — is expected to be professional and respectful.
 Debate the change, not the person.
 
