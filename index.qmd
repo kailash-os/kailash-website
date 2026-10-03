@@ -3,6 +3,9 @@ title: "Kailash OS"
 subtitle: "A NixOS-based Linux distribution for AI security — one declaratively built environment for offensive, defensive, and platform tooling"
 ---
 
+[![License: GPL v2](https://img.shields.io/badge/kailash--os-GPL--2.0-blue)](https://github.com/kailash-os/kailash-os/blob/master/LICENSE) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/kailash-os/kailash-os/badge)](https://scorecard.dev/viewer/?uri=github.com/kailash-os/kailash-os) [![Roadmap](https://img.shields.io/badge/roadmap-v0.1%20%C2%B7%20v0.2-8A2BE2)](https://github.com/orgs/kailash-os/projects/1)
+
+
 Kailash OS keeps the distribution contract that made Kali Linux the default
 environment for security work — curated tooling, category navigation, live
 images, self-consistent surfaces — and points it at a surface Kali has never
