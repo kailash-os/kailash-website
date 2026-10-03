@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", ":semanticCommits"],
+  "timezone": "Australia/Melbourne",
+  "schedule": ["after 6am", "before 10am every weekday"],
+  "packageRules": [
+    {
+      "description": "group github actions updates",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "github actions",
+      "automerge": false
+    }
+  ]
+}
