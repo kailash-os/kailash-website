@@ -1,0 +1,43 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Kailash OS"
+  description: "Kailash OS: a NixOS-based Linux distribution for AI security — offensive, defensive, and platform tooling in one declaratively built environment."
+  site-url: https://kailash.site
+  repo-url: https://github.com/kailash-os/kailash-website
+  repo-branch: main
+  repo-actions: [edit, issue]
+  open-graph: true
+  navbar:
+    background: dark
+    pinned: true
+    left:
+      - href: index.qmd
+        text: Home
+      - href: index.qmd#taxonomy
+        text: Taxonomy
+      - href: index.qmd#architecture
+        text: Architecture
+      - href: index.qmd#roadmap
+        text: Roadmap
+      - href: index.qmd#governance
+        text: Governance
+    right:
+      - href: index.qmd#paper
+        text: Paper
+      - icon: github
+        href: https://github.com/kailash-os
+  page-footer:
+    left: "Kailash OS — MIT licensed."
+    right:
+      - icon: github
+        href: https://github.com/kailash-os
+
+format:
+  html:
+    theme: cosmo
+    css: assets/styles.css
+    toc: true
+    code-copy: true

@@ -1,0 +1,48 @@
+/* Kailash OS site styles */
+.navbar {
+  background-color: #1a1a2e;
+}
+.navbar-brand {
+  font-weight: 700;
+}
+h2 {
+  border-bottom: 1px solid #d5dbe5;
+  padding-bottom: 0.2em;
+}
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.6rem;
+}
+table {
+  font-size: 0.88em;
+}
+code {
+  color: #4a25aa;
+}
+blockquote {
+  border-left: 3px solid #7c3aed;
+  padding-left: 0.8rem;
+  color: #334155;
+}
+.hero-banner {
+  text-align: center;
+  padding: 2.2rem 0 1.2rem 0;
+}
+.hero-banner h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+}
+.hero-banner p.lead {
+  color: #475569;
+  font-size: 1.15rem;
+  max-width: 46rem;
+  margin: 0.6rem auto 0 auto;
+}
+.badge-layer {
+  display: inline-block;
+  font-family: "PragmataPro Mono", monospace;
+  font-size: 0.72rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0 0.45rem;
+  margin-right: 0.3rem;
+}
