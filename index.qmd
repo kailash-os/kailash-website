@@ -31,10 +31,10 @@ image inherits it.
 | Layer | Ids | Purpose | Categories |
 |---|---|---|---|
 | **CORE** | — | system substrate, no tool categories | kernel, hardening, safety defaults, desktop(s), CLI/menu engines |
-| **CLASSIC** | K-1…K-10 | traditional software security assessment (Kali heritage) | Information Gathering · Vulnerability Analysis · Web App Assessment · Database Assessment · Password & Offline-Credential · Reverse Engineering · Signal & SDR (opt-in) · Exploitation & Post-Exploitation · Forensics/IR · Runtime AppSec for AI |
+| **CLASSIC** | C-1…C-10 | traditional software security assessment (Kali heritage) | Information Gathering · Vulnerability Analysis · Web App Assessment · Database Assessment · Password & Offline-Credential · Reverse Engineering · Signal & SDR (opt-in) · Exploitation & Post-Exploitation · Forensics/IR · Runtime AppSec for AI |
 | **ATTACK** | A-1…A-8 | AI offensive tooling, MITRE ATLAS-mapped | AI Recon · LLM Prompt Injection & Jailbreaking · Agentic/MCP & Tool-Use · Model Supply Chain · Model Extraction/Inversion · Multi-modal · AI System Exploitation · Data Poisoning |
 | **DEFENCE** | D-1…D-7 | AI defensive and assurance tooling | Runtime Defence & Guardrails · Detection & Observability · Evals & Benchmarks · Provenance & Signing · Threat Modelling · Governance Mapping · Standards Verification |
-| **BUILD** | P-1…P-7 | the platform the other layers attack and defend | MLOps · Compute & Serving · Vector Stores · Local LLM · SDKs & Dev Env · Docs & Authoring · Agent & MCP Operability |
+| **BUILD** | B-1…B-7 | the platform the other layers attack and defend | MLOps · Compute & Serving · Vector Stores · Local LLM · SDKs & Dev Env · Docs & Authoring · Agent & MCP Operability |
 
 Navigation is generated from one manifest and offered three ways, mirroring the
 practitioner's three questions: **layer-first** (menu), **tactic-first**
