@@ -28,12 +28,12 @@ website:
       - href: index.qmd#paper
         text: Paper
       - icon: github
-        href: https://github.com/kailash-os
+        href: https://github.com/kailash-os/kailash-os
   page-footer:
     left: "Kailash OS — MIT licensed."
     right:
       - icon: github
-        href: https://github.com/kailash-os
+        href: https://github.com/kailash-os/kailash-os
 
 format:
   html:
