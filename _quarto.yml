@@ -1,6 +1,10 @@
 project:
   type: website
   output-dir: _site
+  render:
+    - "index.qmd"
+    - "contributing.qmd"
+    - "security.qmd"
 
 website:
   title: "Kailash OS"
@@ -27,6 +31,10 @@ website:
     right:
       - href: index.qmd#paper
         text: Paper
+      - href: contributing.qmd
+        text: Contributing
+      - href: security.qmd
+        text: Security
       - icon: github
         href: https://github.com/kailash-os/kailash-os
   page-footer:

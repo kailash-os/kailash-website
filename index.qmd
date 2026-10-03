@@ -126,7 +126,7 @@ schema, verification bindings) ships alongside it in the
 
 ## Get involved
 
-Kailash is open source (MIT for the project's own artefacts; bundled tools keep
+Kailash is open source under **GPL-2.0** (bundled tools keep
 their upstream licences). The packaging harness, taxonomy, and CLI are built to
 accept contributors: add a tool via manifest entry, not hand-edited module
 files; CI validates, builds, and tests every change; signed commits required.
