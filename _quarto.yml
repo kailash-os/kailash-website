@@ -30,7 +30,7 @@ website:
       - icon: github
         href: https://github.com/kailash-os/kailash-os
   page-footer:
-    left: "Kailash OS — MIT licensed."
+    left: "Kailash OS — GPL-2.0 licensed."
     right:
       - icon: github
         href: https://github.com/kailash-os/kailash-os
