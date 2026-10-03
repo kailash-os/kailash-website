@@ -111,9 +111,15 @@ auto-starts, secrets are sops-nix-managed and read at runtime.
 The design is documented in the paper *"Kailash OS — An Operating System for
 Building and Securing AI"* — covering the taxonomy derivation from MITRE ATLAS
 and the OWASP standards, the manifest-driven architecture, the release
-engineering of a reproducible OS, and the explicit scope exclusions. A copy
-ships in the [project references](https://github.com/kailash-os/kailash-os) and
-the implementation specification lives alongside in the project repository.
+engineering of a reproducible OS, and the explicit scope exclusions.
+
+**Read the current revision: [paper.pdf](paper.pdf)** (Revision 1.2, 3 October 2026
+— updated as the implementation progresses; the live copy always reflects the
+latest revision).
+
+The implementation specification (phase gates, packaging shapes, manifest
+schema, verification bindings) ships alongside it in the
+[project repository](https://github.com/kailash-os/kailash-os).
 
 ## Get involved
 
