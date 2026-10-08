@@ -38,7 +38,7 @@ website:
       - icon: github
         href: https://github.com/kailash-os/kailash-os
   page-footer:
-    left: "Kailash OS — GPL-2.0 licensed."
+    left: "Kailash OS — BSD-3-Clause licensed."
     right:
       - icon: github
         href: https://github.com/kailash-os/kailash-os
