@@ -3,7 +3,7 @@ title: "Kailash OS"
 subtitle: "A NixOS-based Linux distribution for AI security — one declaratively built environment for offensive, defensive, and platform tooling"
 ---
 
-[![License: GPL v2](https://img.shields.io/badge/kailash--os-GPL--2.0-blue)](https://github.com/kailash-os/kailash-os/blob/master/LICENSE) [![version](https://img.shields.io/badge/version-v0.1.0-blue)](https://github.com/orgs/kailash-os/projects/1) [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kailash-os/kailash-os?label=OpenSSF%20Scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/kailash-os/kailash-os) [![OpenSSF Best Practices](https://img.shields.io/badge/cii%20best%20practices-in%20progress-orange)](https://www.bestpractices.dev/projects/15182)
+[![License: BSD-3-Clause](https://img.shields.io/badge/licence-BSD--3--Clause-blue)](https://github.com/kailash-os/kailash-os/blob/master/LICENSE) [![version](https://img.shields.io/badge/version-v0.1.0-blue)](https://github.com/orgs/kailash-os/projects/1) [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kailash-os/kailash-os?label=OpenSSF%20Scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/kailash-os/kailash-os) [![OpenSSF Best Practices](https://img.shields.io/badge/cii%20best%20practices-in%20progress-orange)](https://www.bestpractices.dev/projects/15182)
 
 
 Kailash OS keeps the distribution contract that made Kali Linux the default
@@ -126,7 +126,7 @@ schema, verification bindings) ships alongside it in the
 
 ## Get involved
 
-Kailash is open source under **GPL-2.0** (bundled tools keep
+Kailash is open source under **BSD-3-Clause** (bundled tools keep
 their upstream licences). The packaging harness, taxonomy, and CLI are built to
 accept contributors: add a tool via manifest entry, not hand-edited module
 files; CI validates, builds, and tests every change; signed commits required.
