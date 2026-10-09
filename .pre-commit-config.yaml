@@ -1,0 +1,24 @@
+# See https://pre-commit.com for more information
+# pre-commit.ci runs this on every PR; run locally with
+# `pre-commit run --all-files`.
+default_stages: [pre-commit]
+ci:
+  autofix_prs: false
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '^_site/'           # rendered output, never hand-edited
+      - id: end-of-file-fixer
+        exclude: '^_site/'
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-json
+      # bundled paper.pdf (~126KB) ships in-repo and regenerates per revision;
+      # 500KB mirrors the release-asset cap convention
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: detect-private-key
