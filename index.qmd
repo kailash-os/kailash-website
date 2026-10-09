@@ -109,14 +109,14 @@ documentation beside it: `KAILASH_LAB_MODE` defaults off, active-exploit
 tooling is double-gated behind explicit host and shell opt-in, no service
 auto-starts, secrets are sops-nix-managed and read at runtime.
 
-##  Paper
+## Paper
 
 The design is documented in the paper *"Kailash OS — An Operating System for
 Building and Securing AI"* — covering the taxonomy derivation from MITRE ATLAS
 and the OWASP standards, the manifest-driven architecture, the release
 engineering of a reproducible OS, and the explicit scope exclusions.
 
-**Read the current revision: [paper.pdf](paper.pdf)** (Revision 1.2, 3 October 2026
+**Read the current revision: [paper.pdf](paper.pdf)** (Revision 1.3, 9 October 2026
 — updated as the implementation progresses; the live copy always reflects the
 latest revision).
 
