@@ -3,6 +3,7 @@ project:
   output-dir: _site
   render:
     - "index.qmd"
+    - "build.qmd"
     - "contributing.qmd"
     - "security.qmd"
 
