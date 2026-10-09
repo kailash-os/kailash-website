@@ -36,12 +36,12 @@ website:
       - href: security.qmd
         text: Security
       - icon: github
-        href: https://github.com/kailash-os/kailash-os
+        href: https://github.com/kailash-os
   page-footer:
     left: "Kailash OS — BSD-3-Clause licensed."
     right:
       - icon: github
-        href: https://github.com/kailash-os/kailash-os
+        href: https://github.com/kailash-os
 
 format:
   html:
