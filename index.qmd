@@ -17,7 +17,7 @@ a single reproducible environment.
 
 Kailash targets four domains, and each pillar ships twice — as offensive tooling
 in the ATTACK layer, and as build-side or defensive tooling in the DEFENCE and
-BUILD layers:
+OPS layers:
 
 - **AppSec** — classic application security assessment (CLASSIC layer, software only)
 - **APISec** — web, API, and AI-endpoint runtime assessment
@@ -37,7 +37,7 @@ image inherits it.
 | **CLASSIC** | C-1…C-10 | traditional software security assessment (Kali heritage) | Information Gathering · Vulnerability Analysis · Web App Assessment · Database Assessment · Password & Offline-Credential · Reverse Engineering · Signal & SDR (opt-in) · Exploitation & Post-Exploitation · Forensics/IR · Runtime AppSec for AI |
 | **ATTACK** | A-1…A-8 | AI offensive tooling, MITRE ATLAS-mapped | AI Recon · LLM Prompt Injection & Jailbreaking · Agentic/MCP & Tool-Use · Model Supply Chain · Model Extraction/Inversion · Multi-modal · AI System Exploitation · Data Poisoning |
 | **DEFENCE** | D-1…D-7 | AI defensive and assurance tooling | Runtime Defence & Guardrails · Detection & Observability · Evals & Benchmarks · Provenance & Signing · Threat Modelling · Governance Mapping · Standards Verification |
-| **BUILD** | B-1…B-7 | the platform the other layers attack and defend | MLOps · Compute & Serving · Vector Stores · Local LLM · SDKs & Dev Env · Docs & Authoring · Agent & MCP Operability |
+| **OPS** | O-1…O-7 | the platform the other layers attack and defend | MLOps · Compute & Serving · Vector Stores · Local LLM · SDKs & Dev Env · Docs & Authoring · Agent & MCP Operability |
 
 Navigation is generated from one manifest and offered three ways, mirroring the
 practitioner's three questions: **layer-first** (menu), **tactic-first**
@@ -68,7 +68,7 @@ with its images, checksums, and signed changelog.
 
 ## The lab thesis
 
-The platform and the attack tooling ship together. BUILD deploys MLflow, vLLM,
+The platform and the attack tooling ship together. OPS deploys MLflow, vLLM,
 TorchServe, vector stores, and agent runtimes as documented lab configurations;
 ATTACK carries the platform-exploitation probes validated against those same
 deployments. Builders learn to break, breakers learn to build — in one pinned
