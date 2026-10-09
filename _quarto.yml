@@ -24,11 +24,13 @@ website:
         text: Taxonomy
       - href: index.qmd#architecture
         text: Architecture
-      - href: index.qmd#roadmap
-        text: Roadmap
       - href: index.qmd#governance
         text: Governance
+      - href: build.qmd
+        text: Build
     right:
+      - href: index.qmd#roadmap
+        text: Roadmap
       - href: index.qmd#paper
         text: Paper
       - href: contributing.qmd

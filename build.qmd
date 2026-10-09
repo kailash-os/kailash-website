@@ -1,0 +1,79 @@
+---
+title: "Building Kailash"
+---
+
+Kailash is built and verified with a small, reproducible toolchain: Nix flakes
+evaluating the whole distribution declaratively, a single tool manifest driving
+every generated surface, and every claim traced to a merge-verified pull
+request. This page documents that loop — the same loop that produces the
+evidence records cited across the [roadmap](index.html#roadmap) and its
+[dependency graph](https://github.com/kailash-os/kailash-os/issues/61).
+
+## The build environment
+
+| Layer | Component | Role |
+|---|---|---|
+| Gate surface | **GitHub Actions, hosted runners** (`ubuntu-latest` + `ubuntu-24.04-arm`) | The authoritative check and build surface: one runner per declared system (`x86_64-linux`, `aarch64-linux`) — merge evidence lives here, never on a laptop |
+| Authoring workstation | macOS (Apple silicon) | Editing, issue/board work, site publishing; runs the same suite for development only |
+| Development eval | Local Linux builders (containers/VM) | Fast inner loop; development-only evidence — never the merge record |
+| Distribution substrate | Nix + flakes (Determinate Nix) | `nix flake check` is the single evaluation gate; the lockfile is the version |
+| Source pins | `nvfetcher` | Every bespoke tool pinned commit-exact; `_sources/` committed |
+| Derivation checks | `checks.manifest-wellformed` and friends | Manifest-driven gates that grow with the build matrix ([KA-15](https://github.com/kailash-os/kailash-os/issues/15)) |
+
+The runners carry the gates because **CI is the acceptance surface**: the
+overlay's `flake-check` matrix (
+[workflow](https://github.com/kailash-os/kailash-packages/blob/main/.github/workflows/flake-check.yml)
+) evaluates every declared system and builds the manifest gate on hosted
+hardware; the OS repo runs the same shape from the root flake, growing the
+per-package build matrix, disk-bound image builds (self-hosted, by design), and
+VM tests in at [KA-15](https://github.com/kailash-os/kailash-os/issues/15).
+Contributor machines run the identical commands for development; they are not
+the record.
+
+## Verification standard
+
+Every build item follows a hypothesis-first test-driven loop (the
+[engineering standard](https://github.com/kailash-os/kailash-os/issues/51),
+scope clauses and hosted-runner authority in
+[#119](https://github.com/kailash-os/kailash-os/issues/119), encoded in both
+repos' [CONTRIBUTING](https://github.com/kailash-os/kailash-os/blob/master/CONTRIBUTING.md)):
+
+1. **Spec** — the issue's plan-ref and acceptance line are the design source; the [canon register](https://github.com/kailash-os/kailash-os/issues/61) maps each item to its plan sections.
+2. **RED** — the failing test is written first and committed watched-failing. A manifest contract is frozen by its validator *before* the data lands: schema, invariants, reconcile counts.
+3. **GREEN** — the minimal implementation makes the gate pass; nothing more.
+4. **PR** — branch per change, GPG-signed commits, CI gates (flake-check matrix, dependency review, pre-commit); every PR carries the hypothesis and the RED/GREEN evidence in the body.
+5. **Close on acceptance** — an issue closes only when its own acceptance line is verified against the tree (run the check, paste the evidence). Harness before capability: nothing merges ahead of the check that would catch its regression.
+
+This produces the property that matters: every roadmap artifact is **proved by
+a runnable check**, not asserted by prose.
+
+## The gate loop in practice
+
+The overlay's first week shows the loop end to end — the
+[manifest gate](https://github.com/kailash-os/kailash-packages/pull/6) and the
+[flake harness](https://github.com/kailash-os/kailash-packages/pull/5):
+
+```text
+1. contract test (RED)   manifest-wellformed FAIL: categories.yaml missing (rc=1)
+2. data lands            categories.yaml v1 — CLASSIC census transcribed (9 cats, 141 slots exact)
+3. reconcile guard       layer totals checked against §3.6 with data-packs excluded (141/59/46/91)
+4. GREEN                 manifest-wellformed OK rc=0 — same gate, stricter input
+5. hosted proof          flake-check matrix green on github actions (both systems)
+```
+
+Two hosted-runner catches already earned their keep, exactly as the
+authoritative-surface clause predicts: a cross-arch `--all-systems` run
+demanded an aarch64 builder the x86_64 runner does not have (fixed by the
+runner-per-system matrix), and the manifest gate's first hosted execution
+exposed source-context assumptions that local green had papered over (fixed by
+running the gate against the flake source with its dependencies declared). The
+gate that gates the manifest also gates itself.
+
+## What ships when
+
+Delivery runs in wave lanes — repo milestones **Wave 0 … Wave 8** — mirrored on
+the [kailash Roadmap board](https://github.com/orgs/kailash-os/projects/1)
+(the *Sprint queue* view is the open v0.1 front). Each roadmap item decomposes
+into roughly one-hour children; each child is one PR; the parent stays open as
+the acceptance gate. The v0.1 exit is the delivery-gate ledger on the roadmap,
+not a date.
