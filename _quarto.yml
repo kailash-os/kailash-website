@@ -32,12 +32,12 @@ website:
     right:
       - href: index.qmd#roadmap
         text: Roadmap
-      - href: index.qmd#paper
-        text: Paper
       - href: contributing.qmd
         text: Contributing
       - href: security.qmd
         text: Security
+      - href: index.qmd#paper
+        text: Paper
       - icon: github
         href: https://github.com/kailash-os
   page-footer:
