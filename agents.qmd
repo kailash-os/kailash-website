@@ -1,0 +1,21 @@
+---
+title: "Coding agents"
+toc: true
+---
+
+The single source of truth for humans and coding agents (Copilot, Claude,
+Cursor, Hermes, etc.) working on Kailash OS —
+[`AGENTS.md`](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md)
+in the [`kailash-os`](https://github.com/kailash-os/kailash-os) repository
+(default branch `master`). A companion file covers the
+[`kailash-packages`](https://github.com/kailash-os/kailash-packages)
+overlay repo:
+[`AGENTS.md`](https://github.com/kailash-os/kailash-packages/blob/main/AGENTS.md).
+Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`) point
+there; when anything disagrees, **AGENTS.md wins**.
+
+This page is a **verbatim render** of that file; the synced copy lives at
+[`includes/AGENTS.md`](https://github.com/kailash-os/kailash-website/blob/main/includes/AGENTS.md)
+(resync = `curl -o includes/AGENTS.md https://raw.githubusercontent.com/kailash-os/kailash-os/master/AGENTS.md`).
+
+{{< include includes/AGENTS.md >}}

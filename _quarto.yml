@@ -4,6 +4,7 @@ project:
   render:
     - "index.qmd"
     - "build.qmd"
+    - "agents.qmd"
     - "contributing.qmd"
     - "security.qmd"
 
@@ -38,6 +39,8 @@ website:
         text: Security
       - href: index.qmd#paper
         text: Paper
+      - href: agents.qmd
+        text: Agents
       - icon: github
         href: https://github.com/kailash-os
   page-footer:
