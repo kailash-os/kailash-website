@@ -123,11 +123,9 @@ new gate's negative case is proven in CI, not asserted.
 ## Signing
 
 **Everything is GPG-signed, always.** Commits AND tags
-(`git config commit.gpgsign true`; signing key `AAF8226F3F4C1712` —
-authored and committed as `Shain.Singh@owasp.org`). PR CI enforces
-`required_signatures`; an unsigned or badly-attributed commit blocks the PR.
-Never use the f5-attributed key for kailash work — the signing key and the
-commit email must agree with the GitHub-verified identity or verification
+(`git config commit.gpgsign true`). PR CI enforces `required_signatures`;
+an unsigned or badly-attributed commit blocks the PR. The signing key and
+the commit email must agree with a GitHub-verified identity or verification
 fails with `bad_email` and the PR cannot merge.
 
 Note: this repository's default branch is **`master`** (the packages and
@@ -135,18 +133,23 @@ website repos use `main`).
 
 ## Architecture Decision Records
 
-Structural changes carry an ADR in the same PR, following the
-[Coraza ADR standard](https://github.com/corazawaf/coraza/blob/main/docs/adr/README.md)
-format. The bar here is small: most slices are leaf-sized, so the issue's plan
-reference IS the design record — write an ADR only when **the change introduces
-a new persistent artifact** (a manifest schema field whose semantics lock,
-a profile contract, a wire format, a gate script) **or removes/changes one**.
+Structural changes carry an ADR in the same PR. Most slices are
+leaf-sized — the issue's plan reference IS the design record, no ADR
+needed — write one only when **the change introduces a new persistent
+artifact** (a manifest schema field whose semantics lock, a profile
+contract, a wire format, a gate script) **or removes/changes one**.
 
-Agent rules (borrowed from Coraza, same teeth):
+The record lives in [`docs/adr/`](docs/adr/):
+[`0000-architecture-decision-records.md`](docs/adr/0000-architecture-decision-records.md)
+explains the process and
+[`0001-record-format.md`](docs/adr/0001-record-format.md) fixes the
+format (NNNN-short-slug.md, numbered sequentially, one decision per
+file). Rules with teeth:
 
-- **Never invent discussion, deciders or quotes.** Cite commit/issue permalinks
-  or write "No substantive technical discussion recorded".
-- **Never rewrite an accepted ADR** to match a new change — supersede it.
+- **Accepted ADRs are immutable.** A change that contradicts an accepted
+  ADR supersedes it with a new one; never rewrite the accepted record.
+- **Never invent discussion, deciders or quotes.** Cite commit/issue
+  permalinks, or write "No substantive technical discussion recorded".
 - Dependency bumps, docs and CI tweaks don't need ADRs.
 
 ## Pull requests
@@ -161,7 +164,7 @@ contract, not decoration.
   misses its target: verify content landed on the branch the squash merges to).
 - **One logical change per PR.** No drive-by refactors, formatting or dependency bumps.
 - TDD: watched RED committed before GREEN (see [Testing](#testing)).
-- All commits GPG-signed by `Shain.Singh@owasp.org` (see [Signing](#signing)).
+- All commits GPG-signed with a GitHub-verified identity (see [Signing](#signing)).
 
 ### Title and description
 
