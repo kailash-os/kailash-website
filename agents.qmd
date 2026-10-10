@@ -1,21 +1,32 @@
 ---
 title: "Coding agents"
-toc: true
+toc: false
 ---
 
 The single source of truth for humans and coding agents (Copilot, Claude,
-Cursor, Hermes, etc.) working on Kailash OS —
+Cursor, Hermes, etc.) working on Kailash OS is
 [`AGENTS.md`](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md)
 in the [`kailash-os`](https://github.com/kailash-os/kailash-os) repository
-(default branch `master`). A companion file covers the
-[`kailash-packages`](https://github.com/kailash-os/kailash-packages)
-overlay repo:
-[`AGENTS.md`](https://github.com/kailash-os/kailash-packages/blob/main/AGENTS.md).
-Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`) point
-there; when anything disagrees, **AGENTS.md wins**.
+(default branch `master`). The companion guide for the
+[`kailash-packages`](https://github.com/kailash-os/kailash-packages) overlay
+repo is
+[`AGENTS.md`](https://github.com/kailash-os/kailash-packages/blob/main/AGENTS.md)
+there. Tool-specific files (`CLAUDE.md`,
+`.github/copilot-instructions.md`) point at these; when anything disagrees,
+**AGENTS.md wins**.
 
-This page is a **verbatim render** of that file; the synced copy lives at
-[`includes/AGENTS.md`](https://github.com/kailash-os/kailash-website/blob/main/includes/AGENTS.md)
-(resync = `curl -o includes/AGENTS.md https://raw.githubusercontent.com/kailash-os/kailash-os/master/AGENTS.md`).
+Read them at the source — the GitHub-rendered pages are always current:
 
-{{< include includes/AGENTS.md >}}
+- [`kailash-os`](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md):
+  project map, layer model and the manifest single-home rule, TDD standard
+  with the layer map, the ADR process
+  ([`docs/adr/`](https://github.com/kailash-os/kailash-os/tree/master/docs/adr)),
+  PR contract, labels, security rules (the distribution packages offensive
+  tooling — the safety posture is deliberate and testable).
+- [`kailash-packages`](https://github.com/kailash-os/kailash-packages/blob/main/AGENTS.md):
+  the overlay flake — pins, packaging shapes and the manifest rules that
+  every other artifact generates from.
+
+This page intentionally does not mirror either file: a mirror drifts the
+moment the repos move, and the source-of-truth rule (AGENTS.md wins)
+already says where to look.
