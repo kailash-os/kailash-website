@@ -75,7 +75,11 @@ scripts) runs on every PR.
 - Push your branch and open a PR against `master`; describe the what and the why.
 - Link the `KA-XX` issue the change implements; the project board
   is [kailash Roadmap](https://github.com/orgs/kailash-os/projects/1).
-- Releases are signed tags (`git tag -s vX.Y.Z`); unsigned tags are not published.
+- Releases are signed tags (`git tag -s 2026.01-alpha.1`; the
+  release-naming ladder — `YYYY.NN` release index, alpha/rc staging, bare
+  `2026.01` reserved for GA — lives on
+  [`docs/guide/releases.md`](https://github.com/kailash-os/kailash-os/blob/master/docs/guide/releases.md)
+  in the main repository); unsigned tags are not published.
 
 ## Reporting bugs
 
