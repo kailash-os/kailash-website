@@ -7,6 +7,7 @@ project:
     - "agents.qmd"
     - "contributing.qmd"
     - "security.qmd"
+    - "tools.qmd"
 
 website:
   title: "Kailash OS"
@@ -28,6 +29,8 @@ website:
         text: Architecture
       - href: index.qmd#governance
         text: Governance
+      - href: tools.qmd
+        text: Tools
       - href: build.qmd
         text: Build
     right:
