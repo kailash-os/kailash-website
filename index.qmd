@@ -3,7 +3,7 @@ title: "Kailash OS"
 subtitle: "A NixOS-based Linux distribution for AI security — one declaratively built environment for offensive, defensive, and platform tooling"
 ---
 
-[![License: BSD-3-Clause](https://img.shields.io/badge/licence-BSD--3--Clause-blue)](https://github.com/kailash-os/kailash-os/blob/master/LICENSE) [![version](https://img.shields.io/badge/version-v0.1.0-blue)](https://github.com/orgs/kailash-os/projects/1) [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kailash-os/kailash-os?label=OpenSSF%20Scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/kailash-os/kailash-os) [![OpenSSF Best Practices](https://img.shields.io/badge/cii%20best%20practices-in%20progress-orange)](https://www.bestpractices.dev/projects/15182)
+[![License: BSD-3-Clause](https://img.shields.io/badge/licence-BSD--3--Clause-blue)](https://github.com/kailash-os/kailash-os/blob/master/LICENSE) [![release](https://img.shields.io/badge/release-2026.01--alpha.1-blue)](https://github.com/kailash-os/kailash-os/releases) [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kailash-os/kailash-os?label=OpenSSF%20Scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/kailash-os/kailash-os) [![OpenSSF Best Practices](https://img.shields.io/badge/cii%20best%20practices-in%20progress-orange)](https://www.bestpractices.dev/projects/15182)
 
 
 Kailash OS keeps the distribution contract that made Kali Linux the default
@@ -61,10 +61,12 @@ CLI, docs, and the verification evidence matrix — so no two surfaces can drift
 Every category is an opt-in NixOS module (`kailash.layers.<layer>.categories.<id>`),
 generated from the manifest, VM-tested, never hand-maintained.
 
-Releases are lockfile states: the lockfile is the version
-(`vMAJOR.YYYYMM.<patch>`), nixpkgs inputs refresh monthly, tool updates arrive
-as reviewed PRs by staleness class, and a release train departs every six weeks
-with its images, checksums, and signed changelog.
+Releases are lockfile states: the lockfile is the version — releases tag
+`2026.01-alpha.1` first (staged cuts), with bare `2026.01` reserved for GA;
+the two-digit release index counts releases within the year (01, 02, …,
+2026.10, …), nixpkgs inputs refresh monthly, tool updates arrive as
+reviewed PRs by staleness class, and a release train departs every six
+weeks with its images, checksums, and signed changelog.
 
 ## The lab thesis
 
@@ -90,7 +92,9 @@ and defender validation of one's own systems. Users are responsible for the law
 in their jurisdiction (in Australia: Cyber Security Act 2024 (Cth); Criminal
 Code Act 1995 (Cth), Div 474). Safety is part of the OS rather than
 documentation beside it: `KAILASH_LAB_MODE` defaults off, active-exploit
-tooling is double-gated behind explicit host and shell opt-in, no service
+tooling is double-gated behind explicit host and shell opt-in (the host
+key `kailash.labMode = true` plus the shell key `KAILASH_LAB_MODE=1` per
+invocation), no service
 auto-starts, secrets are sops-nix-managed and read at runtime.
 
 ## Roadmap
