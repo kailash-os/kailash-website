@@ -220,8 +220,6 @@ def field_glossary(tools):
         "atlas_tactics": count_of(lambda t: t.get("atlas_tactics")),
         "owasp_llm": count_of(lambda t: has_map(t, "owasp_llm")),
     }
-    menu_three = count_of(lambda t: has_map(t, "nixos_menu")
-                          and all(t["nixos_menu"].get(k) for k in ("icon", "exec", "category")))
     derivations = count_of(lambda t: (t.get("packaging") or {}).get("derivation"))
 
     update_tags = {tc: count_of(lambda t, tc=tc: tc in (t.get("tags") or []))
@@ -229,74 +227,39 @@ def field_glossary(tools):
 
     rows = [
         ("`id`", "%d/%d" % (in_counts["id"], total),
-         "Unique slug — the row's key on every generated surface (desktop menu, CLI, "
-         "category modules, docs pages, bespoke derivation directories). One tool row "
-         "per tool; there is no second home for a tool in the manifest."),
+         "Unique slug — the row's key on every generated surface (menu, CLI, modules, docs, derivations)."),
         ("`layer`", "%d/%d" % (in_counts["layer"], total),
-         "One of `CLASSIC` | `ATTACK` | `DEFENCE` | `OPS`. CLASSIC — traditional "
-         "software-security assessment (Kali heritage). ATTACK — AI-offensive tooling, "
-         "MITRE ATLAS-mapped. DEFENCE — AI defensive and assurance tooling. OPS — the "
-         "platform layer the other layers target (MLOps, serving, SDKs, agent "
-         "operability). Earlier plan revisions named the platform layer BUILD; taxonomy "
-         "v3 renames it OPS (os#121, kp#9). All four ride a CORE substrate that hosts no "
-         "tool categories."),
+         "`CLASSIC` · `ATTACK` · `DEFENCE` · `OPS` (the platform layer, formerly BUILD — os#121). All four ride a CORE substrate with no tool categories."),
         ("`category`", "%d/%d" % (in_counts["category"], total),
-         "Primary category id from `categories.yaml` (e.g. `c-01-information-gathering`) "
-         "— exactly one per row. This is the one-tool-one-primary-category invariant: "
-         "every tool lands in one category, and the 31 category sections on this page "
-         "follow this field."),
+         "Primary category id — exactly one per row (the one-tool-one-primary invariant); orders the 31 sections on this page."),
         ("`secondary_categories`", "%d/%d" % (in_counts["secondary_categories"], total),
-         "Optional cross-references to other census slugs where dual-use is real — never "
-         "a second primary. Surfaced as the *also* line inside the per-category tables."),
+         "Optional cross-refs where dual-use is real — never a second primary. Shown as the *also* line in the tables."),
         ("`name`", "%d/%d" % (in_counts["name"], total),
-         "Human name; the menu and docs surface. Equals `id` on all rows but one "
-         "(`evaluate` ↦ `huggingface-evaluate`)."),
+         "Human name (menu/docs surface); equals `id` on all rows but one."),
         ("`description`", "%d/%d" % (in_counts["description"], total),
-         "One-line what-it-does, hand-written in the manifest; truncated for the tables "
-         "on this page."),
+         "One-line what-it-does, hand-written in the manifest; truncated in the tables."),
         ("`source`", "%d/%d" % (in_counts["source"], total),
-         "Pinned upstream coordinates, always as a map: `vcs_owner` + `repo` + "
-         "`vcs_url`. Research-grade tools pin to commit revisions — nvfetcher records a "
-         "commit-exact pin (R7), committed under `_sources/`. Native rows carry the "
-         "upstream coordinates nixpkgs builds from. Absent on %d rows without a declared "
-         "upstream VCS URL (bundled applications, shell-tool pack rows, data rows) — the "
-         "tool name appears unlinked in the tables."
+         "Upstream coordinates `{vcs_owner, repo, vcs_url}`; research-grade tools pin "
+         "commit-exact (nvfetcher, `_sources/`). Absent on %d rows with no declared "
+         "upstream URL — those render unlinked."
          % (total - in_counts["source"])),
         ("`license`", "%d/%d" % (in_counts["license"], total),
-         "SPDX identifier (e.g. `GPL-2.0-only`, `MIT`, `Apache-2.0`)."),
+         "SPDX identifier (`GPL-2.0-only`, `MIT`, …)."),
         ("`packaging`", "%d/%d" % (in_counts["packaging"], total),
-         "How the tool is packaged: `status` (vocabulary below) plus `derivation` on "
-         "bespoke rows only (%d of %d rows) — the overlay path `pkgs/<tool>/default.nix`."
-         % (derivations, total)),
+         "`status` (vocabulary below) + `derivation` path on bespoke rows (%d)."
+         % (derivations,)),
         ("`safety`", "%d/%d" % (in_counts["safety"], total),
-         "How the tool may be used: `level` (vocabulary below) plus `target-required` "
-         "(bool) on rows that are inert without a declared target. ATTACK-layer rows "
-         "declare their level and are double-gated on the OS side (host opt-in + shell "
-         "opt-in)."),
+         "`level` (vocabulary below) + `target-required` bool — inert without a declared target; keys the OS-side double gate."),
         ("`nixos_menu`", "%d/%d" % (in_counts["nixos_menu"], total),
-         "The desktop menu surface, always as `{icon, exec, category}`: the icon asset "
-         "(e.g. `nmap.svg`), the launched command, and the menu category (the tool's "
-         "primary category id). %d/%d rows carry all three fields."
-         % (menu_three, total)),
+         "Desktop-menu surface `{icon, exec, category}`."),
         ("`docs`", "%d/%d" % (in_counts["docs"], total),
-         "mdBook documentation path, `layers/<category-slug>/<tool-id>.md` (e.g. "
-         "`layers/c-01/nmap.md`) — the generated docs surface the CLI links to."),
+         "Generated docs path: `layers/<category>/<tool>.md`."),
         ("`tags`", "%d/%d" % (in_counts["tags"], total),
-         "Free-form lowercase list. Two conventions matter: layer/shape markers "
-         "(`classic`, `attack`, `defence`, `ops`, `framework`, `scanner`, `agentic`, "
-         "`mcp`, `library`, `serving`, `kubernetes`, `gpu`, `first-party`, "
-         "`pinned-reference`, …) and the update-automation cadence classes (below)."),
+         "Lowercase list: shape/stage markers + the `update:*` cadence class (below)."),
         ("`atlas_tactics`", "%d/%d" % (in_counts["atlas_tactics"], total),
-         "At least one MITRE ATLAS tactic id (`AML.T…`) from the 2026.05 16-tactic "
-         "matrix — ATTACK-layer rows only. ATTACK *category* rows carry their "
-         "category-level tactic sets in `categories.yaml`; the in-repo manifest gate "
-         "validates both sets."),
+         "≥1 MITRE ATLAS tactic id (`AML.T…`, 2026.05 matrix) — ATTACK rows only."),
         ("`owasp_llm`", "%d/%d" % (in_counts["owasp_llm"], total),
-         "Dual-epoch OWASP LLM Top 10 map on ATTACK-layer rows: `{2026: [LLMxx…], v2: "
-         "[LLMxx…]}` — both epochs (`2026`, the 2026 list; `v2`, the 2025 v2 list) "
-         "recorded per row. The same class number names different classes per epoch "
-         "(§2.4), so the epochs are recorded separately and never mixed. ATTACK "
-         "*category* rows carry the same dual-epoch map in `categories.yaml`."),
+         "Dual-epoch OWASP LLM Top 10 map `{2026: […], v2: […]}` — ATTACK rows only; the epochs are recorded separately and never mixed (§2.4)."),
     ]
 
     lines = [
@@ -319,22 +282,15 @@ def field_glossary(tools):
     ])
     status_meanings = [
         ("native", lambda: in_counts["packaging"],
-         "Built from nixpkgs' existing package set — no overlay-side packaging work; "
-         "the manifest row records the upstream coordinates nixpkgs builds from."),
+         "nixpkgs ships it; the row records the upstream coordinates the lock builds from."),
         ("stale", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "stale"),
-         "nixpkgs-native, with a recorded caveat: the packaged version currently trails "
-         "the tool's current upstream release. The lag is recorded (and tracked through "
-         "the update cadence), not forked."),
+         "nixpkgs-native; the packaged version trails upstream (tracked through the update cadence, not forked)."),
         ("bespoke", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "bespoke"),
-         "Packaged in the kailash-packages overlay itself: nvfetcher-pinned commit-exact, "
-         "a declared derivation path `pkgs/<tool>/default.nix`, `_sources/` committed."),
+         "Packaged in this overlay: nvfetcher commit-exact pin, `pkgs/<tool>/default.nix`, `_sources/` committed."),
         ("module", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "module"),
-         "Delivered as a bundled module or component (service-style or library-shape) "
-         "rather than a single menu executable; the pinned upstream source still drives "
-         "the component."),
+         "Delivered as a bundled module/component (service- or library-shape), not a single menu executable."),
         ("data", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "data"),
-         "Packaged data artefact — wordlists, corpora, samples, pack seeds — rather than "
-         "an executable surface; typically an opt-in data-pack row."),
+         "Data artefact — wordlists, corpora, pack seeds; typically an opt-in data-pack row."),
     ]
     for status, count_fn, meaning in status_meanings:
         lines.append("| `%s` | %d | %s |" % (status, count_fn(), meaning))
@@ -347,23 +303,17 @@ def field_glossary(tools):
     ])
     level_meanings = [
         ("safe", lambda: count_of(lambda t: (t.get("safety") or {}).get("level") == "safe"),
-         "No aiming required — the tool works on artefacts, local models, or one's own "
-         "systems: analysis, evaluation, forensics, defensive tooling."),
+         "Runs as-is — works on artefacts, local models, or one's own systems."),
         ("requires-target", lambda: count_of(lambda t: (t.get("safety") or {}).get("level") == "requires-target"),
-         "Must be pointed at a system under test — use it only inside an authorised "
-         "engagement (written authorisation, one's own systems)."),
+         "Must be pointed at a system under test — authorised engagements only."),
         ("exp", lambda: count_of(lambda t: (t.get("safety") or {}).get("level") == "exp"),
-         "Experimental research code — upstream lab releases and reference "
-         "implementations: unpolished interfaces, no stability promise between releases."),
+         "Experimental research code — lab releases; double-gated on the OS side (`kailash.labMode = true` + `KAILASH_LAB_MODE=1`)."),
     ]
     for level, count_fn, meaning in level_meanings:
         lines.append("| `%s` | %d | %s |" % (level, count_fn(), meaning))
     lines.append("")
     lines.extend([
-        "`target-required` (%d of %d rows, all ATTACK) marks tools that are inert without "
-        "a target — they key the OS-side double gate (host opt-in + shell opt-in) "
-        "described above. The table rendering adds a `· target-required` marker to the "
-        "Safety column for these rows." % (count_of(lambda t: (t.get("safety") or {}).get("target-required")), total),
+        "`target-required` (%d of %d rows, all ATTACK) — inert without a target; renders as the `· target-required` marker in the Safety column." % (count_of(lambda t: (t.get("safety") or {}).get("target-required")), total),
         "",
     ])
 
@@ -377,14 +327,10 @@ def field_glossary(tools):
         "|---|---|",
     ])
     update_meanings = [
-        ("update:slow", "The bulk cadence — tools whose value lies in steady availability, "
-                        "not in tracking every upstream commit."),
-        ("update:steady", "Tighter than the bulk cadence — tracked along, not pinned to "
-                          "releases only."),
-        ("update:weekly", "Weekly follow — typical for fast-moving attack tooling where "
-                          "upstream fixes matter quickly."),
-        ("update:fast", "Tightest follow — pinned-reference research tools kept close to "
-                        "upstream head."),
+        ("update:slow", "The bulk cadence — steady availability, not per-commit tracking."),
+        ("update:steady", "Tighter tracking, not release-pinned."),
+        ("update:weekly", "Weekly follow — fast-moving attack tooling."),
+        ("update:fast", "Tightest follow — pinned-reference tools kept near upstream head."),
     ]
     for tag, meaning in update_meanings:
         lines.append("| `%s` | %d — %s |" % (tag, update_tags[tag], meaning))
@@ -441,63 +387,34 @@ def layer_summary(categories, tools):
 
 INTRO_PARAGRAPHS = [
     # Provenance — where the tools come from.
-    "The tool set descends from three provenance streams. The CLASSIC layer follows the "
-    "Kali Linux heritage catalog: the category shape (information gathering through "
-    "reverse engineering, exploitation, forensics) is Kali's menu taxonomy re-derived for "
-    "a software-only scope, filled from maintained nixpkgs packages and overlay-packaged "
-    "tools. The DEFENCE and OPS layers draw on the nixpkgs staple set — the NixOS "
-    "ecosystem's own packages for serving, notebooks, evaluation harnesses, and agent "
-    "plumbing — because the platform layer should be reproducible infrastructure rather "
-    "than curated exotica. The ATTACK layer and the specialised edges of every other "
-    "layer draw on upstream research tooling — lab releases and reference "
-    "implementations such as the adversarial-robustness-toolbox, garak, PyRIT, promptfoo, "
-    "and counterfit — pinned commit-exact through nvfetcher, never floated on a mutable "
-    "branch.",
+    "Three provenance streams: the **CLASSIC** layer follows the Kali heritage "
+    "catalog re-derived for a software-only scope; **DEFENCE/OPS** draw on "
+    "nixpkgs' own staple set (reproducible infrastructure, not curated exotica); "
+    "**ATTACK** and the specialised edges of every layer draw on upstream "
+    "research tooling (garak, PyRIT, promptfoo, ART, counterfit), pinned "
+    "commit-exact through nvfetcher — never floated.",
     # Method — how selection works.
-    "Selection has one criterion: fit to the four pillars. **AppSec** — classic "
-    "application-security assessment of software artefacts (the CLASSIC layer). "
-    "**APISec** — web, API, and AI-endpoint runtime assessment (CLASSIC's assessment "
-    "categories plus the runtime-AppSec category). **MLSec** — adversarial machine "
-    "learning against predictive models (ATTACK's model-focused categories: evasion, "
-    "poisoning, extraction, and inference attacks). **AISec** — LLM, agentic, and MCP "
-    "security (ATTACK's language-model and tool-use categories, mirrored on the defence "
-    "side by the guardrails and evaluation tooling). Every candidate is scored against "
-    "those domains; tools outside the boundary are excluded regardless of reputation. "
-    "Admission lands in exactly one of the 31 primary categories — the "
-    "one-tool-one-primary-category invariant — and genuinely dual-use tools carry "
-    "secondary cross-references (`secondary_categories`) rather than duplicate rows.",
+    "Selection criterion: fit to the four pillars — **AppSec** (classic "
+    "software assessment), **APISec** (web/API/AI-endpoint runtime assessment), "
+    "**MLSec** (adversarial ML against predictive models), **AISec** (LLM, "
+    "agentic, MCP security). Every tool lands in exactly one primary category; "
+    "dual-use tools carry `secondary_categories` cross-refs, never duplicate "
+    "rows.",
     # Exclusions — §3.7.
-    "Exclusion is documented alongside admission (§3.7 of the specification). The census "
-    "carries no hardware, RF, wifi, or bluetooth tooling — Kali's hardware-hacking "
-    "categories and the wireless attack suite stay out — with one deliberate, opt-in "
-    "exception: the c-07 signal & SDR data-pack, software-only DSP and audio tooling for "
-    "AI-adjacent signal work, never on default profiles or ISOs. No paid-licence tools "
-    "(Nessus, Cobalt Strike, paid IDA — `kailash doctor <tool>` points at legitimate "
-    "licensing). No cloud-only SaaS deliverables — the census is CLI-first, the recorded "
-    "exception being the first-party CLI of a research platform (`wandb-cli`). No "
-    "unmaintained tools — the no-resurrection guard keeps dead tools out and documents "
-    "supersession (netexec over crackmapexec; a maintained webshell-analysis pack over "
-    "pre-2015 collections). No classic-network attack tooling — lateral-movement suites, "
-    "online credential brute-forcing against live services, C2 frameworks, and "
-    "social-engineering tooling are Kali-for-networks territory, not the four pillars.",
+    "Excluded (the §3.7 no-resurrection guard): hardware/RF/wifi/bluetooth "
+    "tooling (one opt-in exception: the c-07 SDR data-pack), paid-licence "
+    "tools, cloud-only SaaS, unmaintained tools, and classic-network attack "
+    "tooling (lateral movement, C2 frameworks, social engineering) — Kali's "
+    "network-arsenal territory, not the four pillars.",
     # The census.
-    "The census, at this manifest revision: %d taxonomy rows — %d categories plus %d "
-    "opt-in data-pack (%s; the planned `kailash-data.wordlists-mega` pack rides C-5 and "
-    "has no manifest rows yet) — and %d tool rows. %d rows sit in the %d primary "
-    "categories and %d in the SDR data-pack. By tool row: %s. The specification's §3.6 "
-    "census projected ~337 primary slots across the 31 categories; %d rows are filled on "
-    "the categories at this revision and the remaining planned slots stay open (%s).",
+    "%d taxonomy rows — %d categories + %d opt-in data-pack (%s) — and %d "
+    "tool rows: %s. The §3.6 census projected ~337 primary slots; %d are "
+    "filled, the open planned slots noted per section below.",
     # The generation statement.
-    "This page is generated, not maintained by hand. `python3 "
-    "tools/generate-tools-page.py` fetches `manifest/tools.yaml` and "
-    "`manifest/categories.yaml` from kailash-os/kailash-packages and renders every "
-    "number, table, and link on this page at generation time — categories, counts, "
-    "licences, packaging statuses, and safety declarations always reflect the manifest "
-    "the distribution itself builds from. One manifest drives six system views (the "
-    "overlay's derivations, the category module tree, the desktop menu, the CLI, the "
-    "mdBook docs, and this website); the page is the website view of that single truth. "
-    "The regeneration command is recorded inside the generated file; nothing on this "
-    "page is hand-synced, and manifest merges regenerate it.",
+    "Generated — never hand-maintained. `python3 tools/generate-tools-page.py` "
+    "fetches `tools.yaml` + `categories.yaml` from kailash-packages and "
+    "renders every number, table, and link here at generation time; manifest "
+    "merges regenerate this page.",
 ]
 
 
@@ -521,12 +438,8 @@ def census_paragraph(categories, tools):
         len(data_packs),      # data-pack rows
         pack_names,
         len(tools),           # tool rows
-        cat_rows,
-        len(cats),
-        sum(pack_rows.values()),
         layer_str,
         cat_rows,
-        "; ".join(open_slots),
     )
 
 

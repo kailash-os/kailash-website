@@ -15,15 +15,15 @@ after every manifest merge and commit the result.) -->
 
 # Kailash tool set
 
-The tool set descends from three provenance streams. The CLASSIC layer follows the Kali Linux heritage catalog: the category shape (information gathering through reverse engineering, exploitation, forensics) is Kali's menu taxonomy re-derived for a software-only scope, filled from maintained nixpkgs packages and overlay-packaged tools. The DEFENCE and OPS layers draw on the nixpkgs staple set — the NixOS ecosystem's own packages for serving, notebooks, evaluation harnesses, and agent plumbing — because the platform layer should be reproducible infrastructure rather than curated exotica. The ATTACK layer and the specialised edges of every other layer draw on upstream research tooling — lab releases and reference implementations such as the adversarial-robustness-toolbox, garak, PyRIT, promptfoo, and counterfit — pinned commit-exact through nvfetcher, never floated on a mutable branch.
+Three provenance streams: the **CLASSIC** layer follows the Kali heritage catalog re-derived for a software-only scope; **DEFENCE/OPS** draw on nixpkgs' own staple set (reproducible infrastructure, not curated exotica); **ATTACK** and the specialised edges of every layer draw on upstream research tooling (garak, PyRIT, promptfoo, ART, counterfit), pinned commit-exact through nvfetcher — never floated.
 
-Selection has one criterion: fit to the four pillars. **AppSec** — classic application-security assessment of software artefacts (the CLASSIC layer). **APISec** — web, API, and AI-endpoint runtime assessment (CLASSIC's assessment categories plus the runtime-AppSec category). **MLSec** — adversarial machine learning against predictive models (ATTACK's model-focused categories: evasion, poisoning, extraction, and inference attacks). **AISec** — LLM, agentic, and MCP security (ATTACK's language-model and tool-use categories, mirrored on the defence side by the guardrails and evaluation tooling). Every candidate is scored against those domains; tools outside the boundary are excluded regardless of reputation. Admission lands in exactly one of the 31 primary categories — the one-tool-one-primary-category invariant — and genuinely dual-use tools carry secondary cross-references (`secondary_categories`) rather than duplicate rows.
+Selection criterion: fit to the four pillars — **AppSec** (classic software assessment), **APISec** (web/API/AI-endpoint runtime assessment), **MLSec** (adversarial ML against predictive models), **AISec** (LLM, agentic, MCP security). Every tool lands in exactly one primary category; dual-use tools carry `secondary_categories` cross-refs, never duplicate rows.
 
-Exclusion is documented alongside admission (§3.7 of the specification). The census carries no hardware, RF, wifi, or bluetooth tooling — Kali's hardware-hacking categories and the wireless attack suite stay out — with one deliberate, opt-in exception: the c-07 signal & SDR data-pack, software-only DSP and audio tooling for AI-adjacent signal work, never on default profiles or ISOs. No paid-licence tools (Nessus, Cobalt Strike, paid IDA — `kailash doctor <tool>` points at legitimate licensing). No cloud-only SaaS deliverables — the census is CLI-first, the recorded exception being the first-party CLI of a research platform (`wandb-cli`). No unmaintained tools — the no-resurrection guard keeps dead tools out and documents supersession (netexec over crackmapexec; a maintained webshell-analysis pack over pre-2015 collections). No classic-network attack tooling — lateral-movement suites, online credential brute-forcing against live services, C2 frameworks, and social-engineering tooling are Kali-for-networks territory, not the four pillars.
+Excluded (the §3.7 no-resurrection guard): hardware/RF/wifi/bluetooth tooling (one opt-in exception: the c-07 SDR data-pack), paid-licence tools, cloud-only SaaS, unmaintained tools, and classic-network attack tooling (lateral movement, C2 frameworks, social engineering) — Kali's network-arsenal territory, not the four pillars.
 
-The census, at this manifest revision: 32 taxonomy rows — 31 categories plus 1 opt-in data-pack (`c-07-signal-sdr`; the planned `kailash-data.wordlists-mega` pack rides C-5 and has no manifest rows yet) — and 336 tool rows. 330 rows sit in the 31 primary categories and 6 in the SDR data-pack. By tool row: CLASSIC 146, ATTACK 58, OPS 87, DEFENCE 45. The specification's §3.6 census projected ~337 primary slots across the 31 categories; 330 rows are filled on the categories at this revision and the remaining planned slots stay open (C-10 at 7 of 8; O-2 at 11 of 13; O-6 at 10 of 12; D-7 at 4 of 5).
+32 taxonomy rows — 31 categories + 1 opt-in data-pack (`c-07-signal-sdr`) — and 336 tool rows: CLASSIC 146, ATTACK 58, OPS 87, DEFENCE 45. The §3.6 census projected ~337 primary slots; 330 are filled, the open planned slots noted per section below.
 
-This page is generated, not maintained by hand. `python3 tools/generate-tools-page.py` fetches `manifest/tools.yaml` and `manifest/categories.yaml` from kailash-os/kailash-packages and renders every number, table, and link on this page at generation time — categories, counts, licences, packaging statuses, and safety declarations always reflect the manifest the distribution itself builds from. One manifest drives six system views (the overlay's derivations, the category module tree, the desktop menu, the CLI, the mdBook docs, and this website); the page is the website view of that single truth. The regeneration command is recorded inside the generated file; nothing on this page is hand-synced, and manifest merges regenerate it.
+Generated — never hand-maintained. `python3 tools/generate-tools-page.py` fetches `tools.yaml` + `categories.yaml` from kailash-packages and renders every number, table, and link here at generation time; manifest merges regenerate this page.
 
 ## What every value means
 
@@ -31,41 +31,41 @@ Every field a tool row can carry, in manifest order. The *In* column is the live
 
 | Field | In | Meaning |
 |---|---|---|
-| `id` | 336/336 | Unique slug — the row's key on every generated surface (desktop menu, CLI, category modules, docs pages, bespoke derivation directories). One tool row per tool; there is no second home for a tool in the manifest. |
-| `layer` | 336/336 | One of `CLASSIC` | `ATTACK` | `DEFENCE` | `OPS`. CLASSIC — traditional software-security assessment (Kali heritage). ATTACK — AI-offensive tooling, MITRE ATLAS-mapped. DEFENCE — AI defensive and assurance tooling. OPS — the platform layer the other layers target (MLOps, serving, SDKs, agent operability). Earlier plan revisions named the platform layer BUILD; taxonomy v3 renames it OPS (os#121, kp#9). All four ride a CORE substrate that hosts no tool categories. |
-| `category` | 336/336 | Primary category id from `categories.yaml` (e.g. `c-01-information-gathering`) — exactly one per row. This is the one-tool-one-primary-category invariant: every tool lands in one category, and the 31 category sections on this page follow this field. |
-| `secondary_categories` | 23/336 | Optional cross-references to other census slugs where dual-use is real — never a second primary. Surfaced as the *also* line inside the per-category tables. |
-| `name` | 336/336 | Human name; the menu and docs surface. Equals `id` on all rows but one (`evaluate` ↦ `huggingface-evaluate`). |
-| `description` | 336/336 | One-line what-it-does, hand-written in the manifest; truncated for the tables on this page. |
-| `source` | 320/336 | Pinned upstream coordinates, always as a map: `vcs_owner` + `repo` + `vcs_url`. Research-grade tools pin to commit revisions — nvfetcher records a commit-exact pin (R7), committed under `_sources/`. Native rows carry the upstream coordinates nixpkgs builds from. Absent on 16 rows without a declared upstream VCS URL (bundled applications, shell-tool pack rows, data rows) — the tool name appears unlinked in the tables. |
-| `license` | 336/336 | SPDX identifier (e.g. `GPL-2.0-only`, `MIT`, `Apache-2.0`). |
-| `packaging` | 336/336 | How the tool is packaged: `status` (vocabulary below) plus `derivation` on bespoke rows only (122 of 336 rows) — the overlay path `pkgs/<tool>/default.nix`. |
-| `safety` | 336/336 | How the tool may be used: `level` (vocabulary below) plus `target-required` (bool) on rows that are inert without a declared target. ATTACK-layer rows declare their level and are double-gated on the OS side (host opt-in + shell opt-in). |
-| `nixos_menu` | 336/336 | The desktop menu surface, always as `{icon, exec, category}`: the icon asset (e.g. `nmap.svg`), the launched command, and the menu category (the tool's primary category id). 336/336 rows carry all three fields. |
-| `docs` | 336/336 | mdBook documentation path, `layers/<category-slug>/<tool-id>.md` (e.g. `layers/c-01/nmap.md`) — the generated docs surface the CLI links to. |
-| `tags` | 336/336 | Free-form lowercase list. Two conventions matter: layer/shape markers (`classic`, `attack`, `defence`, `ops`, `framework`, `scanner`, `agentic`, `mcp`, `library`, `serving`, `kubernetes`, `gpu`, `first-party`, `pinned-reference`, …) and the update-automation cadence classes (below). |
-| `atlas_tactics` | 58/336 | At least one MITRE ATLAS tactic id (`AML.T…`) from the 2026.05 16-tactic matrix — ATTACK-layer rows only. ATTACK *category* rows carry their category-level tactic sets in `categories.yaml`; the in-repo manifest gate validates both sets. |
-| `owasp_llm` | 58/336 | Dual-epoch OWASP LLM Top 10 map on ATTACK-layer rows: `{2026: [LLMxx…], v2: [LLMxx…]}` — both epochs (`2026`, the 2026 list; `v2`, the 2025 v2 list) recorded per row. The same class number names different classes per epoch (§2.4), so the epochs are recorded separately and never mixed. ATTACK *category* rows carry the same dual-epoch map in `categories.yaml`. |
+| `id` | 336/336 | Unique slug — the row's key on every generated surface (menu, CLI, modules, docs, derivations). |
+| `layer` | 336/336 | `CLASSIC` · `ATTACK` · `DEFENCE` · `OPS` (the platform layer, formerly BUILD — os#121). All four ride a CORE substrate with no tool categories. |
+| `category` | 336/336 | Primary category id — exactly one per row (the one-tool-one-primary invariant); orders the 31 sections on this page. |
+| `secondary_categories` | 23/336 | Optional cross-refs where dual-use is real — never a second primary. Shown as the *also* line in the tables. |
+| `name` | 336/336 | Human name (menu/docs surface); equals `id` on all rows but one. |
+| `description` | 336/336 | One-line what-it-does, hand-written in the manifest; truncated in the tables. |
+| `source` | 320/336 | Upstream coordinates `{vcs_owner, repo, vcs_url}`; research-grade tools pin commit-exact (nvfetcher, `_sources/`). Absent on 16 rows with no declared upstream URL — those render unlinked. |
+| `license` | 336/336 | SPDX identifier (`GPL-2.0-only`, `MIT`, …). |
+| `packaging` | 336/336 | `status` (vocabulary below) + `derivation` path on bespoke rows (122). |
+| `safety` | 336/336 | `level` (vocabulary below) + `target-required` bool — inert without a declared target; keys the OS-side double gate. |
+| `nixos_menu` | 336/336 | Desktop-menu surface `{icon, exec, category}`. |
+| `docs` | 336/336 | Generated docs path: `layers/<category>/<tool>.md`. |
+| `tags` | 336/336 | Lowercase list: shape/stage markers + the `update:*` cadence class (below). |
+| `atlas_tactics` | 58/336 | ≥1 MITRE ATLAS tactic id (`AML.T…`, 2026.05 matrix) — ATTACK rows only. |
+| `owasp_llm` | 58/336 | Dual-epoch OWASP LLM Top 10 map `{2026: […], v2: […]}` — ATTACK rows only; the epochs are recorded separately and never mixed (§2.4). |
 
 ### `packaging.status`
 
 | Status | Count | Meaning |
 |---|---|---|
-| `native` | 336 | Built from nixpkgs' existing package set — no overlay-side packaging work; the manifest row records the upstream coordinates nixpkgs builds from. |
-| `stale` | 7 | nixpkgs-native, with a recorded caveat: the packaged version currently trails the tool's current upstream release. The lag is recorded (and tracked through the update cadence), not forked. |
-| `bespoke` | 122 | Packaged in the kailash-packages overlay itself: nvfetcher-pinned commit-exact, a declared derivation path `pkgs/<tool>/default.nix`, `_sources/` committed. |
-| `module` | 16 | Delivered as a bundled module or component (service-style or library-shape) rather than a single menu executable; the pinned upstream source still drives the component. |
-| `data` | 29 | Packaged data artefact — wordlists, corpora, samples, pack seeds — rather than an executable surface; typically an opt-in data-pack row. |
+| `native` | 336 | nixpkgs ships it; the row records the upstream coordinates the lock builds from. |
+| `stale` | 7 | nixpkgs-native; the packaged version trails upstream (tracked through the update cadence, not forked). |
+| `bespoke` | 122 | Packaged in this overlay: nvfetcher commit-exact pin, `pkgs/<tool>/default.nix`, `_sources/` committed. |
+| `module` | 16 | Delivered as a bundled module/component (service- or library-shape), not a single menu executable. |
+| `data` | 29 | Data artefact — wordlists, corpora, pack seeds; typically an opt-in data-pack row. |
 
 ### `safety.level`
 
 | Level | Count | Meaning |
 |---|---|---|
-| `safe` | 290 | No aiming required — the tool works on artefacts, local models, or one's own systems: analysis, evaluation, forensics, defensive tooling. |
-| `requires-target` | 20 | Must be pointed at a system under test — use it only inside an authorised engagement (written authorisation, one's own systems). |
-| `exp` | 26 | Experimental research code — upstream lab releases and reference implementations: unpolished interfaces, no stability promise between releases. |
+| `safe` | 290 | Runs as-is — works on artefacts, local models, or one's own systems. |
+| `requires-target` | 20 | Must be pointed at a system under test — authorised engagements only. |
+| `exp` | 26 | Experimental research code — lab releases; double-gated on the OS side (`kailash.labMode = true` + `KAILASH_LAB_MODE=1`). |
 
-`target-required` (12 of 336 rows, all ATTACK) marks tools that are inert without a target — they key the OS-side double gate (host opt-in + shell opt-in) described above. The table rendering adds a `· target-required` marker to the Safety column for these rows.
+`target-required` (12 of 336 rows, all ATTACK) — inert without a target; renders as the `· target-required` marker in the Safety column.
 
 ### Tag update classes
 
@@ -73,10 +73,10 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tag | Rows |
 |---|---|
-| `update:slow` | 199 — The bulk cadence — tools whose value lies in steady availability, not in tracking every upstream commit. |
-| `update:steady` | 13 — Tighter than the bulk cadence — tracked along, not pinned to releases only. |
-| `update:weekly` | 5 — Weekly follow — typical for fast-moving attack tooling where upstream fixes matter quickly. |
-| `update:fast` | 6 — Tightest follow — pinned-reference research tools kept close to upstream head. |
+| `update:slow` | 199 — The bulk cadence — steady availability, not per-commit tracking. |
+| `update:steady` | 13 — Tighter tracking, not release-pinned. |
+| `update:weekly` | 5 — Weekly follow — fast-moving attack tooling. |
+| `update:fast` | 6 — Tightest follow — pinned-reference tools kept near upstream head. |
 
 ## C-1 · Information Gathering (`c-01-information-gathering`, CLASSIC, 38 tools)
 
