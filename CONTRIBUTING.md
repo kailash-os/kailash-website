@@ -2,94 +2,72 @@
 
 Contributions are welcome. This document defines the working agreement: how
 changes are proposed, reviewed, and merged, and what the continuous-integration
-gates enforce.
+gates enforce. This is the docs-only Quarto site repo — no nix, no manifest;
+the distribution working agreements live in
+[kailash-os](https://github.com/kailash-os/kailash-os/blob/master/CONTRIBUTING.md)
+and
+[kailash-packages](https://github.com/kailash-os/kailash-packages/blob/main/CONTRIBUTING.md).
 
 ## Ground rules
 
-1. **Never commit to `master`.** All work happens on a branch, one change per
+1. **Never commit to `main`.** All work happens on a branch, one change per
    branch, merged via pull request. Branch names follow
-   `<type>/<short-description>` with kebab-case — e.g. `feat/taxonomy-layer`,
-   `fix/flake-eval`, `docs/module-page`.
-2. **Conventional Commits.** Every commit message follows
+   `<type>/<short-description>` with kebab-case — e.g. `site/tools-page`,
+   `docs/paper-render`, `agents/page-refresh`.
+2. **Conventional Commits.** Every commit subject follows
    the [specification](https://www.conventionalcommits.org/en/v1.0.0):
-   `type(scope): subject`.
-   - Types: `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `ci`, `chore`.
-   - `scope` is a component: `nix` (flake/module), `taxonomy` (the four-layer
-     category tree), `manifest` (tool entries, packaging), `cli` (kailash
-     command surface), `menu` (menu definitions), `safety` (lab-mode and
-     gating), `docs`, `ci`.
-   - Subject: imperative, lowercase, no trailing period. Body (optional):
-     what changed and why; wrap at 72 columns.
-3. **Sign everything.** Commits must be GPG- or SSH-signed
-   (`git config --global commit.gpgsign true`); releases are
-   signed tags — unsigned commits and unsigned tags are
-   not merged/published. Verify with `git log --show-signature` / `git tag -v`.
+   `type: subject` (scope optional on a docs-only site).
+   - Standard types: `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `ci`,
+     `chore`, `perf`, `revert`.
+   - Site-surface types (this repo's extension, carried by its history):
+     `site` (rendered-page content/layout) and `agents` (the coding-agents
+     guide page).
+   - Subject: imperative, no trailing period. Body (optional): what changed
+     and why; wrap at 72 columns.
+   - PR titles follow the same form; site-track items carry their roadmap id
+     in the subject — `site: KA-WS-x — …`. Squash merges use the PR title as
+     the commit subject (`squash_merge_commit_title: COMMIT_OR_PR_TITLE`), so
+     the PR title is the commit record. A CI gate checks the form on every
+     PR; bot/dependency PRs (renovate, pre-commit.ci autoupdate) keep their
+     canonical titles.
+3. **Sign everything.** Commits must be GPG- or SSH-signed; the
+   `protect-default` ruleset requires signatures (`required_signatures`) —
+   an unsigned commit blocks the PR. Verify with `git log --show-signature`.
 4. **One logical change per PR.** Small, reviewable diffs merge faster.
 5. **Pre-commit runs locally.** Install the hooks once per clone —
    `pre-commit install && pre-commit install --hook-type pre-push` —
-   then every `git commit` and `git push` runs the same hook set CI runs
-   (bypass with `--no-verify` for the rare legitimate exception).
+   then every `git commit` and `git push` runs the same hook set CI runs.
+   pre-commit.ci still gates every PR.
 
-## Security-sensitive changes
+## CI gates
 
-Anything touching the tool manifest, the safety gating, or the packaging
-harness warrants extra care (see [SECURITY.md](SECURITY.md) for the full
-posture):
-
-- **Vulnerabilities are not issues.** Follow [SECURITY.md](SECURITY.md) — never
-  open a public issue for an unreported vulnerability.
-- **Offensive tooling entries** (`area:layer-attack`) must carry their safety
-  level in the manifest entry: tools whose safety level is active-exploit are
-  double-gated behind explicit host and shell opt-in (`KAILASH_LAB_MODE`
-  defaults off). A manifest change that new-tools an active-exploit entry
-  without the gate declared is rejected in review.
-- **Taxonomy integrity:** categories and their ATLAS/OWASP mappings are part
-  of the distribution's contract — re-orderings or removals state their
-  impact in the PR body.
-- **Nix-side entrypoints:** keep module code evalu-reproducible — every
-  runtime dependency belongs in the flake, pinned by the lockfile.
-
-## The acceptance suite
-
-```
-nix flake check --all-systems --no-build   # (KA-15) everything evaluates
-nix develop -c pre-commit run --all-files  # the hook set CI runs
-```
-
-`nix flake check` becomes the full gate when the root flake lands (KA-01) and
-replaces the scaffold gate in KA-15; until then CI verifies the repository
-carries its planned layout. The hook set (trailing whitespace, YAML/JSON
-validity, large-file guards, `detect-private-key`, shellcheck on shell
-scripts) runs on every PR.
-
-## CI on every pull request
+Every pull request runs:
 
 | Check | What it does |
 |---|---|
-| `flake-check` | layout-scaffold gate now; `nix flake check` from KA-15 |
-| Dependency Review | flags vulnerable or licence-incompatible dependency changes |
-| OpenSSF Scorecard | publishes the security-posture score |
+| `site-check` (required) | `quarto render` fails on broken refs; the built HTML must exist |
+| `PR title — Conventional Commits` | PR title checked against the Conventional Commits form |
+| `scorecard` | OpenSSF Scorecard |
+| `pre-commit.ci` | the [.pre-commit-config.yaml](.pre-commit-config.yaml) hook set |
+
+The branch ruleset `protect-default` (active) enforces: no deletions, no
+non-fast-forward pushes, required signatures, and the PR rule (code-owner
+review; extra approval for unattributed changes). Merges to `main` deploy the
+site via the Pages workflow (`pages.yml`); the live page is
+[kailash.site](https://kailash.site).
 
 ## Commits and pull requests
 
-- Push your branch and open a PR against `master`; describe the what and the why.
-- Link the `KA-XX` issue the change implements; the project board
-  is [kailash Roadmap](https://github.com/orgs/kailash-os/projects/1).
-- Releases are signed tags (`git tag -s 2026.01-alpha.1`; the
-  release-naming ladder — `YYYY.NN` release index, alpha/rc staging, bare
-  `2026.01` reserved for GA — lives on
-  [`docs/guide/releases.md`](https://github.com/kailash-os/kailash-os/blob/master/docs/guide/releases.md)
-  in the main repository); unsigned tags are not published.
+- Cut the branch from current `origin/main`, push, and open the PR against
+  `main`; the description states what changed, why (the issue), and how the
+  rendered output was verified.
+- Verify rendered output, not configuration: `quarto render`, then parse the
+  built `_site/*.html` (nav order/labels, TOC anchors) before pushing.
+- Merges happen on review; the merge is the maintainer's action.
 
 ## Reporting bugs
 
-Open a [GitHub issue](https://github.com/kailash-os/kailash-os/issues/new) with
-the flake revision (or the release tag once releases start), the category/manifest
-surface you hit, host OS, and the relevant error excerpt. Security issues never
-go here — [SECURITY.md](SECURITY.md) instead.
-
-## Licence
-
-The project is licensed under **BSD-3-Clause** — see [LICENSE](LICENSE).
-Contributions are made under **BSD-3-Clause**: by submitting a pull request you
-agree your work is licensed under the project's BSD-3-Clause terms.
+Open a [GitHub issue](https://github.com/kailash-os/kailash-website/issues/new)
+describing the page, the observed vs expected render, and the commit where the
+behaviour appeared. Security issues never go here —
+[SECURITY.md](SECURITY.md) instead.
