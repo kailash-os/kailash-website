@@ -1,0 +1,717 @@
+---
+title: "Tools"
+toc-depth: 3
+---
+
+<!-- GENERATED FILE — do not hand-edit.
+Regenerate from the tool manifest with:
+
+    python3 tools/generate-tools-page.py
+
+(run from the repository root; fetches manifest/tools.yaml and
+manifest/categories.yaml from kailash-os/kailash-packages main and rewrites
+tools.qmd. No number or table on this page is hand-maintained — regenerate
+after every manifest merge and commit the result.) -->
+
+# Kailash tool set
+
+The tool set descends from three provenance streams. The CLASSIC layer follows the Kali Linux heritage catalog: the category shape (information gathering through reverse engineering, exploitation, forensics) is Kali's menu taxonomy re-derived for a software-only scope, filled from maintained nixpkgs packages and overlay-packaged tools. The DEFENCE and OPS layers draw on the nixpkgs staple set — the NixOS ecosystem's own packages for serving, notebooks, evaluation harnesses, and agent plumbing — because the platform layer should be reproducible infrastructure rather than curated exotica. The ATTACK layer and the specialised edges of every other layer draw on upstream research tooling — lab releases and reference implementations such as the adversarial-robustness-toolbox, garak, PyRIT, promptfoo, and counterfit — pinned commit-exact through nvfetcher, never floated on a mutable branch.
+
+Selection has one criterion: fit to the four pillars. **AppSec** — classic application-security assessment of software artefacts (the CLASSIC layer). **APISec** — web, API, and AI-endpoint runtime assessment (CLASSIC's assessment categories plus the runtime-AppSec category). **MLSec** — adversarial machine learning against predictive models (ATTACK's model-focused categories: evasion, poisoning, extraction, and inference attacks). **AISec** — LLM, agentic, and MCP security (ATTACK's language-model and tool-use categories, mirrored on the defence side by the guardrails and evaluation tooling). Every candidate is scored against those domains; tools outside the boundary are excluded regardless of reputation. Admission lands in exactly one of the 31 primary categories — the one-tool-one-primary-category invariant — and genuinely dual-use tools carry secondary cross-references (`secondary_categories`) rather than duplicate rows.
+
+Exclusion is documented alongside admission (§3.7 of the specification). The census carries no hardware, RF, wifi, or bluetooth tooling — Kali's hardware-hacking categories and the wireless attack suite stay out — with one deliberate, opt-in exception: the c-07 signal & SDR data-pack, software-only DSP and audio tooling for AI-adjacent signal work, never on default profiles or ISOs. No paid-licence tools (Nessus, Cobalt Strike, paid IDA — `kailash doctor <tool>` points at legitimate licensing). No cloud-only SaaS deliverables — the census is CLI-first, the recorded exception being the first-party CLI of a research platform (`wandb-cli`). No unmaintained tools — the no-resurrection guard keeps dead tools out and documents supersession (netexec over crackmapexec; a maintained webshell-analysis pack over pre-2015 collections). No classic-network attack tooling — lateral-movement suites, online credential brute-forcing against live services, C2 frameworks, and social-engineering tooling are Kali-for-networks territory, not the four pillars.
+
+The census, at this manifest revision: 32 taxonomy rows — 31 categories plus 1 opt-in data-pack (`c-07-signal-sdr`; the planned `kailash-data.wordlists-mega` pack rides C-5 and has no manifest rows yet) — and 336 tool rows. 330 rows sit in the 31 primary categories and 6 in the SDR data-pack. By tool row: CLASSIC 146, ATTACK 58, OPS 87, DEFENCE 45. The specification's §3.6 census projected ~337 primary slots across the 31 categories; 330 rows are filled on the categories at this revision and the remaining planned slots stay open (C-10 at 7 of 8; O-2 at 11 of 13; O-6 at 10 of 12; D-7 at 4 of 5).
+
+This page is generated, not maintained by hand. `python3 tools/generate-tools-page.py` fetches `manifest/tools.yaml` and `manifest/categories.yaml` from kailash-os/kailash-packages and renders every number, table, and link on this page at generation time — categories, counts, licences, packaging statuses, and safety declarations always reflect the manifest the distribution itself builds from. One manifest drives six system views (the overlay's derivations, the category module tree, the desktop menu, the CLI, the mdBook docs, and this website); the page is the website view of that single truth. The regeneration command is recorded inside the generated file; nothing on this page is hand-synced, and manifest merges regenerate it.
+
+## What every value means
+
+Every field a tool row can carry, in manifest order. The *In* column is the live count of the 336 tool rows carrying the field at this revision; a smaller count means the field is optional and present only where it applies.
+
+| Field | In | Meaning |
+|---|---|---|
+| `id` | 336/336 | Unique slug — the row's key on every generated surface (desktop menu, CLI, category modules, docs pages, bespoke derivation directories). One tool row per tool; there is no second home for a tool in the manifest. |
+| `layer` | 336/336 | One of `CLASSIC` | `ATTACK` | `DEFENCE` | `OPS`. CLASSIC — traditional software-security assessment (Kali heritage). ATTACK — AI-offensive tooling, MITRE ATLAS-mapped. DEFENCE — AI defensive and assurance tooling. OPS — the platform layer the other layers target (MLOps, serving, SDKs, agent operability). Earlier plan revisions named the platform layer BUILD; taxonomy v3 renames it OPS (os#121, kp#9). All four ride a CORE substrate that hosts no tool categories. |
+| `category` | 336/336 | Primary category id from `categories.yaml` (e.g. `c-01-information-gathering`) — exactly one per row. This is the one-tool-one-primary-category invariant: every tool lands in one category, and the 31 category sections on this page follow this field. |
+| `secondary_categories` | 23/336 | Optional cross-references to other census slugs where dual-use is real — never a second primary. Surfaced as the *also* line inside the per-category tables. |
+| `name` | 336/336 | Human name; the menu and docs surface. Equals `id` on all rows but one (`evaluate` ↦ `huggingface-evaluate`). |
+| `description` | 336/336 | One-line what-it-does, hand-written in the manifest; truncated for the tables on this page. |
+| `source` | 320/336 | Pinned upstream coordinates, always as a map: `vcs_owner` + `repo` + `vcs_url`. Research-grade tools pin to commit revisions — nvfetcher records a commit-exact pin (R7), committed under `_sources/`. Native rows carry the upstream coordinates nixpkgs builds from. Absent on 16 rows without a declared upstream VCS URL (bundled applications, shell-tool pack rows, data rows) — the tool name appears unlinked in the tables. |
+| `license` | 336/336 | SPDX identifier (e.g. `GPL-2.0-only`, `MIT`, `Apache-2.0`). |
+| `packaging` | 336/336 | How the tool is packaged: `status` (vocabulary below) plus `derivation` on bespoke rows only (122 of 336 rows) — the overlay path `pkgs/<tool>/default.nix`. |
+| `safety` | 336/336 | How the tool may be used: `level` (vocabulary below) plus `target-required` (bool) on rows that are inert without a declared target. ATTACK-layer rows declare their level and are double-gated on the OS side (host opt-in + shell opt-in). |
+| `nixos_menu` | 336/336 | The desktop menu surface, always as `{icon, exec, category}`: the icon asset (e.g. `nmap.svg`), the launched command, and the menu category (the tool's primary category id). 336/336 rows carry all three fields. |
+| `docs` | 336/336 | mdBook documentation path, `layers/<category-slug>/<tool-id>.md` (e.g. `layers/c-01/nmap.md`) — the generated docs surface the CLI links to. |
+| `tags` | 336/336 | Free-form lowercase list. Two conventions matter: layer/shape markers (`classic`, `attack`, `defence`, `ops`, `framework`, `scanner`, `agentic`, `mcp`, `library`, `serving`, `kubernetes`, `gpu`, `first-party`, `pinned-reference`, …) and the update-automation cadence classes (below). |
+| `atlas_tactics` | 58/336 | At least one MITRE ATLAS tactic id (`AML.T…`) from the 2026.05 16-tactic matrix — ATTACK-layer rows only. ATTACK *category* rows carry their category-level tactic sets in `categories.yaml`; the in-repo manifest gate validates both sets. |
+| `owasp_llm` | 58/336 | Dual-epoch OWASP LLM Top 10 map on ATTACK-layer rows: `{2026: [LLMxx…], v2: [LLMxx…]}` — both epochs (`2026`, the 2026 list; `v2`, the 2025 v2 list) recorded per row. The same class number names different classes per epoch (§2.4), so the epochs are recorded separately and never mixed. ATTACK *category* rows carry the same dual-epoch map in `categories.yaml`. |
+
+### `packaging.status`
+
+| Status | Count | Meaning |
+|---|---|---|
+| `native` | 336 | Built from nixpkgs' existing package set — no overlay-side packaging work; the manifest row records the upstream coordinates nixpkgs builds from. |
+| `stale` | 7 | nixpkgs-native, with a recorded caveat: the packaged version currently trails the tool's current upstream release. The lag is recorded (and tracked through the update cadence), not forked. |
+| `bespoke` | 122 | Packaged in the kailash-packages overlay itself: nvfetcher-pinned commit-exact, a declared derivation path `pkgs/<tool>/default.nix`, `_sources/` committed. |
+| `module` | 16 | Delivered as a bundled module or component (service-style or library-shape) rather than a single menu executable; the pinned upstream source still drives the component. |
+| `data` | 29 | Packaged data artefact — wordlists, corpora, samples, pack seeds — rather than an executable surface; typically an opt-in data-pack row. |
+
+### `safety.level`
+
+| Level | Count | Meaning |
+|---|---|---|
+| `safe` | 290 | No aiming required — the tool works on artefacts, local models, or one's own systems: analysis, evaluation, forensics, defensive tooling. |
+| `requires-target` | 20 | Must be pointed at a system under test — use it only inside an authorised engagement (written authorisation, one's own systems). |
+| `exp` | 26 | Experimental research code — upstream lab releases and reference implementations: unpolished interfaces, no stability promise between releases. |
+
+`target-required` (12 of 336 rows, all ATTACK) marks tools that are inert without a target — they key the OS-side double gate (host opt-in + shell opt-in) described above. The table rendering adds a `· target-required` marker to the Safety column for these rows.
+
+### Tag update classes
+
+The `update:*` tag on a row is the update-automation cadence class — how aggressively the tool's pin follows upstream. Live distribution at this revision:
+
+| Tag | Rows |
+|---|---|
+| `update:slow` | 199 — The bulk cadence — tools whose value lies in steady availability, not in tracking every upstream commit. |
+| `update:steady` | 13 — Tighter than the bulk cadence — tracked along, not pinned to releases only. |
+| `update:weekly` | 5 — Weekly follow — typical for fast-moving attack tooling where upstream fixes matter quickly. |
+| `update:fast` | 6 — Tightest follow — pinned-reference research tools kept close to upstream head. |
+
+## C-1 · Information Gathering (`c-01-information-gathering`, CLASSIC, 38 tools)
+
+**Purpose:** Classic recon/OSINT lead-in for AI engagements — the AI-surface on-ramp.
+
+*Coverage:* High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [nmap](https://github.com/nmap/nmap) | GPL-2.0-only | `native` | `safe` | Network scanner and security mapper — host/port discovery and service enumeration. |
+| [masscan](https://github.com/robertdavidgraham/masscan) | AGPL-3.0-only | `native` | `safe` | Mass IP port scanner — the whole internet in minutes. |
+| [rustscan](https://github.com/bee-san/RustScan) | GPL-3.0-only | `native` | `safe` | Fast port scanner that pipes results into Nmap. |
+| [zenmap](https://github.com/nmap/nmap) | GPL-2.0-only | `native` | `safe` | Official Nmap Security Scanner GUI. |
+| [the-harvester](https://github.com/laramies/theharvester) | GPL-2.0-only | `native` | `safe` | Gathers emails, subdomains and names from public sources. |
+| [amass](https://github.com/owasp-amass/Amass) | Apache-2.0 | `native` | `safe` | In-depth DNS enumeration and network mapping (OWASP Amass). |
+| [recon-ng](https://github.com/lanmaster53/recon-ng) | GPL-3.0-only | `native` | `safe` | Full-featured reconnaissance framework with a web-style module environment. |
+| [sublist3r](https://github.com/aboul3la/Sublist3r) | GPL-2.0-only | `bespoke` · `pkgs/sublist3r/default.nix` | `safe` | Subdomain enumeration using public search engines and services. |
+| **maltego-community** | LicenseRef-Proprietary | `native` | `safe` | OSINT graph platform — community edition, unfree licence. |
+| [dmitry](https://github.com/jaygreig86/dmitry) | GPL-2.0-or-later | `native` | `safe` | Deepmagic information-gathering tool — whois, subdomains, emails. |
+| [fierce](https://github.com/mschwager/fierce) | GPL-3.0-or-later | `native` | `safe` | DNS reconnaissance for locating non-contiguous IP space. |
+| [dnsrecon](https://github.com/darkoperator/dnsrecon) | GPL-2.0-only | `bespoke` · `pkgs/dnsrecon/default.nix` | `safe` | DNS enumeration script — zone transfers, records, reverse lookups (overlay pin). |
+| [dnsenum](https://github.com/SparrowOchon/dnsenum2) | GPL-2.0-or-later | `native` | `safe` | Enumerates DNS information including subdomains. |
+| [dnsmap](https://github.com/resurrecting-open-source-projects/dnsmap) | GPL-3.0-only | `native` | `safe` | Scans for subdomains using brute-force techniques. |
+| [massdns](https://github.com/blechschmidt/massdns) | GPL-3.0-only | `native` | `safe` | Resolves large amounts of domain names. |
+| [assetfinder](https://github.com/tomnomnom/assetfinder) | MIT | `native` | `safe` | Finds domains and subdomains related to a given domain. |
+| [findomain](https://github.com/findomain/findomain) | GPL-3.0-or-later | `stale` | `safe` | Fastest cross-platform subdomain enumerator. |
+| [gobuster](https://github.com/OJ/gobuster) | Apache-2.0 | `native` | `safe` | Brute-forces URIs, DNS subdomains, virtual hosts and open ports. |
+| **dirb** | GPL-2.0-only | `native` | `safe` | Web content scanner. |
+| [dirsearch](https://github.com/maurosoria/dirsearch) | GPL-2.0-only | `native` | `safe` | Command-line web-path brute-forcer for directories and files. |
+| [feroxbuster](https://github.com/epi052/feroxbuster) | MIT | `native` | `safe` | Recursive content discovery tool (Rust). |
+| [ffuf](https://github.com/ffuf/ffuf) | MIT | `native` | `safe` | Fast web fuzzer written in Go. |
+| [wfuzz](https://github.com/xmendez/wfuzz) | GPL-2.0-only | `native` | `safe` | Web content fuzzer for web application assessment. |
+| [whatweb](https://github.com/urbanadventurer/whatweb) | GPL-2.0-only | `native` | `safe` | Next-generation web scanner — technology fingerprinting. |
+| [wafw00f](https://github.com/EnableSecurity/wafw00f) | BSD-3-Clause | `native` | `safe` | Identifies and fingerprints web application firewalls. |
+| [arjun](https://github.com/s0md3v/Arjun) | GPL-3.0-only | `native` | `safe` | HTTP parameter discovery suite. |
+| [uro](https://github.com/s0md3v/uro) | Apache-2.0 | `native` | `safe` | Declutters URL lists for crawling and pentesting. |
+| [photon](https://github.com/s0md3v/Photon) | GPL-3.0-only | `native` | `safe` | Lightning-fast web crawler extracting URLs and OSINT intel. |
+| [sherlock](https://github.com/sherlock-project/sherlock) | MIT | `native` | `safe` | Hunts down social-media accounts by username across sites. |
+| [spiderfoot](https://github.com/smicallef/spiderfoot) | MIT | `bespoke` · `pkgs/spiderfoot/default.nix` | `safe` | OSINT automation platform — collects intel about a target from public sources. |
+| [httpx](https://github.com/projectdiscovery/httpx) | MIT | `stale` | `safe` | Fast and multi-purpose HTTP toolkit. |
+| [gospider](https://github.com/jaeles-project/gospider) | MIT | `native` | `safe` | Fast web spider written in Go. |
+| [hakrawler](https://github.com/hakluke/hakrawler) | GPL-3.0-only | `native` | `safe` | Web crawler for endpoint and asset discovery. |
+| [arp-scan](https://github.com/royhills/arp-scan) | GPL-3.0-only | `native` | `safe` | ARP scanning and fingerprinting tool (ethernet, not RF). |
+| [netdiscover](https://github.com/netdiscover-scanner/netdiscover) | GPL-3.0-or-later | `native` | `safe` | Network address discovery via ARP — kept per the §3.2 ethernet rule. |
+| [katana](https://github.com/projectdiscovery/katana) | MIT | `stale` | `safe` | Next-generation crawling and spidering framework. |
+| [subfinder](https://github.com/projectdiscovery/subfinder) | MIT | `bespoke` · `pkgs/subfinder/default.nix` | `safe` | Subdomain discovery tool — overlay pin (pkgs/subfinder, KA-02.3). |
+| [puredns](https://github.com/d3mondev/puredns) | GPL-3.0-only | `stale` | `safe` | Domain resolver and subdomain brute-forcing tool. |
+
+## C-2 · Vulnerability Analysis (`c-02-vulnerability-analysis`, CLASSIC, 7 tools)
+
+**Purpose:** Local vulnerability scanning of software artefacts and hosts.
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [nikto](https://github.com/sullo/nikto) | GPL-2.0-or-later | `native` | `safe` | Web server scanner performing tests for dangerous files and misconfigurations. |
+| [lynis](https://github.com/CISOfy/lynis) | GPL-3.0-only | `native` | `safe` | Security auditing tool for Linux, macOS and UNIX systems. |
+| [wapiti](https://github.com/wapiti-scanner/wapiti) | GPL-2.0-only | `native` | `safe` | Web application vulnerability scanner. |
+| **legion** | GPL-3.0-only | `bespoke` · `pkgs/legion/default.nix` | `safe` | Semi-automated network pentesting framework with a GUI. |
+| **searchsploit** | MIT | `native` | `safe` | Exploit Database search CLI (ships with the exploitdb archive). |
+| [nuclei](https://github.com/projectdiscovery/nuclei) | MIT | `stale` | `safe` | Configurable targeted vulnerability scanner — overlay-currency class. |
+| [gvm](https://github.com/greenbone/gvm-libs) | AGPL-3.0-only | `module` | `safe` | Greenbone Vulnerability Management — ships as services.kailash.gvm, not loose tools. |
+
+## C-3 · Web Application Assessment (`c-03-web-application-assessment`, CLASSIC, 10 tools)
+
+**Purpose:** Web/API proxy-based assessment and scanning.
+
+*Coverage:* Medium-High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| **burpsuite** | LicenseRef-Proprietary | `native` | `safe` | Integrated platform for web security testing — free edition, pinned (KA-07.1). |
+| [zaproxy](https://github.com/zaproxy/zaproxy)<br>*also:* `c-10-runtime-appsec-ai` | Apache-2.0 | `native` | `safe` | OWASP ZAP — web app penetration-testing proxy. |
+| **caido** | LicenseRef-Proprietary | `native` | `safe` | Lightweight web security auditing toolkit (free tier), pinned (KA-07.1). |
+| [graphw00f](https://github.com/dolevf/graphw00f) | BSD-3-Clause | `native` | `safe` | GraphQL server engine fingerprinting utility. |
+| [clairvoyance](https://github.com/nikitastupin/clairvoyance) | Apache-2.0 | `native` | `safe` | Obtains GraphQL API schemas from introspection-disabled endpoints. |
+| [inql](https://github.com/doyensec/inql)<br>*also:* `c-04-database-assessment` | Apache-2.0 | `bespoke` · `pkgs/inql/default.nix` | `safe` | Security testing tool for GraphQL — query/schema analysis. |
+| [kiterunner](https://github.com/assetnote/kiterunner) | AGPL-3.0-only | `native` | `safe` | Contextual content discovery tool for API routes. |
+| [gopherus](https://github.com/tarlogicsecurity/gopherus) | GPL-3.0-only | `bespoke` · `pkgs/gopherus/default.nix` | `safe` | Generates serialized payloads for SSRF/gopher attacks on internal services. |
+| [commix](https://github.com/commixproject/commix)<br>*also:* `c-08-exploitation-post-exploitation` | GPL-3.0-or-later | `native` | `safe` | Automated all-in-one OS command-injection exploitation tool. |
+| [sstimap](https://github.com/vladko312/SSTImap) | GPL-3.0-only | `bespoke` · `pkgs/sstimap/default.nix` | `safe` | SSTI detection and exploitation assistant (Server-Side Template Injection). |
+
+## C-4 · Database Assessment (`c-04-database-assessment`, CLASSIC, 7 tools)
+
+**Purpose:** Database front-end assessment tooling.
+
+*Coverage:* High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [sqlmap](https://github.com/sqlmapproject/sqlmap)<br>*also:* `c-03-web-application-assessment` | GPL-2.0-or-later | `native` | `safe` | Automatic SQL injection and database takeover tool. |
+| [mssql-cli](https://github.com/dbcli/mssql-cli) | BSD-3-Clause | `bespoke` · `pkgs/mssql-cli/default.nix` | `safe` | Command-line interface for SQL Server with autocompletion. |
+| [psql](https://github.com/postgres/postgres) | PostgreSQL | `native` | `safe` | Interactive terminal for PostgreSQL — front-end enumeration support. |
+| [redis-cli](https://github.com/redis/redis) | MIT | `native` | `safe` | Redis command-line client — front-end enumeration support. |
+| [mongosh](https://github.com/mongodb-js/mongosh) | Apache-2.0 | `native` | `safe` | MongoDB Shell — front-end enumeration support. |
+| [sqlitebrowser](https://github.com/sqlitebrowser/sqlitebrowser) | GPL-3.0-only | `native` | `safe` | DB Browser for SQLite — artefact inspection front-end. |
+| [mycli](https://github.com/dbcli/mycli) | BSD-3-Clause | `native` | `safe` | Command-line interface for MySQL with autocompletion. |
+
+## C-5 · Password &amp; Offline-Credential Attacks (`c-05-password-offline-credential`, CLASSIC, 15 tools)
+
+**Purpose:** Offline credential attacks (hashes, dumps, artefacts).
+
+*Coverage:* High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [hashcat](https://github.com/NixOS/nixpkgs) | MIT | `native` | `safe` | Fast password cracker with GPU support and a rule-based engine. |
+| [john](https://github.com/openwall/john) | GPL-2.0-or-later | `native` | `safe` | John the Ripper password cracker (Jumbo build). |
+| [johnny](https://github.com/openwall/johnny) | BSD-2-Clause | `native` | `safe` | Open-source GUI frontend for John the Ripper. |
+| **ophcrack** | GPL-2.0-or-later | `native` | `safe` | Windows password cracker based on rainbow tables. |
+| **crunch** | GPL-2.0-only | `native` | `safe` | Wordlist generator. |
+| [cewl](https://github.com/digininja/CeWL) | GPL-3.0-or-later | `native` | `safe` | Custom wordlist generator that spiders a target URL. |
+| [maskgen](https://github.com/iphelix/pack) | BSD-3-Clause | `bespoke` · `pkgs/maskgen/default.nix` | `safe` | Generates optimized hashcat masks from password lists (PACK kit). |
+| [policygen](https://github.com/iphelix/pack) | BSD-3-Clause | `bespoke` · `pkgs/policygen/default.nix` | `safe` | Generates hashcat mask policies from password-policy samples (PACK kit). |
+| [statsgen](https://github.com/iphelix/pack) | BSD-3-Clause | `bespoke` · `pkgs/statsgen/default.nix` | `safe` | Password-list statistics generator for mask analysis (PACK kit). |
+| [hashid](https://github.com/psypanda/hashID) | GPL-3.0-or-later | `native` | `safe` | Identifies hash types from their format. |
+| [hash-identifier](https://github.com/blackploit/hash-identifier) | GPL-3.0-or-later | `native` | `safe` | Identifies the hash algorithm used to encrypt data. |
+| [bopscrk](https://github.com/r3nt0n/bopscrk) | GPL-3.0-only | `bespoke` · `pkgs/bopscrk/default.nix` | `safe` | Smart wordlist generator that combines target-related words with transformations. |
+| [rsmangler](https://github.com/digininja/RSMangler) | CC-BY-SA-2.0 | `native` | `safe` | Performs various manipulations on wordlists (mangling). |
+| [twofi](https://github.com/digininja/twofi) | CC-BY-SA-2.0 | `bespoke` · `pkgs/twofi/default.nix` | `safe` | Twofi — words of interest from Twitter for password cracking lists. |
+| [seclists](https://github.com/danielmiessler/SecLists) | MIT | `data` | `safe` | Collection of security wordlists (passwords, usernames, URLs) — the opt-in wordlist pack seed row for KA-07.2. |
+
+## C-6 · Reverse Engineering (software artefacts) (`c-06-reverse-engineering`, CLASSIC, 26 tools)
+
+**Purpose:** Binary/app artefact RE — software only.
+
+*Coverage:* Very High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [ghidra](https://github.com/NationalSecurityAgency/ghidra) | Apache-2.0 | `native` | `safe` | Software reverse-engineering suite of tools (NSA). |
+| [radare2](https://github.com/radareorg/radare2) | LGPL-3.0-only | `native` | `safe` | UNIX-like reverse-engineering framework and command-line toolset. |
+| [rizin](https://github.com/rizinorg/rizin) | GPL-3.0-or-later | `native` | `safe` | UNIX-like reverse-engineering framework (radare2 fork). |
+| [cutter](https://github.com/rizinorg/cutter) | GPL-3.0-only | `native` | `safe` | Free and open-source reverse-engineering platform powered by rizin. |
+| [iaito](https://github.com/radareorg/iaito) | GPL-3.0-only | `native` | `safe` | Official radare2 GUI. |
+| **gdb** | GPL-3.0-or-later | `native` | `safe` | GNU Project debugger. |
+| [gef](https://github.com/hugsy/gef) | MIT | `native` | `safe` | GDB Enhanced Features — exploit-development plugin for GDB. |
+| [pwndbg](https://github.com/pwndbg/pwndbg) | MIT | `native` | `safe` | Exploit-development plugin for GDB with modern UX. |
+| [peda](https://github.com/longld/peda) | LicenseRef-Unknown | `bespoke` · `pkgs/peda/default.nix` | `safe` | Python Exploit Development Assistance for GDB (upstream has no SPDX file). |
+| [capstone](https://github.com/capstone-engine/capstone) | BSD-3-Clause | `native` | `safe` | Lightweight multi-platform CPU disassembly framework. |
+| [cstool](https://github.com/capstone-engine/capstone) | BSD-3-Clause | `native` | `safe` | Capstone's interactive disassembly CLI. |
+| [checksec](https://github.com/slimm609/checksec) | BSD-3-Clause | `native` | `safe` | Checks security properties of executables (RELRO/canary/NX/PIE). |
+| [jadx](https://github.com/skylot/jadx) | Apache-2.0 | `native` | `safe` | Dex to Java decompiler. |
+| [bytecode-viewer](https://github.com/Konloch/bytecode-viewer) | GPL-3.0-only | `native` | `safe` | Java/Android bytecode viewer, decompiler and editor. |
+| [apktool](https://github.com/iBotPeaches/Apktool) | Apache-2.0 | `native` | `safe` | Reverse-engineers Android APK files (decode/rebuild). |
+| [dex2jar](https://github.com/pxb1988/dex2jar) | Apache-2.0 | `native` | `safe` | Converts Android .dex files to Java .class (jar). |
+| [javasnoop](https://github.com/CodeMason/JavaSnoop) | GPL-3.0-only | `bespoke` · `pkgs/javasnoop/default.nix` | `safe` | Intercepts methods and alters data in Java applications at runtime. |
+| [jd-gui](https://github.com/java-decompiler/jd-gui) | GPL-3.0-only | `bespoke` · `pkgs/jd-gui/default.nix` | `safe` | Java decompiler with a standalone graphical UI. |
+| [smali](https://github.com/JesusFreke/smali) | LicenseRef-Unknown | `native` | `safe` | Assembler/disassembler for the Android dex format (upstream carries no SPDX licence file; AOSP mirror maps Apache-2.0). |
+| [unicorn](https://github.com/unicorn-engine/unicorn) | GPL-2.0-only | `native` | `safe` | Lightweight multi-architecture CPU emulator framework. |
+| [angr](https://github.com/angr/angr) | BSD-2-Clause | `native` | `safe` | Binary analysis framework — symbolic execution and emulation. |
+| [qiling](https://github.com/qilingframework/qiling) | GPL-2.0-only | `native` | `safe` | Cross-platform emulation framework built on Unicorn. |
+| [unipacker](https://github.com/unipacker/unipacker) | GPL-2.0-only | `bespoke` · `pkgs/unipacker/default.nix` | `safe` | Automatic and platform-independent unpacker for Windows binaries. |
+| [pyinstaller-extractor](https://github.com/extremecoders-re/pyinstxtractor) | GPL-3.0-or-later | `bespoke` · `pkgs/pyinstaller-extractor/default.nix` | `safe` | Extracts packed executables from PyInstaller bundles. |
+| [edb-debugger](https://github.com/eteran/edb-debugger) | GPL-2.0-or-later | `native` | `safe` | Cross-platform AArch32/x86/x86-64 debugger. |
+| [binwalk](https://github.com/ReFirmLabs/binwalk) | MIT | `native` | `safe` | Firmware-image analysis — signature scanning and extraction. |
+
+## C-7 · Signal &amp; SDR Processing (`c-07-signal-sdr`, CLASSIC data-pack, 6 tools)
+
+**Purpose:** Software-only signal processing pack for ML signal work (audio/waveform corpora) and the B-6 voice-clone research surface.
+
+*Coverage:* Medium
+
+**Opt-in data-pack.** This category ships as the opt-in data-pack `kailash-data.sdr-tools` — its tools are absent from default profiles and ISOs by design; the module stub exists but is switched off on every default surface. Manifest note: the sole radio-adjacent concession (§4.1); category of record but opt-in data-pack — never on default profiles/ISOs (D7). Module stub exists but off everywhere by default; decision + revisit condition recorded in the module comment (KA-07.2).
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [gnuradio](https://github.com/gnuradio/gnuradio) | GPL-3.0-only | `data` | `safe` | GNU Radio — software-defined radio DSP framework (software-only). |
+| [gqrx](https://github.com/gqrx-sdr/gqrx) | GPL-3.0-or-later | `data` | `safe` | Software-defined radio receiver built on GNU Radio. |
+| **hackrf-tools** | GPL-2.0-or-later | `data` | `safe` | Command-line utilities for HackRF hardware SDR platforms. |
+| [sox](https://github.com/sox-ng/sox) | GPL-2.0-or-later | `data` | `safe` | Sound eXchange — audio processing and format conversion. |
+| [librosa](https://github.com/librosa/librosa) | ISC | `data` | `safe` | Audio and music-signal analysis library (Python). |
+| [pysox](https://github.com/rabitt/pysox) | BSD-3-Clause | `bespoke` · `pkgs/pysox/default.nix` | `safe` | Python bindings around SoX for audio DSP pipelines. |
+
+## C-8 · Exploitation &amp; Post-Exploitation (software) (`c-08-exploitation-post-exploitation`, CLASSIC, 9 tools)
+
+**Purpose:** Software-target exploitation, webshells, privesc/post-exploitation.
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| **metasploit-framework** | BSD-3-Clause | `native` | `safe` | Exploit framework — pinned upstream (KA-07.3); web/API modules only. |
+| [msfvenom](https://github.com/rapid7/metasploit-framework) | BSD-3-Clause | `native` | `safe` | Payload generation and encoding CLI from the Metasploit suite. |
+| **beef-xss** | GPL-2.0-only | `native` | `safe` | Browser Exploitation Framework — XSS hooking and browser assessment. |
+| [weevely](https://github.com/epinna/weevely3) | GPL-3.0-or-later | `native` | `safe` | Weaponized web shell with a telnet-like console. |
+| [laudanum](https://github.com/junk13/laudanum) | GPL-2.0-or-later | `native` | `safe` | Collection of ready-to-use injectable web-shell files. |
+| **webshell-analysis-pack** | LicenseRef-Unknown | `data` | `safe` | Reference pack of known webshell artefacts for detection and analysis. |
+| [peass-ng](https://github.com/peass-ng/PEASS-ng) | GPL-2.0-or-later | `native` | `safe` | Privilege-escalation awesome scripts suite (linpeas/winpeas). |
+| [unix-privesc-check](https://github.com/NixOS/nixpkgs) | GPL-2.0-or-later | `native` | `safe` | Finds misconfigurations allowing local privilege escalation. |
+| [pspy](https://github.com/dominicbreuker/pspy)<br>*also:* `c-09-forensics-ir-reporting` | GPL-3.0-only | `native` | `safe` | Monitors Linux processes without root permissions. |
+
+## C-9 · Forensics, IR &amp; Reporting (`c-09-forensics-ir-reporting`, CLASSIC, 21 tools)
+
+**Purpose:** Artefact forensics, incident response, engagement reporting.
+
+*Coverage:* Medium-High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [autopsy](https://github.com/sleuthkit/autopsy) | Apache-2.0 | `native` | `safe` | Digital forensics platform and GUI for The Sleuth Kit. |
+| [sleuthkit](https://github.com/sleuthkit/sleuthkit) | CPL-1.0 | `native` | `safe` | Library and CLI collection for filesystem forensics analysis. |
+| [volatility3](https://github.com/volatilityfoundation/volatility3) | VSL-1.0 | `native` | `safe` | Memory forensics framework (Volatility 3). |
+| [hashdeep](https://github.com/jessek/hashdeep) | GPL-2.0-only | `native` | `safe` | Hashing and audit utility with fuzzy matching (md5deep family). |
+| **chkrootkit** | GPL-2.0-or-later | `bespoke` · `pkgs/chkrootkit/default.nix` | `safe` | Locally checks for signs of a rootkit. |
+| [rkhunter](https://github.com/Rootkit-Hunter/rkhunter) | GPL-2.0-or-later | `bespoke` · `pkgs/rkhunter/default.nix` | `safe` | Rootkit Hunter — scans for rootkits, backdoors and local exploits. |
+| **dc3dd** | GPL-3.0-or-later | `native` | `safe` | Forensic disk-imaging tool (DoD Cyber Crime Center fork of dd). |
+| [ewfacquire](https://github.com/libyal/libewf) | LGPL-3.0-only | `native` | `safe` | Acquires evidence in the Expert Witness Compression Format (libewf). |
+| **guymager** | GPL-2.0-only | `native` | `safe` | Fast forensic imager with a graphical interface. |
+| [regripper](https://github.com/keydet89/RegRipper3.0) | MIT | `native` | `safe` | Windows registry forensics — extracting artefacts from hives. |
+| [testdisk](https://github.com/cgsecurity/testdisk) | GPL-2.0-or-later | `native` | `safe` | Data-recovery tool for lost partitions and filesystems. |
+| [photorec](https://github.com/cgsecurity/testdisk) | GPL-2.0-or-later | `native` | `safe` | File-carving recovery tool shipped with TestDisk. |
+| [bulk_extractor](https://github.com/simsong/bulk_extractor) | MIT | `native` | `safe` | Extracts features (emails, URLs, cards) from disk images without parsing the filesystem. |
+| [chainsaw](https://github.com/WithSecureLabs/chainsaw) | GPL-3.0-only | `stale` | `safe` | Rapidly searches and hunts through Windows forensic artefacts (Sigma/YARA). |
+| [hayabusa](https://github.com/notarin/hayabusa) | AGPL-3.0-only | `stale` | `safe` | Windows event-log fast forensics timeline generator. |
+| [sigma-cli](https://github.com/SigmaHQ/sigma-cli) | LGPL-2.1-or-later | `native` | `safe` | Sigma rule conversion command-line interface. |
+| [sysmon-modular](https://github.com/olafhartong/sysmon-modular) | MIT | `data` | `safe` | A modular Sysmon configuration set for high-fidelity Windows logging. |
+| [plaso](https://github.com/log2timeline/plaso) | Apache-2.0 | `bespoke` · `pkgs/plaso/default.nix` | `safe` | log2timeline — super-timeline generation and analysis. |
+| [timesketch](https://github.com/google/timesketch) | Apache-2.0 | `module` | `safe` | Collaborative forensic timeline analysis — ships as a service module. |
+| [faraday](https://github.com/lightninglabs/faraday)<br>*also:* `o-06-documentation-reporting-authoring` | MIT | `module` | `safe` | Vulnerability-management and collaborative IR platform — service module. |
+| [pwndoc-ng](https://github.com/pwndoc-ng/pwndoc-ng)<br>*also:* `o-06-documentation-reporting-authoring` | MIT | `module` | `safe` | Collaborative pentest reporting platform — service module. |
+
+## C-10 · Runtime AppSec for AI Systems (`c-10-runtime-appsec-ai`, CLASSIC, 7 of 8 planned)
+
+**Purpose:** AppSec toolkit aimed at AI endpoints — the ASVS-scoped runtime surface (the layer AISVS scopes out).
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [mitmproxy](https://github.com/mitmproxy/mitmproxy) | MIT | `native` | `safe` | Man-in-the-middle HTTP(S) proxy with a Python API — AI endpoint inspection. |
+| [oauth-mcp-prober](https://github.com/kailash-os/oauth-mcp-prober) | LicenseRef-Unknown | `bespoke` · `pkgs/oauth-mcp-prober/default.nix` | `safe` | Probes OAuth flows behind AI-agent tool surfaces for broken auth patterns. |
+| [sdl3-stream-fuzzer](https://github.com/kailash-os/sdl3-stream-fuzzer) | LicenseRef-Unknown | `bespoke` · `pkgs/sdl3-stream-fuzzer/default.nix` | `safe` | Structure-aware stream fuzzer for media/SDK endpoints exposed by AI runtimes. |
+| [llm-fuzzer](https://github.com/kailash-os/llm-fuzzer)<br>*also:* `a-02-prompt-injection-jailbreaks` | LicenseRef-Unknown | `bespoke` · `pkgs/llm-fuzzer/default.nix` | `safe` | Fuzzes LLM-backed endpoints with adversarial input corpora. |
+| [vulnerable-llm-apps](https://github.com/kailash-os/vulnerable-llm-apps)<br>*also:* `a-02-prompt-injection-jailbreaks` | LicenseRef-Unknown | `data` | `safe` | Deliberately vulnerable LLM application lab for AppSec training and verification. |
+| [ais](https://github.com/gojis/ais) | LicenseRef-Unknown | `bespoke` · `pkgs/ais/default.nix` | `safe` | ai-scanner — AI-endpoint AppSec scanner (plan §3.2: AISVS-scoped runtime surface). |
+| [asvs-verification-toolkit](https://github.com/kailash-os/asvs-verification-toolkit)<br>*also:* `d-07-standards-verification` | Apache-2.0 | `data` | `safe` | ASVS verification data-pack — checklists driving the D-7 verifier. |
+
+## A-1 · AI Reconnaissance &amp; Target Discovery (`a-01-ai-recon`, ATTACK, 5 tools)
+
+**Purpose:** Discover the AI surfaces a target exposes — models, agents, org artefacts, leaked AI-provider credentials.
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [recon-ai](https://github.com/kailash-os/recon-ai) | LicenseRef-Unknown | `bespoke` · `pkgs/recon-ai/default.nix` | `requires-target` | AI-surface reconnaissance — discovers model endpoints, agentic surfaces and org-published AI artefacts on a target scope. |
+| [llm-recon](https://github.com/kailash-os/llm-recon) | LicenseRef-Unknown | `bespoke` · `pkgs/llm-recon/default.nix` | `requires-target` | LLM-focused reconnaissance — enumerates LLM API endpoints, model families and provider metadata from exposed surfaces. |
+| [trufflehog](https://github.com/trufflesecurity/trufflehog)<br>*also:* `c-08-exploitation-post-exploitation` | AGPL-3.0-only | `native` | `safe` | Secret scanner — hunts leaked AI-provider keys in repos and paths (A-1 AI-key hunting; C-8 classic secret scanning). |
+| [huggingface-org-scan](https://github.com/kailash-os/huggingface-org-scan) | LicenseRef-Unknown | `bespoke` · `pkgs/huggingface-org-scan/default.nix` | `safe` | Enumerates a target organization's Hugging Face presence — models, datasets, spaces and their freshness as attack surface. |
+| [colab-crawler](https://github.com/kailash-os/colab-crawler) | LicenseRef-Unknown | `bespoke` · `pkgs/colab-crawler/default.nix` | `requires-target` | Crawls shared compute notebooks for leaked credentials, mounted secrets and exposed model endpoints. |
+
+## A-2 · LLM Prompt Injection &amp; Jailbreaking (`a-02-prompt-injection-jailbreaks`, ATTACK, 8 tools)
+
+**Purpose:** Generation-stage prompt attacks — direct/indirect injection, jailbreaks, payload corpora.
+
+*Coverage:* Low-Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [garak](https://github.com/NVIDIA/garak) | Apache-2.0 | `bespoke` · `pkgs/garak/default.nix` | `requires-target` · target-required | LLM vulnerability scanner — probes for jailbreaks, prompt injection, data leakage and hallucination across model providers. |
+| [promptfoo](https://github.com/promptfoo/promptfoo)<br>*also:* `d-02-detection-monitoring-observability, d-03-assurance-evals-benchmarks` | MIT | `bespoke` · `pkgs/promptfoo/default.nix` | `requires-target` · target-required | promptfoo — LLM eval and red-team CLI: prompt/model/RAG evaluation, regression checks and injection probes. |
+| [pyrit](https://github.com/microsoft/PyRIT) | MIT | `bespoke` · `pkgs/pyrit/default.nix` | `requires-target` | PyRIT — Microsoft's Python Risk Identification Tool: automated adversarial-text pipelines for probing generative-AI endpoints. |
+| [inj3ct-llm](https://github.com/kailash-os/inj3ct-llm) | LicenseRef-Unknown | `bespoke` · `pkgs/inj3ct-llm/default.nix` | `requires-target` | Injection harness — curates and drives prompt-injection payloads against targeted LLM deployments. |
+| [llm-red-team-col](https://github.com/kailash-os/llm-red-team-col) | LicenseRef-Unknown | `data` | `safe` | Curated red-team prompt corpus — collected real-world attack prompts with sources, for injection and jailbreak testing. |
+| [jailbreak-payloads](https://github.com/elder-plinius/L1B3RT4S) | AGPL-3.0 | `data` | `safe` | Jailbreak payload pack — packages the L1B3RT-4S corpus (the plan's libertas-prompts twin; content use-restrictions beyond the repo licence). |
+| [libertas-prompts](https://github.com/elder-plinius/L1B3RT4S) | AGPL-3.0 | `data` | `safe` | L1B3RT-4S prompt data pack — vendor-organized jailbreak corpus (L1B3RT-4S) for jailbreak testing. |
+| [llm-jailbreak-bench](https://github.com/JailbreakBench/jailbreakbench) | MIT | `data` | `safe` | JailbreakBench harness + artifact pack — standardized jailbreak robustness evaluation corpora. |
+
+## A-3 · Agentic, MCP &amp; Tool-Use Attacks (`a-03-agentic-mcp-tool-use`, ATTACK, 9 tools)
+
+**Purpose:** Attack the agentic control plane — tool-use/MCP scanners, agent fuzzers, poisoned-tool probes.
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [mcp-scan](https://github.com/invariantlabs-ai/mcp-scan) | Apache-2.0 | `bespoke` · `pkgs/mcp-scan/default.nix` | `safe` | mcp-scan — Invariant's scanner: detects tool poisoning, prompt injection and tool-description drift in installed MCP servers. |
+| [mcp-guardian](https://github.com/eqtylab/mcp-guardian) | Apache-2.0 | `bespoke` · `pkgs/mcp-guardian/default.nix` | `safe` | MCP Guardian — proxy and guard layer for exercising MCP server controls (allow-lists, ratelimits) from the attacker side. |
+| [mcp-remote](https://github.com/geelen/mcp-remote) | MIT | `bespoke` · `pkgs/mcp-remote/default.nix` | `requires-target` | mcp-remote — stdio/HTTP bridge for reachability and man-in-the-middle tests of remote MCP transports. |
+| [mcp-unsafe-deser-probe](https://github.com/kailash-os/mcp-unsafe-deser-probe) | LicenseRef-Unknown | `bespoke` · `pkgs/mcp-unsafe-deser-probe/default.nix` | `exp` | Unsafe-deserialization probe — plants maliciously crafted tool payloads to test MCP/agent parser hardening (lab-gated). |
+| [langchain-vuln-hunter](https://github.com/kailash-os/langchain-vuln-hunter) | LicenseRef-Unknown | `bespoke` · `pkgs/langchain-vuln-hunter/default.nix` | `requires-target` | LangChain vulnerability hunter — drives CVE probes against langchain-based agent deployments. |
+| [llm-agent-fuzzer](https://github.com/kailash-os/llm-agent-fuzzer) | LicenseRef-Unknown | `bespoke` · `pkgs/llm-agent-fuzzer/default.nix` | `requires-target` | Agent fuzzer — mutation-guided goal chasing across agent tool-call loops; unsafe-path discovery. |
+| [mcpoison](https://github.com/pulkitb124/mcpoison) | LicenseRef-Unknown | `bespoke` · `pkgs/mcpoison/default.nix` | `exp` | MCPoison — public PoC demonstrating agent trickery via poisoned MCP tool definitions (lab-gated). |
+| [agent-dojo](https://github.com/ethz-spylab/agentdojo) | MIT | `bespoke` · `pkgs/agent-dojo/default.nix` | `safe` | AgentDojo — ETH's dynamic evaluation environment for prompt-injection attacks and defenses on LLM agents (upstream repo agentdojo). |
+| [poisoned-skill-pack](https://github.com/kailash-os/poisoned-skill-pack) | LicenseRef-Unknown | `data` | `exp` | Poisoned-skill lab pack — deliberately compromised agent skill/tool definitions for red-team drills (exp-gated). |
+
+## A-4 · Model Supply Chain &amp; Artefact Poisoning (`a-04-model-supply-chain`, ATTACK, 8 tools)
+
+**Purpose:** Attack the model/artefact supply chain — pickles/weights/registry scanners and artefact inspectors.
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [guarddog](https://github.com/DataDog/guarddog) | Apache-2.0 | `bespoke` · `pkgs/guarddog/default.nix` | `safe` | Guarddog — DataDog's scanner: identifies malicious/typosquatted PyPI and npm packages (malicious-code + secrets rules). |
+| [picklescan](https://github.com/mmaitre314/picklescan) | MIT | `bespoke` · `pkgs/picklescan/default.nix` | `safe` | Picklescan — static security scanner for pickle/PyTorch model files: flags dangerous globals and unsafe opcodes. |
+| [modelscan](https://github.com/protectai/modelscan) | Apache-2.0 | `native` | `safe` | Protect AI modelscan — serialized-model scanner covering pickle, torch, keras and other ML artefact formats. |
+| [gguf-template-inspector](https://github.com/kailash-os/gguf-template-inspector) | LicenseRef-Unknown | `bespoke` · `pkgs/gguf-template-inspector/default.nix` | `safe` | GGUF template inspector — surfaces embedded chat templates and metadata for injection vectors inside GGUF weights. |
+| [safetensors-checker](https://github.com/kailash-os/safetensors-checker) | LicenseRef-Unknown | `bespoke` · `pkgs/safetensors-checker/default.nix` | `safe` | SafeTensors checker — malformed-tensor and metadata anomaly checks on safetensors model files. |
+| [hf-repo-inspector](https://github.com/kailash-os/hf-repo-inspector) | LicenseRef-Unknown | `bespoke` · `pkgs/hf-repo-inspector/default.nix` | `safe` | HF repository inspector — artefact-level red-team review of Hugging Face repos: mixed formats, suspicious payloads, org signals. |
+| [namespace-reuse-check](https://github.com/kailash-os/namespace-reuse-check) | LicenseRef-Unknown | `bespoke` · `pkgs/namespace-reuse-check/default.nix` | `safe` | Namespace-reuse checker — detects model/package name squatting and abandoned-namespace re-registration risk. |
+| [torch-load-poc](https://github.com/kailash-os/torch-load-poc) | LicenseRef-Unknown | `bespoke` · `pkgs/torch-load-poc/default.nix` | `exp` | torch.load PoC — demonstrates arbitrary-code execution via weights_only=False deserialization paths (lab-gated). |
+
+## A-5 · Model Extraction, Inversion &amp; MIA (`a-05-model-extraction-inversion`, ATTACK, 8 tools)
+
+**Purpose:** Model theft and privacy attacks — extraction, inversion, membership inference.
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [art](https://github.com/Trusted-AI/adversarial-robustness-toolbox) | MIT | `bespoke` · `pkgs/art/default.nix` | `requires-target` · target-required | Adversarial Robustness Toolbox — IBM's ML security library: evasion, poisoning, extraction and inference attacks, defences and metrics. |
+| [counterfit](https://github.com/Azure/counterfit) | MIT | `bespoke` · `pkgs/counterfit/default.nix` | `requires-target` · target-required | Counterfit — CLI automation layer for assessing the security of ML models (pinned reference posture; upstream dormant since 2025-07). |
+| [foolbox](https://github.com/bethgelab/foolbox) | MIT | `bespoke` · `pkgs/foolbox/default.nix` | `requires-target` · target-required | Foolbox — python toolbox for adversarial attacks on ML models (week-after: derivation pending). |
+| [cleverhans](https://github.com/cleverhans-lab/cleverhans) | MIT | `bespoke` · `pkgs/cleverhans/default.nix` | `requires-target` · target-required | CleverHans — adversarial-examples library for benchmarking ML robustness (week-after: derivation pending). |
+| [model-extraction-attack](https://github.com/kailash-os/model-extraction-attack) | LicenseRef-Unknown | `bespoke` · `pkgs/model-extraction-attack/default.nix` | `requires-target` · target-required | Model-extraction harness — drives query-efficient extraction campaigns against hosted model APIs (Steal-ML class). |
+| [knockoffnets](https://github.com/tribhuvanesh/knockoffnets) | LGPL-3.0 | `bespoke` · `pkgs/knockoffnets/default.nix` | `requires-target` · target-required | Knockoff Nets — black-box model functionality stealing via transfer-set queries on a substitute data budget. |
+| [tf-privacy](https://github.com/tensorflow/privacy) | Apache-2.0 | `bespoke` · `pkgs/tf-privacy/default.nix` | `requires-target` · target-required | TensorFlow Privacy — DP-SGD training plus membership-inference/capture attack utilities (the MIA reference implementations). |
+| [privacy-meter](https://github.com/privacytrustlab/ml_privacy_meter) | MIT | `bespoke` · `pkgs/privacy-meter/default.nix` | `requires-target` · target-required | Privacy Meter — audits data privacy in statistical/ML models with membership-inference leakage metrics. |
+
+## A-6 · Multi-modal &amp; Physical-AI Attacks (`a-06-multimodal-physical-ai`, ATTACK, 5 tools)
+
+**Purpose:** Semantic attacks past the text box — image/voice/camera injection, adversarial visuals; no RF (§3.7).
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [vlm-image-injector](https://github.com/kailash-os/vlm-image-injector) | LicenseRef-Unknown | `bespoke` · `pkgs/vlm-image-injector/default.nix` | `requires-target` · target-required | VLM image injector — crafts image-channel payloads that steer vision-language model outputs (cross-modal prompt injection). |
+| [adversarial-patches-collection](https://github.com/kailash-os/adversarial-patches-collection) | LicenseRef-Unknown | `data` | `safe` | Adversarial-patch data pack — curated public patch corpora and generator recipes for visual-attack drills (aggregates e.g.… |
+| [adversarial-clothing](https://github.com/kailash-os/adversarial-clothing) | LicenseRef-Unknown | `bespoke` · `pkgs/adversarial-clothing/default.nix` | `exp` | Adversarial-clothing generator — printable physical-world attack patterns for person-detection/VLM pipelines (lab experiments). |
+| [audio-voice-clone-injector](https://github.com/kailash-os/audio-voice-clone-injector) | LicenseRef-Unknown | `bespoke` · `pkgs/audio-voice-clone-injector/default.nix` | `exp` | Audio voice-clone injector — voice-clone injection into voice pipelines and audio-LM prompt injection (pairs with C-7's DSP pack). |
+| [camera-adversarial-toolkit](https://github.com/kailash-os/camera-adversarial-toolkit) | LicenseRef-Unknown | `bespoke` · `pkgs/camera-adversarial-toolkit/default.nix` | `requires-target` · target-required | Camera adversarial toolkit — physical-channel attack evaluation against camera-fed AI systems (T0041 Physical Environment Access). |
+
+## A-7 · AI System Exploitation (`a-07-ai-system-exploitation`, ATTACK, 9 tools)
+
+**Purpose:** Exploit deployed AI platform services — inference servers, gateways, vector stores (§6.5 pairing thesis).
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [mlflow-bypass](https://github.com/kailash-os/mlflow-bypass) | LicenseRef-Unknown | `bespoke` · `pkgs/mlflow-bypass/default.nix` | `exp` | MLflow platform exploit — auth-bypass/RCE probes against MLflow tracking servers (pairs with the O-1 lab target). |
+| [triton-pwn](https://github.com/kailash-os/triton-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/triton-pwn/default.nix` | `exp` | Triton Inference Server exploit — unauthenticated API misuse and RCE probes (pairs with the O-2 docker-wrapper target). |
+| [torchserve-pwn](https://github.com/kailash-os/torchserve-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/torchserve-pwn/default.nix` | `exp` | TorchServe exploit — handler deserialization and management-API attack probes against TorchServe deployments. |
+| [ollama-pwn](https://github.com/kailash-os/ollama-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/ollama-pwn/default.nix` | `exp` | Ollama exploit — exposed-API and model-management attack probes against Ollama servers (0.0.0.0 default-bind class). |
+| [vllm-pwn](https://github.com/kailash-os/vllm-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/vllm-pwn/default.nix` | `exp` | vLLM exploit — inference-server API attack probes: deserialization, distributed-executor and auth surfaces. |
+| [kserve-exploit](https://github.com/kailash-os/kserve-exploit) | LicenseRef-Unknown | `bespoke` · `pkgs/kserve-exploit/default.nix` | `exp` | KServe exploit — serving-runtime and knative-surface attack probes against KServe model deployments. |
+| [shadow-ray](https://github.com/kailash-os/shadow-ray) | LicenseRef-Unknown | `bespoke` · `pkgs/shadow-ray/default.nix` | `exp` | ShadowRay exploit — the ATLAS case study CS0023 Ray-cluster takeover class: job-API RCE on unauthenticated Ray dashboards. |
+| [vector-db-ripper](https://github.com/kailash-os/vector-db-ripper) | LicenseRef-Unknown | `bespoke` · `pkgs/vector-db-ripper/default.nix` | `exp` | Vector-store ripper — unauthenticated dump/exfiltration probes against vector databases (chroma/qdrant/weaviate classes). |
+| [ai-gateway-bypass](https://github.com/kailash-os/ai-gateway-bypass) | LicenseRef-Unknown | `bespoke` · `pkgs/ai-gateway-bypass/default.nix` | `exp` | AI-gateway bypass — auth/quota/routing bypass probes against LLM gateways and proxies. |
+
+## A-8 · Data Poisoning &amp; Dataset Attacks (`a-08-data-poisoning`, ATTACK, 6 tools)
+
+**Purpose:** Upstream-of-model attack tooling — dataset poisoning, backdoored training data, split-view replay.
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [poison-dataset-builder](https://github.com/kailash-os/poison-dataset-builder) | LicenseRef-Unknown | `bespoke` · `pkgs/poison-dataset-builder/default.nix` | `exp` | Dataset-poisoning builder — crafts poisoned training corpora (trigger-embedded samples) for attack simulations (lab-gated). |
+| [trojai-toolkit](https://github.com/trojai/trojai) | Apache-2.0 | `bespoke` · `pkgs/trojai-toolkit/default.nix` | `safe` | TrojAI toolkit — NIST-rounded synthetic trojaned-dataset and trojaned-model generation for backdoor research. |
+| [trojan-lm-toolkit](https://github.com/kailash-os/trojan-lm-toolkit) | LicenseRef-Unknown | `bespoke` · `pkgs/trojan-lm-toolkit/default.nix` | `exp` | Trojan-LM toolkit — backdoor-embedding experiments against language-model training/fine-tuning corpora (lab-gated). |
+| [prompt-backdoor-tool](https://github.com/kailash-os/prompt-backdoor-tool) | LicenseRef-Unknown | `bespoke` · `pkgs/prompt-backdoor-tool/default.nix` | `exp` | Prompt-backdoor tool — trigger-insertion experiments in prompt/instruction corpora (the T0043.004 class at base technique). |
+| [data-exfil-via-poison](https://github.com/kailash-os/data-exfil-via-poison) | LicenseRef-Unknown | `bespoke` · `pkgs/data-exfil-via-poison/default.nix` | `exp` | Exfiltration-via-poisoning — model-behavior poisoning that leaks data at inference time (lab-gated). |
+| [split-view-replay](https://github.com/kailash-os/split-view-replay) | LicenseRef-Unknown | `bespoke` · `pkgs/split-view-replay/default.nix` | `safe` | Split-view replay — dataset split-integrity attacks: train/eval contamination and poisoning-via-replay drills. |
+
+## O-1 · MLOps &amp; ML Engineering Suite (`o-01-mlops-ml-engineering`, OPS, 18 tools)
+
+**Purpose:** ML lifecycle tooling — tracking, data versioning, pipelines, the tabular stack.
+
+*Coverage:* High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [mlflow](https://github.com/mlflow/mlflow) | Apache-2.0 | `module` | `safe` | MLflow — the pairing-thesis lab target: experiment tracking and model registry; ships as services.kailash.mlflow. |
+| [dvc](https://github.com/iterative/dvc) | Apache-2.0 | `native` | `safe` | Data Version Control — pipeline and dataset versioning for ML workspaces. |
+| [git-lfs](https://github.com/git-lfs/git-lfs) | MIT | `native` | `safe` | Git Large File Storage — versioning large artefacts (weights, datasets). |
+| [bentoml](https://github.com/bentoml/BentoML) | Apache-2.0 | `bespoke` · `pkgs/bentoml/default.nix` | `safe` | BentoML — model serving and inference-API packaging. |
+| [feast](https://github.com/feast-dev/feast) | Apache-2.0 | `bespoke` · `pkgs/feast/default.nix` | `safe` | Feast — the open-source feature store for AI/ML. |
+| [kedro](https://github.com/kedro-org/kedro) | Apache-2.0 | `bespoke` · `pkgs/kedro/default.nix` | `safe` | Kedro — production-ready data-science pipeline framework. |
+| [kedro-datasets](https://github.com/kedro-org/kedro-plugins) | Apache-2.0 | `bespoke` · `pkgs/kedro-datasets/default.nix` | `safe` | Kedro datasets — the kedro-plugins catalogue of dataset connectors. |
+| [clearml](https://github.com/AllegroAI/clearml) | Apache-2.0 | `module` | `safe` | ClearML — experiment tracking and orchestration; ships as a service module. |
+| [wandb-cli](https://github.com/wandb/wandb) | MIT | `native` | `safe` | Weights &amp; Biases CLI — experiment logging and sweeps client. |
+| [airflow](https://github.com/apache/airflow) | Apache-2.0 | `module` | `safe` | Apache Airflow — workflow orchestration; ships as a service module. |
+| [prefect](https://github.com/PrefectHQ/prefect) | Apache-2.0 | `module` | `safe` | Prefect — workflow orchestration; ships as a service module. |
+| [pandas](https://github.com/pandas-dev/pandas) | BSD-3-Clause | `native` | `safe` | pandas — DataFrame analysis toolkit (the scientific-Python core). |
+| [polars](https://github.com/pola-rs/polars) | MIT | `native` | `safe` | Polars — extremely fast DataFrame query engine written in Rust. |
+| [scikit-learn](https://github.com/scikit-learn/scikit-learn) | BSD-3-Clause | `native` | `safe` | scikit-learn — classical ML toolkit on numpy/scipy. |
+| [numpy](https://github.com/numpy/numpy) | BSD-3-Clause | `native` | `safe` | NumPy — the fundamental package for scientific computing. |
+| [scipy](https://github.com/scipy/scipy) | BSD-3-Clause | `native` | `safe` | SciPy — scientific computing library (optimization, signal, stats). |
+| [xgboost](https://github.com/dmlc/xgboost) | Apache-2.0 | `native` | `safe` | XGBoost — distributed gradient-boosted decision trees. |
+| [lightgbm](https://github.com/microsoft/LightGBM) | MIT | `native` | `safe` | LightGBM — fast gradient-boosting framework (GBDT, GBRT). |
+
+## O-2 · Compute &amp; Serving Infrastructure (`o-02-compute-serving-infrastructure`, OPS, 11 of 13 planned)
+
+**Purpose:** Model serving, orchestration and container runtimes — the deployed-AI platform the attack layers target.
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [vllm](https://github.com/vllm-project/vllm) | Apache-2.0 | `native` | `safe` | vLLM — high-throughput, memory-efficient LLM inference and serving engine (native at the pin; plan Appendix A listed bespoke). |
+| [tgi](https://github.com/huggingface/text-generation-inference) | Apache-2.0 | `bespoke` · `pkgs/tgi/default.nix` | `safe` | text-generation-inference (Hugging Face TGI) — LLM serving runtime. |
+| [torchserve](https://github.com/pytorch/serve) | Apache-2.0 | `bespoke` · `pkgs/torchserve/default.nix` | `safe` | TorchServe — PyTorch model serving. |
+| [triton-inference-server](https://github.com/triton-inference-server/server) | BSD-3-Clause | `module` | `safe` | NVIDIA Triton Inference Server — docker-wrapper module for optimized inferencing. |
+| [kserve](https://github.com/kserve/kserve) | Apache-2.0 | `bespoke` · `pkgs/kserve/default.nix` | `safe` | KServe — model serving on Kubernetes. |
+| [ray](https://github.com/ray-project/ray) | Apache-2.0 | `module` | `safe` | Ray — distributed AI compute engine; ships as a service module. |
+| [k3s](https://github.com/k3s-io/k3s) | Apache-2.0 | `native` | `safe` | k3s — lightweight Kubernetes. |
+| [minikube](https://github.com/kubernetes/minikube) | Apache-2.0 | `native` | `safe` | minikube — local Kubernetes. |
+| [kind](https://github.com/kubernetes-sigs/kind) | Apache-2.0 | `native` | `safe` | kind — Kubernetes IN Docker, local clusters for testing. |
+| [podman](https://github.com/containers/podman) | Apache-2.0 | `native` | `safe` | Podman — OCI container and pod management. |
+| [nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit) | Apache-2.0 | `native` | `safe` | NVIDIA Container Toolkit — build and run GPU containers (licence Apache-2.0 per upstream metadata). |
+
+## O-3 · Vector Stores &amp; Retrieval (`o-03-vector-stores-retrieval`, OPS, 9 tools)
+
+**Purpose:** Vector databases and retrieval stacks behind RAG surfaces — the A-7 rip targets.
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [chromadb](https://github.com/chroma-core/chroma) | Apache-2.0 | `native` | `safe` | Chroma — AI-native embedding database (python package + server). |
+| [qdrant](https://github.com/qdrant/qdrant) | Apache-2.0 | `native` | `safe` | Qdrant — vector database and vector search engine. |
+| [faiss](https://github.com/facebookresearch/faiss) | MIT | `native` | `safe` | FAISS — efficient similarity search and clustering of dense vectors. |
+| [txtai](https://github.com/neuml/txtai) | Apache-2.0 | `native` | `safe` | txtai — all-in-one embeddings database for semantic search and LLM orchestration. |
+| [jina-embeddings-cli](https://github.com/jina-ai/cli) | Apache-2.0 | `bespoke` · `pkgs/jina-embeddings-cli/default.nix` | `safe` | jina CLI — search/embed/rank over Jina APIs as Unix commands. |
+| [weaviate](https://github.com/weaviate/weaviate) | BSD-3-Clause OR LicenseRef-Weaviate-Community | `module` | `safe` | Weaviate — open-source vector database; ships as a service module (wl/ dir carries the Weaviate community licence). |
+| [pgvector](https://github.com/pgvector/pgvector) | PostgreSQL | `module` | `safe` | pgvector — open-source vector similarity search for Postgres; ships as a service module (PostgreSQL licence). |
+| [elasticsearch](https://github.com/elastic/elasticsearch) | AGPL-3.0-only OR LicenseRef-SSPL-1.0 OR LicenseRef-ELv2 | `module` | `safe` | Elasticsearch — distributed search engine; ships as a service module (AGPL-3.0 / SSPL / Elastic License 2.0 triple licence at the pin). |
+| [milvus](https://github.com/milvus-io/milvus) | Apache-2.0 | `module` | `safe` | Milvus — cloud-native vector database; docker-wrapper module. |
+
+## O-4 · Local LLM &amp; Inference Labs (`o-04-local-llm-inference-labs`, OPS, 5 tools)
+
+**Purpose:** Local model serving and inference lab UIs — the self-hosted generation surface.
+
+*Coverage:* Medium-High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [ollama](https://github.com/ollama/ollama)<br>*also:* `o-02-compute-serving-infrastructure` | MIT | `native` | `safe` | Ollama — run LLMs locally (primary home; documented tiny test model). |
+| [llama.cpp](https://github.com/ggml-org/llama.cpp)<br>*also:* `o-02-compute-serving-infrastructure` | MIT | `native` | `safe` | llama.cpp — LLM inference in C/C++ (CPU/GPU quantized inference). |
+| [text-generation-webui](https://github.com/oobabooga/text-generation-webui) | AGPL-3.0 | `bespoke` · `pkgs/text-generation-webui/default.nix` | `safe` | text-generation-webui — open-source desktop app for local LLMs. |
+| [open-webui](https://github.com/open-webui/open-webui) | LicenseRef-OpenWebUI | `native` | `safe` | Open WebUI — self-hosted chat UI for local LLMs (branding-clause licence; unfree-class in nixpkgs). |
+| [gguf-quantiser](https://github.com/kailash-os/gguf-quantiser) | LicenseRef-Unknown | `bespoke` · `pkgs/gguf-quantiser/default.nix` | `safe` | GGUF quantiser — planned first-party CLI wrapping llama.cpp quantize workflows (Wave-5 deliverable). |
+
+## O-5 · AI Engineering SDKs &amp; Dev Environment (`o-05-ai-engineering-sdks-dev-env`, OPS, 26 tools)
+
+**Purpose:** LLM/agent SDKs, ML frameworks, and the dev environment — the builder layer.
+
+*Coverage:* Very High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [langchain](https://github.com/langchain-ai/langchain) | MIT | `native` | `safe` | LangChain — the agent engineering platform (SDK core). |
+| [langgraph](https://github.com/langchain-ai/langgraph) | MIT | `native` | `safe` | LangGraph — build resilient agents (LangChain graph runtime). |
+| [llama-index](https://github.com/run-llama/llama_index) | MIT | `native` | `safe` | LlamaIndex — document processing and RAG framework. |
+| [openai-python](https://github.com/openai/openai-python) | Apache-2.0 | `native` | `safe` | OpenAI Python SDK. |
+| [anthropic-python](https://github.com/anthropics/anthropic-sdk-python) | MIT | `native` | `safe` | Anthropic Python SDK. |
+| [google-genai](https://github.com/googleapis/python-genai) | Apache-2.0 | `native` | `safe` | Google Gen AI Python SDK. |
+| [autogen](https://github.com/microsoft/autogen) | CC-BY-4.0 | `bespoke` · `pkgs/autogen/default.nix` | `safe` | AutoGen — programming framework for agentic AI (v0.4+; repo licence CC-BY-4.0 per metadata + LICENCE read). |
+| [crewai](https://github.com/crewAIInc/crewAI) | MIT | `native` | `safe` | CrewAI — role-playing autonomous agent orchestration framework. |
+| [pytorch](https://github.com/pytorch/pytorch) | BSD-3-Clause | `native` | `safe` | PyTorch — tensors and dynamic neural networks (CPU default; cuda variant via overlay). |
+| [torchvision](https://github.com/pytorch/vision) | BSD-3-Clause | `native` | `safe` | TorchVision — vision models/transforms for PyTorch. |
+| [torchaudio](https://github.com/pytorch/audio) | BSD-2-Clause | `native` | `safe` | TorchAudio — audio ML for PyTorch. |
+| [tensorflow](https://github.com/tensorflow/tensorflow) | Apache-2.0 | `native` | `safe` | TensorFlow — end-to-end ML platform. |
+| [jax](https://github.com/google/jax) | Apache-2.0 | `native` | `safe` | JAX — composable transformations of Python+NumPy programs. |
+| [onnxruntime](https://github.com/microsoft/onnxruntime) | MIT | `native` | `safe` | ONNX Runtime — cross-platform ML inference. |
+| [transformers](https://github.com/huggingface/transformers) | Apache-2.0 | `native` | `safe` | Hugging Face Transformers — the model-definition framework. |
+| [datasets](https://github.com/huggingface/datasets) | Apache-2.0 | `native` | `safe` | Hugging Face Datasets — ready-to-use datasets library. |
+| [peft](https://github.com/huggingface/peft) | Apache-2.0 | `native` | `safe` | Hugging Face PEFT — parameter-efficient fine-tuning. |
+| [trl](https://github.com/huggingface/trl) | Apache-2.0 | `native` | `safe` | Hugging Face TRL — RL training for transformers. |
+| [vscode](https://github.com/microsoft/vscode) | MIT | `native` | `safe` | Visual Studio Code (source MIT; nixpkgs build unfree-class). |
+| [code-server](https://github.com/coder/code-server) | MIT | `native` | `safe` | VS Code in the browser. |
+| [neovim](https://github.com/neovim/neovim) | Apache-2.0 | `native` | `safe` | Neovim — Vim-fork focused on extensibility. |
+| [python-lsp-server](https://github.com/python-lsp/python-lsp-server) | MIT | `native` | `safe` | python-lsp-server — LSP for Python (SpyderMaintained fork). |
+| [uv](https://github.com/astral-sh/uv) | MIT OR Apache-2.0 | `native` | `safe` | uv — extremely fast Python package/project manager (MIT/Apache dual). |
+| [ruff](https://github.com/astral-sh/ruff) | MIT | `native` | `safe` | Ruff — fast Python linter and formatter. |
+| [mypy](https://github.com/python/mypy) | MIT | `native` | `safe` | mypy — optional static typing for Python. |
+| [python313](https://github.com/python/cpython) | PSF-2.0 | `native` | `safe` | CPython 3.13 (PSF-2.0 licence per upstream). |
+
+## O-6 · Documentation, Reporting &amp; Authoring (`o-06-documentation-reporting-authoring`, OPS, 10 of 12 planned)
+
+**Purpose:** Engagement-report and docs authoring — the quarto/pandoc/typst pipeline behind generated reports.
+
+*Coverage:* High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [quarto](https://github.com/quarto-dev/quarto-cli)<br>*also:* `o-05-ai-engineering-sdks-dev-env` | MIT | `native` | `safe` | Quarto — open-source scientific and technical publishing system. |
+| [pandoc](https://github.com/jgm/pandoc) | GPL-2.0-or-later | `native` | `safe` | Pandoc — universal markup converter. |
+| [typst](https://github.com/typst/typst) | Apache-2.0 | `native` | `safe` | Typst — markup-based typesetting system. |
+| [mdbook](https://github.com/rust-lang/mdBook) | MPL-2.0 | `native` | `safe` | mdBook — create books from markdown files (the OS docs surface). |
+| [drawio](https://github.com/jgraph/drawio) | Apache-2.0 | `native` | `safe` | draw.io — JavaScript client-side diagramming editor. |
+| [excalidraw](https://github.com/excalidraw/excalidraw) | MIT | `bespoke` · `pkgs/excalidraw/default.nix` | `safe` | Excalidraw — virtual whiteboard for hand-drawn-style diagrams. |
+| [mermaid-cli](https://github.com/mermaid-js/mermaid-cli) | MIT | `native` | `safe` | mermaid-cli — command-line rendering for the Mermaid diagram language. |
+| [obsidian](https://github.com/obsidianmd/obsidian-releases) | LicenseRef-Proprietary | `native` | `safe` | Obsidian — personal knowledge base (licence proprietary-class; nixpkgs unfree). |
+| [texlive-full](https://github.com/TeX-Live/texlive-source) | GPL-3.0-or-later | `data` | `safe` | TeX Live scheme-full — opt-in data pack; bundle carries a licence mix (plan Appendix A: GPL-class). |
+| [dradis](https://github.com/dradis/dradisframework-ce) | GPL-2.0-only | `module` | `safe` | Dradis Framework CE — collaboration and reporting for IT security teams; ships as a service module. |
+
+## O-7 · Agent &amp; MCP Operability (`o-07-agent-mcp-operability`, OPS, 8 tools)
+
+**Purpose:** Operate AI agents inside the distro — the MCP server surface, container/lab packs, capability grants.
+
+*Coverage:* mixed
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [hexstrike-ai](https://github.com/0x4m4/hexstrike-ai) | MIT | `bespoke` · `pkgs/hexstrike-ai/default.nix` | `exp` | HexStrike AI — MCP server letting AI agents autonomously run 100+ security tools for offensive security operations. |
+| [mcp-kali-server](https://github.com/Wh0am123/MCP-Kali-Server) | MIT | `bespoke` · `pkgs/mcp-kali-server/default.nix` | `exp` | MCP Kali Server — Kali toolchain exposed over MCP for agent operators (third-party deliverable). |
+| [malicious-mcp-poc](https://github.com/kailash-os/malicious-mcp-poc)<br>*also:* `a-03-agentic-mcp-tool-use` | LicenseRef-Unknown | `data` | `exp` | Malicious MCP server proof-of-concept pack — lab artefacts for the A-3 scanner suite (opt-in lab pack). |
+| [insecure-mcp-lab](https://github.com/kailash-os/insecure-mcp-lab)<br>*also:* `a-03-agentic-mcp-tool-use` | LicenseRef-Unknown | `data` | `exp` | Insecure MCP lab — deliberately vulnerable MCP endpoints for scanner verification (opt-in lab pack). |
+| [kailash-mcp](https://github.com/kailash-os/kailash-mcp) | MIT | `bespoke` · `pkgs/kailash-mcp/default.nix` | `exp` | kailash-mcp — the distro's own MCP server, generated from the manifest; the CI dogfood target. |
+| [kailash-container](https://github.com/kailash-os/kailash-container) | MIT | `bespoke` · `pkgs/kailash-container/default.nix` | `exp` | kailash-container — container image deliverable bundling the distro toolset. |
+| [headless-agent](https://github.com/kailash-os/headless-agent) | MIT | `bespoke` · `pkgs/headless-agent/default.nix` | `exp` | headless-agent — headless agent image deliverable (grants-scoped). |
+| [mcp-inspector](https://github.com/modelcontextprotocol/inspector)<br>*also:* `a-03-agentic-mcp-tool-use` | Apache-2.0 | `bespoke` · `pkgs/mcp-inspector/default.nix` | `safe` | MCP Inspector — visual testing tool for MCP servers (dogfood duty in CI; licence MIT→Apache-2.0 transition). |
+
+## D-1 · AI Runtime Defence &amp; Guardrails (`d-01-runtime-defence`, DEFENCE, 7 tools)
+
+**Purpose:** Guard and filter LLM traffic at runtime — prompts and completions pass defence rails before reaching the model or the user.
+
+*Coverage:* Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [nemo-guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | Apache-2.0 | `bespoke` · `pkgs/nemo-guardrails/default.nix` | `safe` | NVIDIA NeMo Guardrails — programmable guardrails (topics, rails, jailbreak defence) for LLM conversational apps. |
+| [llm-guard](https://github.com/protectai/llm-guard) | MIT | `bespoke` · `pkgs/llm-guard/default.nix` | `safe` | LLM Guard — input/output scanning pipeline for prompts and completions (PII, toxicity, prompt-injection scanners). |
+| [guardrails-ai](https://github.com/guardrails-ai/guardrails) | Apache-2.0 | `bespoke` · `pkgs/guardrails-ai/default.nix` | `safe` | Guardrails AI — validators that enforce structure, type and quality guarantees on LLM outputs. |
+| [rebuff](https://github.com/protectai/rebuff) | Apache-2.0 | `bespoke` · `pkgs/rebuff/default.nix` | `safe` | Rebuff — prompt-injection detector with a canary-token leakage check and multi-stage defence. |
+| [gaskunk](https://github.com/kailash-os/gaskunk) | LicenseRef-Unknown | `bespoke` · `pkgs/gaskunk/default.nix` | `safe` | Gaskunk — runtime LLM output-gating guard (planned first-party pack, KA-06.x derivation target). |
+| [llm-firewall](https://github.com/kailash-os/llm-firewall) | LicenseRef-Unknown | `bespoke` · `pkgs/llm-firewall/default.nix` | `safe` | LLM Firewall — policy firewall in front of LLM endpoints (planned first-party pack, Wave-5 derivation target). |
+| [whisper-gate](https://github.com/kailash-os/whisper-gate) | LicenseRef-Unknown | `bespoke` · `pkgs/whisper-gate/default.nix` | `safe` | Whisper Gate — audio-input LLM-surface gate (planned first-party pack, Wave-5 derivation target). |
+
+## D-2 · AI Detection, Monitoring, Observability &amp; IR (`d-02-detection-monitoring-observability`, DEFENCE, 8 tools)
+
+**Purpose:** Detect and observe AI-system abuse — LLM traffic telemetry, prompt-injection detection models, canary tokens, incident-response hooks.
+
+*Coverage:* Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [langfuse](https://github.com/langfuse/langfuse) | MIT-expat | `module` | `safe` | Langfuse — LLM observability and eval platform: traces, scoring, prompt management (EE dirs restricted; core MIT). |
+| [phoenix](https://github.com/Arize-ai/phoenix) | LicenseRef-ELv2 | `bespoke` · `pkgs/phoenix/default.nix` | `safe` | Arize Phoenix — AI observability and evaluation: traces, embeddings, evals. |
+| [whylogs](https://github.com/whylabs/whylogs)<br>*also:* `o-01-mlops-ml-engineering` | Apache-2.0 | `bespoke` · `pkgs/whylogs/default.nix` | `safe` | WhyLabs whylogs — privacy-preserving data and ML/LLM logging profiles for drift and quality monitoring. |
+| [evidently](https://github.com/evidentlyai/evidently)<br>*also:* `o-01-mlops-ml-engineering` | Apache-2.0 | `bespoke` · `pkgs/evidently/default.nix` | `safe` | Evidently — ML and LLM observability framework: evals, tests and monitoring reports. |
+| [otel-ai](https://github.com/traceloop/openllmetry) | Apache-2.0 | `bespoke` · `pkgs/otel-ai/default.nix` | `safe` | OpenLLMetry — OpenTelemetry instrumentation for LLM applications (traceloop; plumbs AI traces into OTel backends). |
+| [prompt-injection-detector-bert](https://github.com/kailash-os/prompt-injection-detector-bert) | LicenseRef-Unknown | `bespoke` · `pkgs/prompt-injection-detector-bert/default.nix` | `safe` | Prompt-injection classifier pack — DeBERTa-class detector weights + loader for LLM-input gating (planned first-party pack). |
+| [canary-token-generator](https://github.com/kailash-os/canary-token-generator) | LicenseRef-Unknown | `bespoke` · `pkgs/canary-token-generator/default.nix` | `safe` | Canary-token generator — plants verifiable canary strings in prompts, system cards and datasets for leakage tracing (planned first-party… |
+| [giskard](https://github.com/Giskard-AI/giskard) | Apache-2.0 | `bespoke` · `pkgs/giskard/default.nix` | `safe` | Giskard — open-source evaluation and testing library for LLM agents (scan, tests, red-reporting). |
+
+## D-3 · AI Assurance, Evals &amp; Benchmarks (`d-03-assurance-evals-benchmarks`, DEFENCE, 6 tools)
+
+**Purpose:** Measure model assurance — eval harnesses, adversarial-robustness benchmarks and fairness auditing on the defence side of the ladder.
+
+*Coverage:* Medium
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [lm-eval-harness](https://github.com/EleutherAI/lm-evaluation-harness) | MIT | `bespoke` · `pkgs/lm-eval-harness/default.nix` | `safe` | EleutherAI Language Model Evaluation Harness — standard few-shot benchmark runner (lm-eval). |
+| [deepeval](https://github.com/confident-ai/deepeval) | Apache-2.0 | `bespoke` · `pkgs/deepeval/default.nix` | `safe` | DeepEval — LLM evaluation framework with unit-test-style metrics (G-Eval, faithfulness, bias). |
+| [robustbench](https://github.com/RobustBench/robustbench) | MIT | `bespoke` · `pkgs/robustbench/default.nix` | `safe` | RobustBench — standardized adversarial-robustness benchmark suite (model zoo + attacks); MIT code, per-model weight licences vary. |
+| [evaluate](https://github.com/huggingface/evaluate)<br>*also:* `o-05-ai-engineering-sdks-dev-env` | Apache-2.0 | `native` | `safe` | HuggingFace Evaluate — library for easily evaluating ML models and datasets (the hub `evaluate` package). |
+| [fairlearn](https://github.com/fairlearn/fairlearn) | MIT | `bespoke` · `pkgs/fairlearn/default.nix` | `safe` | Fairlearn — fairness metrics and mitigation algorithms for ML models. |
+| [aif360](https://github.com/Trusted-AI/AIF360) | Apache-2.0 | `bespoke` · `pkgs/aif360/default.nix` | `safe` | AI Fairness 360 (AIF360) — comprehensive fairness-metrics and bias-mitigation toolkit. |
+
+## D-4 · Model Provenance, Signing &amp; Trust (`d-04-provenance-signing-trust`, DEFENCE, 10 tools)
+
+**Purpose:** Prove where models and artefacts came from — provenance attestation, model signing, SBOM/AI-BOM scanning for model supply chains.
+
+*Coverage:* Medium-High
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [cosign](https://github.com/sigstore/cosign) | Apache-2.0 | `native` | `safe` | Sigstore cosign — container and binary signing and transparency. |
+| [syft](https://github.com/anchore/syft) | Apache-2.0 | `native` | `safe` | Anchore Syft — SBOM generation CLI for container images and filesystems. |
+| [grype](https://github.com/anchore/grype) | Apache-2.0 | `native` | `safe` | Anchore Grype — vulnerability scanner for container images and filesystems. |
+| [trivy](https://github.com/aquasecurity/trivy) | Apache-2.0 | `native` | `safe` | Aqua Trivy — all-in-one vulnerability/secret/misconfiguration/SBOM scanner. |
+| [cyclonedx-cli](https://github.com/CycloneDX/cyclonedx-cli) | Apache-2.0 | `native` | `safe` | CycloneDX CLI — SBOM validation, merging, diffs and format conversions. |
+| [cdxgen](https://github.com/CycloneDX/cdxgen) | Apache-2.0 | `native` | `safe` | CycloneDX cdxgen — creates CycloneDX SBOMs for source trees and images across languages. |
+| [sigstore-tools](https://github.com/kailash-os/sigstore-tools) | LicenseRef-Unknown | `bespoke` · `pkgs/sigstore-tools/default.nix` | `safe` | Sigstore helper CLI pack — Rekor/fulcio transparency-log queries and bundle verification recipes (planned first-party pack). |
+| [modelsign](https://github.com/sigstore/model-signing) | Apache-2.0 | `bespoke` · `pkgs/modelsign/default.nix` | `safe` | Model signing CLI wrapping sigstore/model-signing — sign and verify model artefacts with Sigstore bundles. |
+| [hf-repo-auditor](https://github.com/kailash-os/hf-repo-auditor) | LicenseRef-Unknown | `bespoke` · `pkgs/hf-repo-auditor/default.nix` | `safe` | Hugging Face repository auditor — scans Hub repos for unsafe pickle/zip-slip artefacts and licence drift (planned first-party pack). |
+| [model-card-toolkit](https://github.com/tensorflow/model-card-toolkit) | Apache-2.0 | `bespoke` · `pkgs/model-card-toolkit/default.nix` | `safe` | TensorFlow Model Card Toolkit — automates generation of model documentation cards. |
+
+## D-5 · AI Threat Modelling (`d-05-threat-modelling`, DEFENCE, 6 tools)
+
+**Purpose:** Threat-model AI systems — ATLAS-mapped worksheet packs, visualisers and playbook templates producing reviewable artefacts.
+
+*Coverage:* Very Low
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [genai-threat-modelling-templates](https://github.com/kailash-os/genai-threat-modelling-templates) | LicenseRef-Unknown | `data` | `safe` | GenAI threat-modelling template pack — per-component worksheets for LLM/agent systems (planned first-party pack). |
+| [atlas-visualiser](https://github.com/kailash-os/atlas-visualiser) | LicenseRef-Unknown | `bespoke` · `pkgs/atlas-visualiser/default.nix` | `safe` | MITRE ATLAS visualiser — renders ATLAS tactic/technique coverage over a target system map (planned first-party pack). |
+| [stride-ai-worksheet](https://github.com/kailash-os/stride-ai-worksheet) | LicenseRef-Unknown | `data` | `safe` | STRIDE-for-AI worksheet pack — per-trust-boundary threat elicitation sheets for AI systems (planned first-party pack). |
+| [maestro](https://github.com/agentic-threat-modeling/MAESTRO) | CC-BY-SA-4.0 | `bespoke` · `pkgs/maestro/default.nix` | `safe` | MAESTRO threat-modelling CLI — agent-system threat elicitation keyed to the OWASP MAESTRO framework. |
+| [atlas-case-study-explorer](https://github.com/kailash-os/atlas-case-study-explorer) | LicenseRef-Unknown | `data` | `safe` | ATLAS case-study explorer — browsable real-world AI-incident case studies (planned first-party pack). |
+| [ai-incident-playbook-packs](https://github.com/kailash-os/ai-incident-playbook-packs)<br>*also:* `c-09-forensics-ir-reporting` | LicenseRef-Unknown | `data` | `safe` | AI incident-response playbook packs — detection/triage/rollback runbooks for AI incidents (planned first-party pack). |
+
+## D-6 · AI Governance &amp; Regulation Mapping (`d-06-governance-regulation-mapping`, DEFENCE, 4 tools)
+
+**Purpose:** Map AI deployments to governance regimes — EU AI Act checks, NIST AI RMF tooling, ISO/IEC 42001 templates, vendor review forms.
+
+*Coverage:* n/a
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [ai-act-compliance-checker](https://github.com/kailash-os/ai-act-compliance-checker) | LicenseRef-Unknown | `bespoke` · `pkgs/ai-act-compliance-checker/default.nix` | `safe` | EU AI Act compliance checker — obligation inventory and gap scoring for AI deployments (planned first-party pack). |
+| [nist-ai-rmf-toolkit](https://github.com/kailash-os/nist-ai-rmf-toolkit) | LicenseRef-Unknown | `data` | `safe` | NIST AI RMF toolkit — Profile templates and mapping worksheets per the AI Risk Management Framework (planned first-party pack). |
+| [iso-42001-templates](https://github.com/kailash-os/iso-42001-templates) | LicenseRef-Unknown | `data` | `safe` | ISO/IEC 42001 template pack — AIMS control templates and evidence checklists (planned first-party pack). |
+| [genai-vendor-review-form](https://github.com/kailash-os/genai-vendor-review-form) | LicenseRef-Unknown | `data` | `safe` | GenAI vendor review form — provider risk questionnaire and scoring sheet (planned first-party pack). |
+
+## D-7 · Standards Verification Toolkit (`d-07-standards-verification`, DEFENCE, 4 of 5 planned)
+
+**Purpose:** Verify against security standards — ASVS 5.0 / AISVS 1.0 / MLSVS / OWASP LLM Top 10 evidence tooling feeding the kailash verifier.
+
+*Coverage:* n/a
+
+| Tool | Licence | Packaging | Safety | Description |
+|---|---|---|---|---|
+| [aisvs-1.0-toolkit](https://github.com/kailash-os/aisvs-1.0-toolkit)<br>*also:* `c-10-runtime-appsec-ai` | LicenseRef-Unknown | `data` | `safe` | OWASP AISVS 1.0 toolkit — verification checklists and level-mapping data driving the D-7 verifier (planned first-party pack). |
+| [mlsvs-toolkit](https://github.com/kailash-os/mlsvs-toolkit) | LicenseRef-Unknown | `data` | `safe` | OWASP MLSVS toolkit — machine-learning system verification checklists (planned first-party pack). |
+| [llm-top10-toolkit](https://github.com/kailash-os/llm-top10-toolkit) | LicenseRef-Unknown | `data` | `safe` | OWASP LLM Top 10 toolkit — risk-mapping data for both Top-10 epochs (2026 + v2:2025) driving the verifier (planned first-party pack). |
+| [kailash-verifier](https://github.com/kailash-os/kailash-verifier) | BSD-3-Clause | `bespoke` · `pkgs/kailash-verifier/default.nix` | `safe` | Kailash verifier CLI — `kailash verifier --standard aisvs --level N`: renders per-tool standards evidence from the manifest (§3.8; planned… |
+
+## Per-layer summary
+
+| Layer | Categories | Tool rows |
+|---|---|---|
+| **CLASSIC** | 10 (C-1…C-10) — includes the opt-in SDR data-pack | 146 (of which 6 in the SDR data-pack) |
+| **ATTACK** | 8 (A-1…A-8) | 58 |
+| **OPS** | 7 (O-1…O-7) | 87 |
+| **DEFENCE** | 7 (D-1…D-7) | 45 |
+| **Total** | 31 categories + 1 opt-in data-pack | 336 |
+
+The second planned data-pack, `kailash-data.wordlists-mega` (riding C-5), is a manifest plan row, not yet a tool row — the opt-in wordlist pack lands with the KA-07 data work. This page renders the manifest as it stands; regenerate after the next manifest merge and the counts move with it.
