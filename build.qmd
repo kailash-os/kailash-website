@@ -73,7 +73,7 @@ gate that gates the manifest also gates itself.
 
 Delivery runs in wave lanes — repo milestones **Wave 0 … Wave 8** — mirrored on
 the [kailash Roadmap board](https://github.com/orgs/kailash-os/projects/1)
-(the *Sprint queue* view is the open v0.1 front). Each roadmap item decomposes
+(the *Sprint queue* view is the open 2026.01 train front). Each roadmap item decomposes
 into roughly one-hour children; each child is one PR; the parent stays open as
-the acceptance gate. The v0.1 exit is the delivery-gate ledger on the roadmap,
+the acceptance gate. The 2026.01 exit is the delivery-gate ledger on the roadmap,
 not a date.

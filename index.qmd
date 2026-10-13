@@ -26,8 +26,9 @@ OPS layers:
 
 ## Taxonomy
 
-The tool set is organised as a **CORE substrate plus four named tool layers, 31
-categories, ~337 curated tool slots**. CORE — kernel, base userland, hardening,
+The tool set is organised as a **CORE substrate plus four named tool layers, 32
+census categories (31 shippable categories + 1 opt-in data pack), ~337 curated
+tool slots**. CORE — kernel, base userland, hardening,
 safety defaults, desktop, CLI and menu engines — hosts no tool categories; every
 image inherits it.
 
@@ -104,14 +105,19 @@ Implementation is decomposed into issues KA-01…KA-44 on the
 in [`kailash-os/kailash-os`](https://github.com/kailash-os/kailash-os), tracked
 by release train:
 
-- **v0.1** — repo skeletons and taxonomy-as-data, CLASSIC modules, platform
-  base, the flagship offensive derivations (garak, PyRIT, promptfoo, ART,
-  counterfit), CLI core, CI with manifest-driven build matrix, safety gating
-- **v0.2** — ATTACK long tail (agentic/MCP, supply chain), DEFENCE full,
-  agent operability and capability grants, desktop menu, image matrix,
-  website content generation
-- **backlog** — reproducibility gates, release signing flows, standards
-  navigation matrix, ARM support, brand system
+- **2026.01 (the first train, in cut)** — repo skeletons and taxonomy-as-data
+  (337 tools / 32 census categories), the FULL four-layer catalogue: CLASSIC
+  modules (C-1…C-10), the complete ATTACK long tail (A-1…A-8, agentic/MCP,
+  supply chain, the flagship derivations garak / PyRIT / promptfoo / ART /
+  counterfit), DEFENCE full (D-1…D-7), OPS platform modules (O-1…O-7 with
+  agent operability and capability grants), CLI core, CI with the
+  manifest-driven build matrix on both arches, safety gating (the §11.2
+  exp gate + lab-mode), the image matrix (QEMU primary, ISO second), and
+  the first staged cut `2026.01-alpha.1`
+- **2026.02** — desktop menu polish, website content generation, repro-gate
+  extras, nixvital overlay, report templates
+- **backlog** — standards navigation matrix, ARM support (KA-36 decides the
+  aarch64 posture), brand system
 
 ## Paper
 
@@ -135,6 +141,6 @@ their upstream licences). The packaging harness, taxonomy, and CLI are built to
 accept contributors: add a tool via manifest entry, not hand-edited module
 files; CI validates, builds, and tests every change; signed commits required.
 Open an issue on the [roadmap board](https://github.com/orgs/kailash-os/projects/1)
-or pick up a v0.1 item to get started.
+or pick up a 2026.01 train item to get started.
 
 Contact: [shain.singh@owasp.org](mailto:shain.singh@owasp.org)
