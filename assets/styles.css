@@ -46,3 +46,14 @@ blockquote {
   padding: 0 0.45rem;
   margin-right: 0.3rem;
 }
+/* Roadmap page: release-train table — compact type, edge columns stay on one line */
+.roadmap-table table {
+  font-size: 0.84em;
+  line-height: 1.45;
+  vertical-align: top;
+}
+.roadmap-table table td:first-child,
+.roadmap-table table td:last-child {
+  white-space: nowrap;
+  vertical-align: top;
+}
