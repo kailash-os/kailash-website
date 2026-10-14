@@ -3,6 +3,7 @@ project:
   output-dir: _site
   render:
     - "index.qmd"
+    - "roadmap.qmd"
     - "build.qmd"
     - "agents.qmd"
     - "contributing.qmd"
@@ -34,7 +35,7 @@ website:
       - href: build.qmd
         text: Build
     right:
-      - href: index.qmd#roadmap
+      - href: roadmap.qmd
         text: Roadmap
       - href: contributing.qmd
         text: Contributing

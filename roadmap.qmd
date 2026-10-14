@@ -1,0 +1,130 @@
+---
+title: "Roadmap"
+---
+
+This page carries the project timeline — what Kailash has delivered, with the
+tracking issue for every step — and the forward plan by release train. Every
+delivered item below was completed as a tested, GPG-signed pull request and
+verified by execution; the dates are the issue-close dates. Trishula, the
+sister project, keeps
+[a timeline in the same shape](https://trishula.dev/roadmap.html) — the projects share the build discipline, not the codebase.
+
+## The road so far
+
+### 3 October — baseline
+
+- The product specification (the implementation plan) is written and reviewed before implementation; the [roadmap board](https://github.com/orgs/kailash-os/projects/1) graduates from planning to GitHub as issues KA-01…KA-44 with the label, effort and milestone catalog ([KA-21](https://github.com/kailash-os/kailash-os/issues/21), [engineering-agreement sweep](https://github.com/kailash-os/kailash-os/issues/46)–[57](https://github.com/kailash-os/kailash-os/issues/57), [website issue #1](https://github.com/kailash-os/kailash-website/issues/1)).
+- Repository governance lands on both product repos: merge queue + branch protection ([os#48](https://github.com/kailash-os/kailash-os/pull/48)), contributing + security policy ([os#46](https://github.com/kailash-os/kailash-os/pull/46)), Renovate ([os#50](https://github.com/kailash-os/kailash-os/pull/50)), the hypothesis-first TDD standard ([os#52](https://github.com/kailash-os/kailash-os/issues/52)), and the OpenSSF badge pair — Best Practices + Scorecard — in the badge row ([os#53](https://github.com/kailash-os/kailash-os/pull/53), [os#55](https://github.com/kailash-os/kailash-os/pull/55)).
+- Both production repos relicense to BSD-3-Clause ([os#62](https://github.com/kailash-os/kailash-os/pull/62), [pkgs#4](https://github.com/kailash-os/kailash-packages/pull/4)); the website follows ([website#13](https://github.com/kailash-os/kailash-website/issues/13)).
+
+### 9 October — the OS skeleton builds
+
+- The OS repo revives as a real flake: skeleton tree + convention commits, pinned inputs, explicit unfree posture, no global CUDA, and profiles/minimal.nix evaluating with zero categories enabled ([KA-01](https://github.com/kailash-os/kailash-os/issues/1): [118](https://github.com/kailash-os/kailash-os/pull/118), [122](https://github.com/kailash-os/kailash-os/pull/122), [127](https://github.com/kailash-os/kailash-os/pull/127)).
+- The overlay repo seeds as an independently consumable flake — the nixpkgs↔NixOS split — and the OS flake.lock pins it at lock-time ([KA-02](https://github.com/kailash-os/kailash-os/issues/2): [pkgs#5](https://github.com/kailash-os/kailash-packages/pull/5), [os#128](https://github.com/kailash-os/kailash-os/pull/128)).
+- The engineering standard hardens: harness-before-capability ordering, GitHub Actions as the authoritative check surface ([os#120](https://github.com/kailash-os/kailash-os/pull/120)), flake-check on hosted runners both repos ([os#129](https://github.com/kailash-os/kailash-os/pull/129), [pkgs#8](https://github.com/kailash-os/kailash-packages/pull/8)), AGENTS.md as the contributor/agent contract ([os#125](https://github.com/kailash-os/kailash-os/pull/125), [pkgs#23](https://github.com/kailash-os/kailash-packages/pull/23)).
+- The platform layer formerly named BUILD becomes OPS, O-1…O-7 ([os#121](https://github.com/kailash-os/kailash-os/issues/121)); the website's [Build page](https://kailash.site/build.html) opens — the verification loop as a public page.
+
+### 10 October — the taxonomy becomes data
+
+- categories.yaml: the post-purge census locks — CORE + CLASSIC C-1…C-10, ATTACK A-1…A-8, DEFENCE D-1…D-7, OPS O-1…O-7, deliberate exclusions recorded ([KA-04](https://github.com/kailash-os/kailash-os/issues/4): [pkgs#6](https://github.com/kailash-os/kailash-packages/pull/6), [12](https://github.com/kailash-os/kailash-packages/pull/12), [26](https://github.com/kailash-os/kailash-packages/pull/26), [14](https://github.com/kailash-os/kailash-packages/pull/14)).
+- tools.yaml: validator invariants committed watched-RED before the data lands; manifest stubs ([KA-05.1](https://github.com/kailash-os/kailash-packages/pull/15), [KA-02.2](https://github.com/kailash-os/kailash-packages/pull/10)).
+- The first bespoke derivation lands: garak, the LLM vulnerability scanner — nvfetcher pin, Shape-1 derivation, --list-probes smoke; a hosted-runner PEP-517 catch fixed same day ([pkgs#20](https://github.com/kailash-os/kailash-packages/pull/20), [pkgs#22](https://github.com/kailash-os/kailash-packages/pull/22)). PyRIT packages ([pkgs#16](https://github.com/kailash-os/kailash-packages/pull/16)); the kailash CLI core opens — list / search / info over the manifest ([pkgs#17](https://github.com/kailash-os/kailash-packages/pull/17)).
+- CI becomes manifest-driven: the manifest→matrix generator, build.yml in both repos, and the negative gate — a deliberately broken manifest fails the build — merged ([os#130](https://github.com/kailash-os/kailash-os/pull/130), [pkgs#18](https://github.com/kailash-os/kailash-packages/pull/18), [neg gate](https://github.com/kailash-os/kailash-packages/pull/28)). The OS-to-overlay pin resolves on the real lock ([os#128](https://github.com/kailash-os/kailash-os/pull/128)).
+- The website [Tools page](https://kailash.site/tools.html) renders the category census from the manifest with provenance and field glossary ([website#26](https://github.com/kailash-os/kailash-website/issues/26)).
+
+### 11 October — the gates acquire teeth
+
+- Every manifest slot is entered — CLASSIC 142, ATTACK 58, DEFENCE 46, OPS 91, data-packs excluded from counts ([pkgs#30](https://github.com/kailash-os/kailash-packages/pull/30), [39](https://github.com/kailash-os/kailash-packages/pull/39), [40](https://github.com/kailash-os/kailash-packages/pull/40), [36](https://github.com/kailash-os/kailash-packages/pull/36), [38](https://github.com/kailash-os/kailash-packages/pull/38)) — and the flagship stack builds green: garak manifest row + smoke, promptfoo (npm-pinned + freshness decision), ART, counterfit ([pkgs#34](https://github.com/kailash-os/kailash-packages/pull/34), [35](https://github.com/kailash-os/kailash-packages/pull/35), [31](https://github.com/kailash-os/kailash-packages/pull/31), [33](https://github.com/kailash-os/kailash-packages/pull/33)); acceptance smokes joined to the build legs ([pkgs#46](https://github.com/kailash-os/kailash-packages/pull/46)).
+- Safety becomes mechanical: the safety-defaults module ships the §11.2 double-key lab-mode gate (KAILASH_LAB_MODE + host kailash.labMode), the no-auto-start audit and sops-nix secret hygiene ([os#144](https://github.com/kailash-os/kailash-os/pull/144), [os#145](https://github.com/kailash-os/kailash-os/pull/145)); the generator wraps every safety:exp tool and CI alarms on drift ([os#149](https://github.com/kailash-os/kailash-os/pull/149), [pkgs#44](https://github.com/kailash-os/kailash-packages/pull/44)).
+- Profiles ship hardened: redteam-ai (ATTACK full + O-4) and minimal-hardened ([os#146](https://github.com/kailash-os/kailash-os/pull/146), [os#148](https://github.com/kailash-os/kailash-os/pull/148)).
+- Release naming moves to calendar trains — 2026.xx, bare-year reserved for GA — superseding the scheme across every surface ([KA-47](https://github.com/kailash-os/kailash-os/issues/47): [os#147](https://github.com/kailash-os/kailash-os/pull/147)). The cadence policy + Renovate reconcile against plan §8.5 ([pkgs#29](https://github.com/kailash-os/kailash-packages/pull/29)); the README category table is generated, never hand-synced ([os#143](https://github.com/kailash-os/kailash-os/pull/143)); ADR records start ([os#133](https://github.com/kailash-os/kailash-os/pull/133)); the kailash binary cache goes live ([os#138](https://github.com/kailash-os/kailash-os/pull/138), [pkgs#41](https://github.com/kailash-os/kailash-packages/pull/41)).
+
+### 12 October — every category becomes a boot-tested module
+
+- Layer CLASSIC completes C-1…C-10 — exemplar module first per the §4.5 contract, then generated siblings; Burp/ZAP/Caido pinned exact; exploitation software-only; forensics/IR; Runtime AppSec for AI; the SDR pack recorded opt-in, never on default images ([KA-06](https://github.com/kailash-os/kailash-os/issues/6) / [KA-07](https://github.com/kailash-os/kailash-os/issues/7): [os#155](https://github.com/kailash-os/kailash-os/pull/155), [159](https://github.com/kailash-os/kailash-os/pull/159), [163](https://github.com/kailash-os/kailash-os/pull/163), [164](https://github.com/kailash-os/kailash-os/pull/164), [167](https://github.com/kailash-os/kailash-os/pull/167), [172](https://github.com/kailash-os/kailash-os/pull/172)).
+- The platform modules land: O-1 MLOps (mlflow service), O-2 compute & serving (k3s/podman, ollama/llama.cpp), O-5 SDKs, torch via Shape 4 — non-GPU default + explicit -nvidia variant ([os#160](https://github.com/kailash-os/kailash-os/pull/160), [161](https://github.com/kailash-os/kailash-os/pull/161), [174](https://github.com/kailash-os/kailash-os/pull/174), [pkgs#51](https://github.com/kailash-os/kailash-packages/pull/51)); O-3 vector stores + O-4 local LLM + O-6 authoring + per-category devShells ([os#162](https://github.com/kailash-os/kailash-os/pull/162), [165](https://github.com/kailash-os/kailash-os/pull/165), [169](https://github.com/kailash-os/kailash-os/pull/169), [170](https://github.com/kailash-os/kailash-os/pull/170)).
+- ATTACK category modules open — A-1 AI recon, A-2 prompt injection, payload data packs, trufflehog cross-list ([os#166](https://github.com/kailash-os/kailash-os/pull/166), [os#168](https://github.com/kailash-os/kailash-os/pull/168)).
+- Layer DEFENCE completes D-1…D-7 — guardrails, evals, provenance, threat modelling, governance, standards — with probe receipts + packaging-reality legs ([os#177](https://github.com/kailash-os/kailash-os/pull/177), [pkgs#54](https://github.com/kailash-os/kailash-packages/pull/54)).
+- The VM smoke suite lands boot legs + a contract watchdog ([os#176](https://github.com/kailash-os/kailash-os/pull/176)); cross-repo harness defects exposed by the expanded ledger are fixed in the same window ([os#136](https://github.com/kailash-os/kailash-os/pull/136), [pkgs#32](https://github.com/kailash-os/kailash-packages/pull/32)).
+
+### 13 October — the long tail lands, the release train departs
+
+- The ATTACK long tail lands: A-3 agentic/MCP + A-4 supply chain (mcp-inspector, mcp-scan, guarddog, picklescan, modelscan + the novel-probe starter set), and O-7 agent & MCP operability with short-lived human-minted capability grants ([os#179](https://github.com/kailash-os/kailash-os/pull/179), [pkgs#55](https://github.com/kailash-os/kailash-packages/pull/55), [os#182](https://github.com/kailash-os/kailash-os/pull/182), [pkgs#56](https://github.com/kailash-os/kailash-packages/pull/56)).
+- A-5…A-8 complete with the mlflow-bypass integration leg — an attack tool exercised against the platform's own lab deployment ([os#185](https://github.com/kailash-os/kailash-os/pull/185)); the GVM/OpenVAS service module arrives ([os#180](https://github.com/kailash-os/kailash-os/pull/180)); kailash.data.* wordlist/data packs flip opt-in with proof legs ([os#183](https://github.com/kailash-os/kailash-os/pull/183), [pkgs#57](https://github.com/kailash-os/kailash-packages/pull/57)).
+- Platform VM acceptance: a booted platform profile completes an ollama prompt and serves MLflow on :5000 ([os#184](https://github.com/kailash-os/kailash-os/pull/184)).
+- The image matrix ships shape-first: QEMU images primary, ISOs secondary, size budgets enforced ([KA-28](https://github.com/kailash-os/kailash-os/issues/28): [os#173](https://github.com/kailash-os/kailash-os/pull/173), [os#181](https://github.com/kailash-os/kailash-os/pull/181)).
+- The first staged cut is engineered: signed tag, release lock bump, changelog, the standing-cut checklist ([KA-46](https://github.com/kailash-os/kailash-os/issues/141): [os#196](https://github.com/kailash-os/kailash-os/pull/196), [os#195](https://github.com/kailash-os/kailash-os/pull/195) path-scopes the build matrix, [os#192](https://github.com/kailash-os/kailash-os/pull/192) enables the Renovate dashboard).
+
+### 13 October — 2026.01-alpha.1 ships, provenance attached
+
+- **The first release of the Kailash OS distribution publishes** ([2026.01-alpha.1](https://github.com/kailash-os/kailash-os/releases/tag/2026.01-alpha.1)): the full four-layer catalogue on a pinned, reproducible NixOS base — 32 census categories, 337 tool slots (CLASSIC 142, ATTACK 58, DEFENCE 46, OPS 91). The release body carries the gate table: hosted build (37 legs), flake-check, OpenSSF Scorecard, manifest validator at the pin, and the §11.2 refusal contract — the generator refuses the exp-carrying A-8 emit by name ([KA-46](https://github.com/kailash-os/kailash-os/issues/141)).
+- **Artefacts are born attested**: release-images grants id-token and emits, per artefact, an in-toto SLSA v1.0 build-provenance statement + SPDX SBOM, signed with a Sigstore certificate over the repository's OIDC identity and written to the public Rekor transparency log — before upload, not after ([os#198](https://github.com/kailash-os/kailash-os/pull/198), [KA-48](https://github.com/kailash-os/kailash-os/issues/171)).
+- Image releases attach from hosted runners with artefact-naming + actor checks ([os#197](https://github.com/kailash-os/kailash-os/pull/197), [os#199](https://github.com/kailash-os/kailash-os/pull/199)); the matrix completeness amendment builds the four never-built targets from the tag's pin and SHA256SUMS covers all 12 §8.1 artefacts ([os#200](https://github.com/kailash-os/kailash-os/pull/200)).
+- The aarch64 half of the matrix builds natively — x86 hosted, arm local, the split-arch strategy of [ko#198](https://github.com/kailash-os/kailash-os/issues/198) — and the aarch64 posture is documented honestly: partial support ([KA-36](https://github.com/kailash-os/kailash-os/issues/36)).
+
+### 14 October — the cut completes; the docs estate opens
+
+- Oversized artefacts stay verified: QEMU images above GitHub's per-asset cap publish in chunks, SLSA/attestation intact, with per-leg checksum sheets; the workflow-trigger defect that would have left four targets never-built was found and fixed ([os#207](https://github.com/kailash-os/kailash-os/pull/207), [os#202](https://github.com/kailash-os/kailash-os/pull/202), [KA-33.4](https://github.com/kailash-os/kailash-os/issues/206)).
+- The standing release ladder fixes the GA discipline: alpha → rc.1 → GA, the cut checklist, per-criterion verdicts ([KA-49](https://github.com/kailash-os/kailash-os/issues/204)).
+- The implementation specification goes public in-repo, every §-citation hyperlinked to an anchor ([KA-51](https://github.com/kailash-os/kailash-os/issues/209): [docs/spec.md](https://github.com/kailash-os/kailash-os/blob/master/docs/spec.md)) — the citation convention the site enforces.
+- **The docs estate opens**: the [Kailash OS Cookbook](https://book.kailash.tools) goes live at book.kailash.tools — task-oriented recipes with real commands and expected output shapes; getting-started, the garak LLM01 prompt-injection exemplar, the attack-then-verify pair and the administrator chapters are live; the scanning and ops lanes continue on the book ([KA-WS-5](https://github.com/kailash-os/kailash-book/issues/1), [first build](https://github.com/kailash-os/kailash-book/issues/2)). The [Kailash OS Guide](https://docs.kailash.tools) goes live at docs.kailash.tools — Parts I–IV (taxonomy census, build security & governance, administrator guide) plus the per-category directory generated from the manifest ([KA-WS-6.1](https://github.com/kailash-os/kailash-guide/issues/2), [directory](https://github.com/kailash-os/kailash-guide/issues/15)); the per-tool reference-page lane is open ([KA-WS-6](https://github.com/kailash-os/kailash-guide/issues/1)).
+
+## What ships next
+
+Work is tracked on the [Kailash Roadmap board](https://github.com/orgs/kailash-os/projects/1)
+(org Project, one Kanban view) as issues KA-01…KA-51 in the
+[`kailash-os`](https://github.com/kailash-os/kailash-os) org: the OS repo, the
+[`kailash-packages`](https://github.com/kailash-os/kailash-packages) overlay, and the
+[`kailash-website`](https://github.com/kailash-os/kailash-website) site mirror. The board's
+*Status* field (not labels) is the record of progress; the
+[dependency graph](https://github.com/kailash-os/kailash-os/issues/61) is the canon map — planning edges, not enforcement gates. Every
+issue lands a runnable artefact with an exit criterion — the distribution is proven by the
+checks it ships, not by prose.
+
+| Train | Items | Status |
+|---|---|---|
+| **2026.01-alpha.1 — DELIVERED** | [KA-01](https://github.com/kailash-os/kailash-os/issues/1)–[KA-29](https://github.com/kailash-os/kailash-os/issues/29) + [KA-36](https://github.com/kailash-os/kailash-os/issues/36) + [KA-45](https://github.com/kailash-os/kailash-os/issues/140)–[KA-47](https://github.com/kailash-os/kailash-os/issues/142) + [KA-33 slices](https://github.com/kailash-os/kailash-os/issues/197) + [KA-49](https://github.com/kailash-os/kailash-os/issues/204) + [KA-51](https://github.com/kailash-os/kailash-os/issues/209): the two-repo skeleton, taxonomy-as-data (337 slots / 32 census categories), every category module (CLASSIC C-1…C-10, ATTACK A-1…A-8, DEFENCE D-1…D-7, OPS O-1…O-7), the flagship derivations (garak, PyRIT, promptfoo, ART, counterfit), the CLI core, manifest-driven CI on both arches, the §11.2 double-key lab-mode gate, the hardened profiles, the image matrix (QEMU primary / ISO), and the first staged cut with SLSA + SPDX attestations per artefact | **[2026.01-alpha.1 published](https://github.com/kailash-os/kailash-os/releases/tag/2026.01-alpha.1)** |
+| **2026.01 — completion (rc → GA)** | [KA-48](https://github.com/kailash-os/kailash-os/issues/171) attestations across every artefact surface (containers, release notes bundle; the image/ISO leg already ships), the rc cut of the same train — the lockfile-is-the-version, so rc and GA are pin states, not feature deltas; GA is reserved bare `2026.01` | **rc** |
+| **2026.02 — next train** | [KA-26](https://github.com/kailash-os/kailash-os/issues/26) desktop menu generation (kailash-menu), [KA-30](https://github.com/kailash-os/kailash-os/issues/30) the website's manifest-driven content build (31 category pages, per-tool pages, ATLAS + standards views), [KA-31](https://github.com/kailash-os/kailash-os/issues/31) Quarto report templates + `kailash report new`, [KA-32](https://github.com/kailash-os/kailash-os/issues/32) golden-image diff + two-machine reproducibility gate, [KA-33](https://github.com/kailash-os/kailash-os/issues/33) full release.yml (changelog-from-lock-delta, aibom.cdx.json dogfood, site pin-bump), [KA-34](https://github.com/kailash-os/kailash-os/issues/34) the ATLAS tactic matrix wired across all 16 tactics, [KA-35](https://github.com/kailash-os/kailash-os/issues/35) standards-first navigation (`kailash verifier` + evidence pages), [KA-44](https://github.com/kailash-os/kailash-os/issues/44) the zero-to-Nix-derived learning track; guide/book upkeep fires every window ([KA-WS-6 upkeep](https://github.com/kailash-os/kailash-guide/issues/9)) | next |
+| **backlog — later trains** | [KA-37](https://github.com/kailash-os/kailash-os/issues/37) the nixvital torch-family fallback (only if nixpkgs variants fight), [KA-38](https://github.com/kailash-os/kailash-os/issues/38) upstreaming the novel bespoke derivations to nixpkgs (mcp-inspector precedent), [KA-39](https://github.com/kailash-os/kailash-os/issues/39) brand system (name/logo/layer colours/mountain theme), [KA-40](https://github.com/kailash-os/kailash-os/issues/40) the D-6 IRAP/ISM governance lens pack (Australian ISM), [KA-41](https://github.com/kailash-os/kailash-os/issues/41) `kailash doctor` + image build + update (doctor reports store-path provenance), [KA-42](https://github.com/kailash-os/kailash-os/issues/42) `kailash container <category>` provisioning (podman / nixos-containers), [KA-43](https://github.com/kailash-os/kailash-os/issues/43) headless-agent boot-to-agent image polish (SSH + CLI, no desktop) | later |
+
+The aarch64 legs of the matrix build natively on the alpha cut
+([KA-36](https://github.com/kailash-os/kailash-os/issues/36)); Raspberry Pi-class support is
+reported honestly as partial, and its posture rides with the image roadmap.
+
+## How an item ships
+
+The delivery unit is an hour-scale slice with a watchable RED→GREEN commit pair — hypothesis-first
+TDD, [harness-before-capability](https://github.com/kailash-os/kailash-os/issues/119) ordering, every commit GPG-signed and merge-gated. The
+[Build page](https://kailash.site/build.html) documents the loop; the
+[sprint register](https://github.com/kailash-os/kailash-os/issues/61) maps every item to the spec sections it implements. Releases follow the
+[cadence policy](https://github.com/kailash-os/kailash-os/blob/master/docs/guide/releases.md): a train
+every six weeks, alpha → rc.1 → GA, the lockfile is the version, nothing self-updates.
+
+## The docs estate
+
+Three public surfaces carry the specification and the practice, all generated or verified from the
+same manifest revision:
+
+- **kailash.site** — this site: the specification overview (taxonomy, architecture, verification
+  standards, governance) and the generated [tools](https://kailash.site/tools.html) page.
+- **[docs.kailash.tools](https://docs.kailash.tools)** — the Kailash OS Guide: what Kailash is, the
+  build's security and governance model ([KA-WS-6](https://github.com/kailash-os/kailash-os/issues/208)),
+  the per-category directory generated from the manifest, a man-style reference page per tool with the
+  exemplar live ([garak(1)](https://docs.kailash.tools/reference/garak.html)) — the manifest-driven
+  generator that lands all 321 reference pages is the open lane
+  ([KA-WS-6.6](https://github.com/kailash-os/kailash-guide/issues/17)).
+- **[book.kailash.tools](https://book.kailash.tools)** — the Kailash OS Cookbook: task-oriented
+  recipes — attack, defence, ops, admin — with real commands and expected output; getting-started,
+  the prompt-injection exemplar and the administrator chapter are live, with the recipe directory
+  and per-family walkthroughs continuing ([KA-WS-5](https://github.com/kailash-os/kailash-os/issues/208)).
+
+## Contributing
+
+Contributions follow the [contributing guide](https://kailash.site/contributing.html) and the
+engineering standard in [AGENTS.md](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md):
+add tools via a manifest entry, not hand-edited module files; CI validates, builds and VM-tests every
+change; commits and tags are GPG-signed; work happens on leaf branches cut from the default branch.
+Pick anything on the [2026.01 completion](https://github.com/orgs/kailash-os/projects/1) or the next
+train — the spec section cited in the issue body is the design source. Kailash OS is BSD-3-Clause
+(bundled tools keep their upstream licences).
