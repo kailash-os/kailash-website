@@ -69,7 +69,7 @@ own equivalents.
 
 - The distribution is pre-release: CI gates prove build health and layout
   integrity, not production readiness. Scope exclusions (what Kailash
-  deliberately does not ship) are documented in the project paper and PRD.
+  deliberately does not ship) are documented in the [project paper](https://kailash.site/#paper) and the [project specification](https://github.com/kailash-os/kailash-os/blob/master/docs/spec.md#27-deliberate-exclusions).
 
 Open a [general issue](https://github.com/kailash-os/kailash-os/issues/new) for
 non-sensitive questions; security reports follow the channels above.

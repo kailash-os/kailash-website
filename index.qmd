@@ -131,8 +131,9 @@ engineering of a reproducible OS, and the explicit scope exclusions.
 latest revision).
 
 The implementation specification (phase gates, packaging shapes, manifest
-schema, verification bindings) ships alongside it in the
-[project repository](https://github.com/kailash-os/kailash-os).
+schema, verification bindings) is
+[`docs/spec.md`](https://github.com/kailash-os/kailash-os/blob/master/docs/spec.md)
+in the [project repository](https://github.com/kailash-os/kailash-os).
 
 ## Get involved
 
