@@ -100,24 +100,19 @@ auto-starts, secrets are sops-nix-managed and read at runtime.
 
 ## Roadmap
 
-Implementation is decomposed into issues KA-01…KA-44 on the
-[Kailash Roadmap project board](https://github.com/orgs/kailash-os/projects/1)
-in [`kailash-os/kailash-os`](https://github.com/kailash-os/kailash-os), tracked
-by release train:
+The first release train is on the tracks: **[2026.01-alpha.1](https://github.com/kailash-os/kailash-os/releases/tag/2026.01-alpha.1)**
+published 13 October 2026 — the full four-layer catalogue (32 census
+categories, 337 tool slots) on a pinned NixOS base, every release artefact
+carrying SLSA provenance and an SBOM attestation. The docs estate is live:
+the [Kailash OS Guide](https://docs.kailash.tools) and the
+[Kailash OS Cookbook](https://book.kailash.tools).
 
-- **2026.01 (the first train, in cut)** — repo skeletons and taxonomy-as-data
-  (337 tools / 32 census categories), the FULL four-layer catalogue: CLASSIC
-  modules (C-1…C-10), the complete ATTACK long tail (A-1…A-8, agentic/MCP,
-  supply chain, the flagship derivations garak / PyRIT / promptfoo / ART /
-  counterfit), DEFENCE full (D-1…D-7), OPS platform modules (O-1…O-7 with
-  agent operability and capability grants), CLI core, CI with the
-  manifest-driven build matrix on both arches, safety gating (the §11.2
-  exp gate + lab-mode), the image matrix (QEMU primary, ISO second), and
-  the first staged cut `2026.01-alpha.1`
-- **2026.02** — desktop menu polish, website content generation, repro-gate
-  extras, nixvital overlay, report templates
-- **backlog** — standards navigation matrix, ARM support (KA-36 decides the
-  aarch64 posture), brand system
+The project timeline and the release-train plan — every item with its tracking
+issue and evidence — are maintained on the [Roadmap](roadmap.html) page. Work
+is tracked on the [Kailash Roadmap project board](https://github.com/orgs/kailash-os/projects/1)
+as issues `KA-NN` in [`kailash-os/kailash-os`](https://github.com/kailash-os/kailash-os),
+with the [dependency graph](https://github.com/kailash-os/kailash-os/issues/61)
+as the canon map.
 
 ## Paper
 

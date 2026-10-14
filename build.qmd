@@ -6,7 +6,7 @@ Kailash is built and verified with a small, reproducible toolchain: Nix flakes
 evaluating the whole distribution declaratively, a single tool manifest driving
 every generated surface, and every claim traced to a merge-verified pull
 request. This page documents that loop — the same loop that produces the
-evidence records cited across the [roadmap](index.html#roadmap) and its
+evidence records cited across the [roadmap](roadmap.html) and its
 [dependency graph](https://github.com/kailash-os/kailash-os/issues/61).
 
 ## The build environment
