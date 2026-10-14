@@ -21,6 +21,7 @@
 # and row counts against the manifest before exiting non-zero on mismatch.
 
 import argparse
+import os
 import sys
 import urllib.request
 
@@ -679,6 +680,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Generate tools.qmd from the kailash-packages tool manifest.")
     parser.add_argument("--out", default=DEFAULT_OUT, help="output path (default tools.qmd)")
+    parser.add_argument("--manifest-dir", default=None,
+                        help="read manifest/tools.yaml + categories.yaml from this "
+                             "local directory instead of the packages main raw URLs "
+                             "(pre-merge regeneration for manifest PRs; the default "
+                             "stay the pinned URLs)")
     parser.add_argument("--self-test", action="store_true",
                         help="run fixture-based assertions and exit")
     args = parser.parse_args(argv)
@@ -686,8 +692,14 @@ def main(argv=None):
     if args.self_test:
         return self_test()
 
-    tools_doc = fetch_manifest(TOOLS_URL)
-    categories_doc = fetch_manifest(CATEGORIES_URL)
+    if args.manifest_dir:
+        tools_doc = yaml.safe_load(
+            open(os.path.join(args.manifest_dir, "tools.yaml"), encoding="utf-8"))
+        categories_doc = yaml.safe_load(
+            open(os.path.join(args.manifest_dir, "categories.yaml"), encoding="utf-8"))
+    else:
+        tools_doc = fetch_manifest(TOOLS_URL)
+        categories_doc = fetch_manifest(CATEGORIES_URL)
     tools = tools_doc.get("tools") or []
     categories = categories_doc.get("categories") or []
     if not tools or not categories:

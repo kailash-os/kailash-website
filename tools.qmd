@@ -21,51 +21,51 @@ Selection criterion: fit to the four pillars — **AppSec** (classic software as
 
 Excluded (the §3.7 no-resurrection guard): hardware/RF/wifi/bluetooth tooling (one opt-in exception: the c-07 SDR data-pack), paid-licence tools, cloud-only SaaS, unmaintained tools, and classic-network attack tooling (lateral movement, C2 frameworks, social engineering) — Kali's network-arsenal territory, not the four pillars.
 
-32 taxonomy rows — 31 categories + 1 opt-in data-pack (`c-07-signal-sdr`) — and 336 tool rows: CLASSIC 146, ATTACK 58, OPS 87, DEFENCE 45. The §3.6 census projected ~337 primary slots; 330 are filled, the open planned slots noted per section below.
+32 taxonomy rows — 31 categories + 1 opt-in data-pack (`c-07-signal-sdr`) — and 270 tool rows: CLASSIC 140, ATTACK 23, OPS 82, DEFENCE 25. The §3.6 census projected ~337 primary slots; 264 are filled, the open planned slots noted per section below.
 
 Generated — never hand-maintained. `python3 tools/generate-tools-page.py` fetches `tools.yaml` + `categories.yaml` from kailash-packages and renders every number, table, and link here at generation time; manifest merges regenerate this page.
 
 ## What every value means
 
-Every field a tool row can carry, in manifest order. The *In* column is the live count of the 336 tool rows carrying the field at this revision; a smaller count means the field is optional and present only where it applies.
+Every field a tool row can carry, in manifest order. The *In* column is the live count of the 270 tool rows carrying the field at this revision; a smaller count means the field is optional and present only where it applies.
 
 | Field | In | Meaning |
 |---|---|---|
-| `id` | 336/336 | Unique slug — the row's key on every generated surface (menu, CLI, modules, docs, derivations). |
-| `layer` | 336/336 | `CLASSIC` · `ATTACK` · `DEFENCE` · `OPS` (the platform layer, formerly BUILD — os#121). All four ride a CORE substrate with no tool categories. |
-| `category` | 336/336 | Primary category id — exactly one per row (the one-tool-one-primary invariant); orders the 31 sections on this page. |
-| `secondary_categories` | 23/336 | Optional cross-refs where dual-use is real — never a second primary. Shown as the *also* line in the tables. |
-| `name` | 336/336 | Human name (menu/docs surface); equals `id` on all rows but one. |
-| `description` | 336/336 | One-line what-it-does, hand-written in the manifest; truncated in the tables. |
-| `source` | 320/336 | Upstream coordinates `{vcs_owner, repo, vcs_url}`; research-grade tools pin commit-exact (nvfetcher, `_sources/`). Absent on 16 rows with no declared upstream URL — those render unlinked. |
-| `license` | 336/336 | SPDX identifier (`GPL-2.0-only`, `MIT`, …). |
-| `packaging` | 336/336 | `status` (vocabulary below) + `derivation` path on bespoke rows (122). |
-| `safety` | 336/336 | `level` (vocabulary below) + `target-required` bool — inert without a declared target; keys the OS-side double gate. |
-| `nixos_menu` | 336/336 | Desktop-menu surface `{icon, exec, category}`. |
-| `docs` | 336/336 | Generated docs path: `layers/<category>/<tool>.md`. |
-| `tags` | 336/336 | Lowercase list: shape/stage markers + the `update:*` cadence class (below). |
-| `atlas_tactics` | 58/336 | ≥1 MITRE ATLAS tactic id (`AML.T…`, 2026.05 matrix) — ATTACK rows only. |
-| `owasp_llm` | 58/336 | Dual-epoch OWASP LLM Top 10 map `{2026: […], v2: […]}` — ATTACK rows only; the epochs are recorded separately and never mixed (§2.4). |
+| `id` | 270/270 | Unique slug — the row's key on every generated surface (menu, CLI, modules, docs, derivations). |
+| `layer` | 270/270 | `CLASSIC` · `ATTACK` · `DEFENCE` · `OPS` (the platform layer, formerly BUILD — os#121). All four ride a CORE substrate with no tool categories. |
+| `category` | 270/270 | Primary category id — exactly one per row (the one-tool-one-primary invariant); orders the 31 sections on this page. |
+| `secondary_categories` | 16/270 | Optional cross-refs where dual-use is real — never a second primary. Shown as the *also* line in the tables. |
+| `name` | 270/270 | Human name (menu/docs surface); equals `id` on all rows but one. |
+| `description` | 270/270 | One-line what-it-does, hand-written in the manifest; truncated in the tables. |
+| `source` | 258/270 | Upstream coordinates `{vcs_owner, repo, vcs_url}`; research-grade tools pin commit-exact (nvfetcher, `_sources/`). Absent on 12 rows with no declared upstream URL — those render unlinked. |
+| `license` | 270/270 | SPDX identifier (`GPL-2.0-only`, `MIT`, …). |
+| `packaging` | 270/270 | `status` (vocabulary below) + `derivation` path on bespoke rows (71). |
+| `safety` | 270/270 | `level` (vocabulary below) + `target-required` bool — inert without a declared target; keys the OS-side double gate. |
+| `nixos_menu` | 270/270 | Desktop-menu surface `{icon, exec, category}`. |
+| `docs` | 270/270 | Generated docs path: `layers/<category>/<tool>.md`. |
+| `tags` | 270/270 | Lowercase list: shape/stage markers + the `update:*` cadence class (below). |
+| `atlas_tactics` | 23/270 | ≥1 MITRE ATLAS tactic id (`AML.T…`, 2026.05 matrix) — ATTACK rows only. |
+| `owasp_llm` | 23/270 | Dual-epoch OWASP LLM Top 10 map `{2026: […], v2: […]}` — ATTACK rows only; the epochs are recorded separately and never mixed (§2.4). |
 
 ### `packaging.status`
 
 | Status | Count | Meaning |
 |---|---|---|
-| `native` | 336 | nixpkgs ships it; the row records the upstream coordinates the lock builds from. |
+| `native` | 270 | nixpkgs ships it; the row records the upstream coordinates the lock builds from. |
 | `stale` | 7 | nixpkgs-native; the packaged version trails upstream (tracked through the update cadence, not forked). |
-| `bespoke` | 122 | Packaged in this overlay: nvfetcher commit-exact pin, `pkgs/<tool>/default.nix`, `_sources/` committed. |
+| `bespoke` | 71 | Packaged in this overlay: nvfetcher commit-exact pin, `pkgs/<tool>/default.nix`, `_sources/` committed. |
 | `module` | 16 | Delivered as a bundled module/component (service- or library-shape), not a single menu executable. |
-| `data` | 29 | Data artefact — wordlists, corpora, pack seeds; typically an opt-in data-pack row. |
+| `data` | 12 | Data artefact — wordlists, corpora, pack seeds; typically an opt-in data-pack row. |
 
 ### `safety.level`
 
 | Level | Count | Meaning |
 |---|---|---|
-| `safe` | 290 | Runs as-is — works on artefacts, local models, or one's own systems. |
-| `requires-target` | 20 | Must be pointed at a system under test — authorised engagements only. |
-| `exp` | 26 | Experimental research code — lab releases; double-gated on the OS side (`kailash.labMode = true` + `KAILASH_LAB_MODE=1`). |
+| `safe` | 255 | Runs as-is — works on artefacts, local models, or one's own systems. |
+| `requires-target` | 11 | Must be pointed at a system under test — authorised engagements only. |
+| `exp` | 4 | Experimental research code — lab releases; double-gated on the OS side (`kailash.labMode = true` + `KAILASH_LAB_MODE=1`). |
 
-`target-required` (12 of 336 rows, all ATTACK) — inert without a target; renders as the `· target-required` marker in the Safety column.
+`target-required` (9 of 270 rows, all ATTACK) — inert without a target; renders as the `· target-required` marker in the Safety column.
 
 ### Tag update classes
 
@@ -73,7 +73,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tag | Rows |
 |---|---|
-| `update:slow` | 199 — The bulk cadence — steady availability, not per-commit tracking. |
+| `update:slow` | 183 — The bulk cadence — steady availability, not per-commit tracking. |
 | `update:steady` | 13 — Tighter tracking, not release-pinned. |
 | `update:weekly` | 5 — Weekly follow — fast-moving attack tooling. |
 | `update:fast` | 6 — Tightest follow — pinned-reference tools kept near upstream head. |
@@ -136,7 +136,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [nikto](https://github.com/sullo/nikto) | GPL-2.0-or-later | `native` | `safe` | Web server scanner performing tests for dangerous files and misconfigurations. |
 | [lynis](https://github.com/CISOfy/lynis) | GPL-3.0-only | `native` | `safe` | Security auditing tool for Linux, macOS and UNIX systems. |
 | [wapiti](https://github.com/wapiti-scanner/wapiti) | GPL-2.0-only | `native` | `safe` | Web application vulnerability scanner. |
-| **legion** | GPL-3.0-only | `bespoke` · `pkgs/legion/default.nix` | `safe` | Semi-automated network pentesting framework with a GUI. |
+| [legion](https://github.com/gnebbia/legion) | GPL-3.0-only | `bespoke` · `pkgs/legion/default.nix` | `safe` | Semi-automated network pentesting framework with a GUI. |
 | **searchsploit** | MIT | `native` | `safe` | Exploit Database search CLI (ships with the exploitdb archive). |
 | [nuclei](https://github.com/projectdiscovery/nuclei) | MIT | `stale` | `safe` | Configurable targeted vulnerability scanner — overlay-currency class. |
 | [gvm](https://github.com/greenbone/gvm-libs) | AGPL-3.0-only | `module` | `safe` | Greenbone Vulnerability Management — ships as services.kailash.gvm, not loose tools. |
@@ -156,7 +156,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [clairvoyance](https://github.com/nikitastupin/clairvoyance) | Apache-2.0 | `native` | `safe` | Obtains GraphQL API schemas from introspection-disabled endpoints. |
 | [inql](https://github.com/doyensec/inql)<br>*also:* `c-04-database-assessment` | Apache-2.0 | `bespoke` · `pkgs/inql/default.nix` | `safe` | Security testing tool for GraphQL — query/schema analysis. |
 | [kiterunner](https://github.com/assetnote/kiterunner) | AGPL-3.0-only | `native` | `safe` | Contextual content discovery tool for API routes. |
-| [gopherus](https://github.com/tarlogicsecurity/gopherus) | GPL-3.0-only | `bespoke` · `pkgs/gopherus/default.nix` | `safe` | Generates serialized payloads for SSRF/gopher attacks on internal services. |
+| [gopherus](https://github.com/tarunkant/Gopherus) | GPL-3.0-only | `bespoke` · `pkgs/gopherus/default.nix` | `safe` | Generates serialized payloads for SSRF/gopher attacks on internal services. |
 | [commix](https://github.com/commixproject/commix)<br>*also:* `c-08-exploitation-post-exploitation` | GPL-3.0-or-later | `native` | `safe` | Automated all-in-one OS command-injection exploitation tool. |
 | [sstimap](https://github.com/vladko312/SSTImap) | GPL-3.0-only | `bespoke` · `pkgs/sstimap/default.nix` | `safe` | SSTI detection and exploitation assistant (Server-Side Template Injection). |
 
@@ -176,7 +176,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [sqlitebrowser](https://github.com/sqlitebrowser/sqlitebrowser) | GPL-3.0-only | `native` | `safe` | DB Browser for SQLite — artefact inspection front-end. |
 | [mycli](https://github.com/dbcli/mycli) | BSD-3-Clause | `native` | `safe` | Command-line interface for MySQL with autocompletion. |
 
-## C-5 · Password &amp; Offline-Credential Attacks (`c-05-password-offline-credential`, CLASSIC, 15 tools)
+## C-5 · Password &amp; Offline-Credential Attacks (`c-05-password-offline-credential`, CLASSIC, 16 tools)
 
 **Purpose:** Offline credential attacks (hashes, dumps, artefacts).
 
@@ -198,7 +198,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [bopscrk](https://github.com/r3nt0n/bopscrk) | GPL-3.0-only | `bespoke` · `pkgs/bopscrk/default.nix` | `safe` | Smart wordlist generator that combines target-related words with transformations. |
 | [rsmangler](https://github.com/digininja/RSMangler) | CC-BY-SA-2.0 | `native` | `safe` | Performs various manipulations on wordlists (mangling). |
 | [twofi](https://github.com/digininja/twofi) | CC-BY-SA-2.0 | `bespoke` · `pkgs/twofi/default.nix` | `safe` | Twofi — words of interest from Twitter for password cracking lists. |
-| [seclists](https://github.com/danielmiessler/SecLists) | MIT | `data` | `safe` | Collection of security wordlists (passwords, usernames, URLs) — the opt-in wordlist pack seed row for KA-07.2. |
+| [seclists](https://github.com/danielmiessler/SecLists) | MIT | `data` | `safe` | Collection of security wordlists (passwords, usernames, URLs) — rides the opt-in kailash-data.wordlists-mega DATA pack (KA-29… |
+| [pw-packs](https://github.com/danielmiessler/SecLists) | MIT | `data` | `safe` | Small password pack — rockyou.txt as the pw-packs DATA pack (KA-29 derivation:pkgs/pw-packs, default OFF — data packs never ride a default… |
 
 ## C-6 · Reverse Engineering (software artefacts) (`c-06-reverse-engineering`, CLASSIC, 26 tools)
 
@@ -247,12 +248,12 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 |---|---|---|---|---|
 | [gnuradio](https://github.com/gnuradio/gnuradio) | GPL-3.0-only | `data` | `safe` | GNU Radio — software-defined radio DSP framework (software-only). |
 | [gqrx](https://github.com/gqrx-sdr/gqrx) | GPL-3.0-or-later | `data` | `safe` | Software-defined radio receiver built on GNU Radio. |
-| **hackrf-tools** | GPL-2.0-or-later | `data` | `safe` | Command-line utilities for HackRF hardware SDR platforms. |
-| [sox](https://github.com/sox-ng/sox) | GPL-2.0-or-later | `data` | `safe` | Sound eXchange — audio processing and format conversion. |
+| [hackrf-tools](https://github.com/GreatScottGadgets/hackrf) | GPL-2.0-or-later | `data` | `safe` | Command-line utilities for HackRF hardware SDR platforms. |
+| [sox](https://sourceforge.net/projects/sox/) | GPL-2.0-or-later | `data` | `safe` | Sound eXchange — audio processing and format conversion. |
 | [librosa](https://github.com/librosa/librosa) | ISC | `data` | `safe` | Audio and music-signal analysis library (Python). |
 | [pysox](https://github.com/rabitt/pysox) | BSD-3-Clause | `bespoke` · `pkgs/pysox/default.nix` | `safe` | Python bindings around SoX for audio DSP pipelines. |
 
-## C-8 · Exploitation &amp; Post-Exploitation (software) (`c-08-exploitation-post-exploitation`, CLASSIC, 9 tools)
+## C-8 · Exploitation &amp; Post-Exploitation (software) (`c-08-exploitation-post-exploitation`, CLASSIC, 8 tools)
 
 **Purpose:** Software-target exploitation, webshells, privesc/post-exploitation.
 
@@ -265,7 +266,6 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | **beef-xss** | GPL-2.0-only | `native` | `safe` | Browser Exploitation Framework — XSS hooking and browser assessment. |
 | [weevely](https://github.com/epinna/weevely3) | GPL-3.0-or-later | `native` | `safe` | Weaponized web shell with a telnet-like console. |
 | [laudanum](https://github.com/junk13/laudanum) | GPL-2.0-or-later | `native` | `safe` | Collection of ready-to-use injectable web-shell files. |
-| **webshell-analysis-pack** | LicenseRef-Unknown | `data` | `safe` | Reference pack of known webshell artefacts for detection and analysis. |
 | [peass-ng](https://github.com/peass-ng/PEASS-ng) | GPL-2.0-or-later | `native` | `safe` | Privilege-escalation awesome scripts suite (linpeas/winpeas). |
 | [unix-privesc-check](https://github.com/NixOS/nixpkgs) | GPL-2.0-or-later | `native` | `safe` | Finds misconfigurations allowing local privilege escalation. |
 | [pspy](https://github.com/dominicbreuker/pspy)<br>*also:* `c-09-forensics-ir-reporting` | GPL-3.0-only | `native` | `safe` | Monitors Linux processes without root permissions. |
@@ -282,7 +282,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [sleuthkit](https://github.com/sleuthkit/sleuthkit) | CPL-1.0 | `native` | `safe` | Library and CLI collection for filesystem forensics analysis. |
 | [volatility3](https://github.com/volatilityfoundation/volatility3) | VSL-1.0 | `native` | `safe` | Memory forensics framework (Volatility 3). |
 | [hashdeep](https://github.com/jessek/hashdeep) | GPL-2.0-only | `native` | `safe` | Hashing and audit utility with fuzzy matching (md5deep family). |
-| **chkrootkit** | GPL-2.0-or-later | `bespoke` · `pkgs/chkrootkit/default.nix` | `safe` | Locally checks for signs of a rootkit. |
+| [chkrootkit](https://www.chkrootkit.org/) | GPL-2.0-or-later | `bespoke` · `pkgs/chkrootkit/default.nix` | `safe` | Locally checks for signs of a rootkit. |
 | [rkhunter](https://github.com/Rootkit-Hunter/rkhunter) | GPL-2.0-or-later | `bespoke` · `pkgs/rkhunter/default.nix` | `safe` | Rootkit Hunter — scans for rootkits, backdoors and local exploits. |
 | **dc3dd** | GPL-3.0-or-later | `native` | `safe` | Forensic disk-imaging tool (DoD Cyber Crime Center fork of dd). |
 | [ewfacquire](https://github.com/libyal/libewf) | LGPL-3.0-only | `native` | `safe` | Acquires evidence in the Expert Witness Compression Format (libewf). |
@@ -300,7 +300,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [faraday](https://github.com/lightninglabs/faraday)<br>*also:* `o-06-documentation-reporting-authoring` | MIT | `module` | `safe` | Vulnerability-management and collaborative IR platform — service module. |
 | [pwndoc-ng](https://github.com/pwndoc-ng/pwndoc-ng)<br>*also:* `o-06-documentation-reporting-authoring` | MIT | `module` | `safe` | Collaborative pentest reporting platform — service module. |
 
-## C-10 · Runtime AppSec for AI Systems (`c-10-runtime-appsec-ai`, CLASSIC, 7 of 8 planned)
+## C-10 · Runtime AppSec for AI Systems (`c-10-runtime-appsec-ai`, CLASSIC, 1 tools)
 
 **Purpose:** AppSec toolkit aimed at AI endpoints — the ASVS-scoped runtime surface (the layer AISVS scopes out).
 
@@ -309,14 +309,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
 | [mitmproxy](https://github.com/mitmproxy/mitmproxy) | MIT | `native` | `safe` | Man-in-the-middle HTTP(S) proxy with a Python API — AI endpoint inspection. |
-| [oauth-mcp-prober](https://github.com/kailash-os/oauth-mcp-prober) | LicenseRef-Unknown | `bespoke` · `pkgs/oauth-mcp-prober/default.nix` | `safe` | Probes OAuth flows behind AI-agent tool surfaces for broken auth patterns. |
-| [sdl3-stream-fuzzer](https://github.com/kailash-os/sdl3-stream-fuzzer) | LicenseRef-Unknown | `bespoke` · `pkgs/sdl3-stream-fuzzer/default.nix` | `safe` | Structure-aware stream fuzzer for media/SDK endpoints exposed by AI runtimes. |
-| [llm-fuzzer](https://github.com/kailash-os/llm-fuzzer)<br>*also:* `a-02-prompt-injection-jailbreaks` | LicenseRef-Unknown | `bespoke` · `pkgs/llm-fuzzer/default.nix` | `safe` | Fuzzes LLM-backed endpoints with adversarial input corpora. |
-| [vulnerable-llm-apps](https://github.com/kailash-os/vulnerable-llm-apps)<br>*also:* `a-02-prompt-injection-jailbreaks` | LicenseRef-Unknown | `data` | `safe` | Deliberately vulnerable LLM application lab for AppSec training and verification. |
-| [ais](https://github.com/gojis/ais) | LicenseRef-Unknown | `bespoke` · `pkgs/ais/default.nix` | `safe` | ai-scanner — AI-endpoint AppSec scanner (plan §3.2: AISVS-scoped runtime surface). |
-| [asvs-verification-toolkit](https://github.com/kailash-os/asvs-verification-toolkit)<br>*also:* `d-07-standards-verification` | Apache-2.0 | `data` | `safe` | ASVS verification data-pack — checklists driving the D-7 verifier. |
 
-## A-1 · AI Reconnaissance &amp; Target Discovery (`a-01-ai-recon`, ATTACK, 5 tools)
+## A-1 · AI Reconnaissance &amp; Target Discovery (`a-01-ai-recon`, ATTACK, 1 tools)
 
 **Purpose:** Discover the AI surfaces a target exposes — models, agents, org artefacts, leaked AI-provider credentials.
 
@@ -324,13 +318,9 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [recon-ai](https://github.com/kailash-os/recon-ai) | LicenseRef-Unknown | `bespoke` · `pkgs/recon-ai/default.nix` | `requires-target` | AI-surface reconnaissance — discovers model endpoints, agentic surfaces and org-published AI artefacts on a target scope. |
-| [llm-recon](https://github.com/kailash-os/llm-recon) | LicenseRef-Unknown | `bespoke` · `pkgs/llm-recon/default.nix` | `requires-target` | LLM-focused reconnaissance — enumerates LLM API endpoints, model families and provider metadata from exposed surfaces. |
 | [trufflehog](https://github.com/trufflesecurity/trufflehog)<br>*also:* `c-08-exploitation-post-exploitation` | AGPL-3.0-only | `native` | `safe` | Secret scanner — hunts leaked AI-provider keys in repos and paths (A-1 AI-key hunting; C-8 classic secret scanning). |
-| [huggingface-org-scan](https://github.com/kailash-os/huggingface-org-scan) | LicenseRef-Unknown | `bespoke` · `pkgs/huggingface-org-scan/default.nix` | `safe` | Enumerates a target organization's Hugging Face presence — models, datasets, spaces and their freshness as attack surface. |
-| [colab-crawler](https://github.com/kailash-os/colab-crawler) | LicenseRef-Unknown | `bespoke` · `pkgs/colab-crawler/default.nix` | `requires-target` | Crawls shared compute notebooks for leaked credentials, mounted secrets and exposed model endpoints. |
 
-## A-2 · LLM Prompt Injection &amp; Jailbreaking (`a-02-prompt-injection-jailbreaks`, ATTACK, 8 tools)
+## A-2 · LLM Prompt Injection &amp; Jailbreaking (`a-02-prompt-injection-jailbreaks`, ATTACK, 6 tools)
 
 **Purpose:** Generation-stage prompt attacks — direct/indirect injection, jailbreaks, payload corpora.
 
@@ -341,13 +331,11 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [garak](https://github.com/NVIDIA/garak) | Apache-2.0 | `bespoke` · `pkgs/garak/default.nix` | `requires-target` · target-required | LLM vulnerability scanner — probes for jailbreaks, prompt injection, data leakage and hallucination across model providers. |
 | [promptfoo](https://github.com/promptfoo/promptfoo)<br>*also:* `d-02-detection-monitoring-observability, d-03-assurance-evals-benchmarks` | MIT | `bespoke` · `pkgs/promptfoo/default.nix` | `requires-target` · target-required | promptfoo — LLM eval and red-team CLI: prompt/model/RAG evaluation, regression checks and injection probes. |
 | [pyrit](https://github.com/microsoft/PyRIT) | MIT | `bespoke` · `pkgs/pyrit/default.nix` | `requires-target` | PyRIT — Microsoft's Python Risk Identification Tool: automated adversarial-text pipelines for probing generative-AI endpoints. |
-| [inj3ct-llm](https://github.com/kailash-os/inj3ct-llm) | LicenseRef-Unknown | `bespoke` · `pkgs/inj3ct-llm/default.nix` | `requires-target` | Injection harness — curates and drives prompt-injection payloads against targeted LLM deployments. |
-| [llm-red-team-col](https://github.com/kailash-os/llm-red-team-col) | LicenseRef-Unknown | `data` | `safe` | Curated red-team prompt corpus — collected real-world attack prompts with sources, for injection and jailbreak testing. |
 | [jailbreak-payloads](https://github.com/elder-plinius/L1B3RT4S) | AGPL-3.0 | `data` | `safe` | Jailbreak payload pack — packages the L1B3RT-4S corpus (the plan's libertas-prompts twin; content use-restrictions beyond the repo licence). |
 | [libertas-prompts](https://github.com/elder-plinius/L1B3RT4S) | AGPL-3.0 | `data` | `safe` | L1B3RT-4S prompt data pack — vendor-organized jailbreak corpus (L1B3RT-4S) for jailbreak testing. |
 | [llm-jailbreak-bench](https://github.com/JailbreakBench/jailbreakbench) | MIT | `data` | `safe` | JailbreakBench harness + artifact pack — standardized jailbreak robustness evaluation corpora. |
 
-## A-3 · Agentic, MCP &amp; Tool-Use Attacks (`a-03-agentic-mcp-tool-use`, ATTACK, 9 tools)
+## A-3 · Agentic, MCP &amp; Tool-Use Attacks (`a-03-agentic-mcp-tool-use`, ATTACK, 5 tools)
 
 **Purpose:** Attack the agentic control plane — tool-use/MCP scanners, agent fuzzers, poisoned-tool probes.
 
@@ -358,14 +346,10 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [mcp-scan](https://github.com/invariantlabs-ai/mcp-scan) | Apache-2.0 | `bespoke` · `pkgs/mcp-scan/default.nix` | `safe` | mcp-scan — Invariant's scanner: detects tool poisoning, prompt injection and tool-description drift in installed MCP servers. |
 | [mcp-guardian](https://github.com/eqtylab/mcp-guardian) | Apache-2.0 | `bespoke` · `pkgs/mcp-guardian/default.nix` | `safe` | MCP Guardian — proxy and guard layer for exercising MCP server controls (allow-lists, ratelimits) from the attacker side. |
 | [mcp-remote](https://github.com/geelen/mcp-remote) | MIT | `bespoke` · `pkgs/mcp-remote/default.nix` | `requires-target` | mcp-remote — stdio/HTTP bridge for reachability and man-in-the-middle tests of remote MCP transports. |
-| [mcp-unsafe-deser-probe](https://github.com/kailash-os/mcp-unsafe-deser-probe) | LicenseRef-Unknown | `bespoke` · `pkgs/mcp-unsafe-deser-probe/default.nix` | `exp` | Unsafe-deserialization probe — plants maliciously crafted tool payloads to test MCP/agent parser hardening (lab-gated). |
-| [langchain-vuln-hunter](https://github.com/kailash-os/langchain-vuln-hunter) | LicenseRef-Unknown | `bespoke` · `pkgs/langchain-vuln-hunter/default.nix` | `requires-target` | LangChain vulnerability hunter — drives CVE probes against langchain-based agent deployments. |
-| [llm-agent-fuzzer](https://github.com/kailash-os/llm-agent-fuzzer) | LicenseRef-Unknown | `bespoke` · `pkgs/llm-agent-fuzzer/default.nix` | `requires-target` | Agent fuzzer — mutation-guided goal chasing across agent tool-call loops; unsafe-path discovery. |
 | [mcpoison](https://github.com/pulkitb124/mcpoison) | LicenseRef-Unknown | `bespoke` · `pkgs/mcpoison/default.nix` | `exp` | MCPoison — public PoC demonstrating agent trickery via poisoned MCP tool definitions (lab-gated). |
 | [agent-dojo](https://github.com/ethz-spylab/agentdojo) | MIT | `bespoke` · `pkgs/agent-dojo/default.nix` | `safe` | AgentDojo — ETH's dynamic evaluation environment for prompt-injection attacks and defenses on LLM agents (upstream repo agentdojo). |
-| [poisoned-skill-pack](https://github.com/kailash-os/poisoned-skill-pack) | LicenseRef-Unknown | `data` | `exp` | Poisoned-skill lab pack — deliberately compromised agent skill/tool definitions for red-team drills (exp-gated). |
 
-## A-4 · Model Supply Chain &amp; Artefact Poisoning (`a-04-model-supply-chain`, ATTACK, 8 tools)
+## A-4 · Model Supply Chain &amp; Artefact Poisoning (`a-04-model-supply-chain`, ATTACK, 3 tools)
 
 **Purpose:** Attack the model/artefact supply chain — pickles/weights/registry scanners and artefact inspectors.
 
@@ -376,13 +360,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [guarddog](https://github.com/DataDog/guarddog) | Apache-2.0 | `bespoke` · `pkgs/guarddog/default.nix` | `safe` | Guarddog — DataDog's scanner: identifies malicious/typosquatted PyPI and npm packages (malicious-code + secrets rules). |
 | [picklescan](https://github.com/mmaitre314/picklescan) | MIT | `bespoke` · `pkgs/picklescan/default.nix` | `safe` | Picklescan — static security scanner for pickle/PyTorch model files: flags dangerous globals and unsafe opcodes. |
 | [modelscan](https://github.com/protectai/modelscan) | Apache-2.0 | `native` | `safe` | Protect AI modelscan — serialized-model scanner covering pickle, torch, keras and other ML artefact formats. |
-| [gguf-template-inspector](https://github.com/kailash-os/gguf-template-inspector) | LicenseRef-Unknown | `bespoke` · `pkgs/gguf-template-inspector/default.nix` | `safe` | GGUF template inspector — surfaces embedded chat templates and metadata for injection vectors inside GGUF weights. |
-| [safetensors-checker](https://github.com/kailash-os/safetensors-checker) | LicenseRef-Unknown | `bespoke` · `pkgs/safetensors-checker/default.nix` | `safe` | SafeTensors checker — malformed-tensor and metadata anomaly checks on safetensors model files. |
-| [hf-repo-inspector](https://github.com/kailash-os/hf-repo-inspector) | LicenseRef-Unknown | `bespoke` · `pkgs/hf-repo-inspector/default.nix` | `safe` | HF repository inspector — artefact-level red-team review of Hugging Face repos: mixed formats, suspicious payloads, org signals. |
-| [namespace-reuse-check](https://github.com/kailash-os/namespace-reuse-check) | LicenseRef-Unknown | `bespoke` · `pkgs/namespace-reuse-check/default.nix` | `safe` | Namespace-reuse checker — detects model/package name squatting and abandoned-namespace re-registration risk. |
-| [torch-load-poc](https://github.com/kailash-os/torch-load-poc) | LicenseRef-Unknown | `bespoke` · `pkgs/torch-load-poc/default.nix` | `exp` | torch.load PoC — demonstrates arbitrary-code execution via weights_only=False deserialization paths (lab-gated). |
 
-## A-5 · Model Extraction, Inversion &amp; MIA (`a-05-model-extraction-inversion`, ATTACK, 8 tools)
+## A-5 · Model Extraction, Inversion &amp; MIA (`a-05-model-extraction-inversion`, ATTACK, 7 tools)
 
 **Purpose:** Model theft and privacy attacks — extraction, inversion, membership inference.
 
@@ -394,12 +373,11 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [counterfit](https://github.com/Azure/counterfit) | MIT | `bespoke` · `pkgs/counterfit/default.nix` | `requires-target` · target-required | Counterfit — CLI automation layer for assessing the security of ML models (pinned reference posture; upstream dormant since 2025-07). |
 | [foolbox](https://github.com/bethgelab/foolbox) | MIT | `bespoke` · `pkgs/foolbox/default.nix` | `requires-target` · target-required | Foolbox — python toolbox for adversarial attacks on ML models (week-after: derivation pending). |
 | [cleverhans](https://github.com/cleverhans-lab/cleverhans) | MIT | `bespoke` · `pkgs/cleverhans/default.nix` | `requires-target` · target-required | CleverHans — adversarial-examples library for benchmarking ML robustness (week-after: derivation pending). |
-| [model-extraction-attack](https://github.com/kailash-os/model-extraction-attack) | LicenseRef-Unknown | `bespoke` · `pkgs/model-extraction-attack/default.nix` | `requires-target` · target-required | Model-extraction harness — drives query-efficient extraction campaigns against hosted model APIs (Steal-ML class). |
 | [knockoffnets](https://github.com/tribhuvanesh/knockoffnets) | LGPL-3.0 | `bespoke` · `pkgs/knockoffnets/default.nix` | `requires-target` · target-required | Knockoff Nets — black-box model functionality stealing via transfer-set queries on a substitute data budget. |
 | [tf-privacy](https://github.com/tensorflow/privacy) | Apache-2.0 | `bespoke` · `pkgs/tf-privacy/default.nix` | `requires-target` · target-required | TensorFlow Privacy — DP-SGD training plus membership-inference/capture attack utilities (the MIA reference implementations). |
 | [privacy-meter](https://github.com/privacytrustlab/ml_privacy_meter) | MIT | `bespoke` · `pkgs/privacy-meter/default.nix` | `requires-target` · target-required | Privacy Meter — audits data privacy in statistical/ML models with membership-inference leakage metrics. |
 
-## A-6 · Multi-modal &amp; Physical-AI Attacks (`a-06-multimodal-physical-ai`, ATTACK, 5 tools)
+## A-6 · Multi-modal &amp; Physical-AI Attacks (`a-06-multimodal-physical-ai`, ATTACK, 0 tools)
 
 **Purpose:** Semantic attacks past the text box — image/voice/camera injection, adversarial visuals; no RF (§3.7).
 
@@ -407,13 +385,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [vlm-image-injector](https://github.com/kailash-os/vlm-image-injector) | LicenseRef-Unknown | `bespoke` · `pkgs/vlm-image-injector/default.nix` | `requires-target` · target-required | VLM image injector — crafts image-channel payloads that steer vision-language model outputs (cross-modal prompt injection). |
-| [adversarial-patches-collection](https://github.com/kailash-os/adversarial-patches-collection) | LicenseRef-Unknown | `data` | `safe` | Adversarial-patch data pack — curated public patch corpora and generator recipes for visual-attack drills (aggregates e.g.… |
-| [adversarial-clothing](https://github.com/kailash-os/adversarial-clothing) | LicenseRef-Unknown | `bespoke` · `pkgs/adversarial-clothing/default.nix` | `exp` | Adversarial-clothing generator — printable physical-world attack patterns for person-detection/VLM pipelines (lab experiments). |
-| [audio-voice-clone-injector](https://github.com/kailash-os/audio-voice-clone-injector) | LicenseRef-Unknown | `bespoke` · `pkgs/audio-voice-clone-injector/default.nix` | `exp` | Audio voice-clone injector — voice-clone injection into voice pipelines and audio-LM prompt injection (pairs with C-7's DSP pack). |
-| [camera-adversarial-toolkit](https://github.com/kailash-os/camera-adversarial-toolkit) | LicenseRef-Unknown | `bespoke` · `pkgs/camera-adversarial-toolkit/default.nix` | `requires-target` · target-required | Camera adversarial toolkit — physical-channel attack evaluation against camera-fed AI systems (T0041 Physical Environment Access). |
 
-## A-7 · AI System Exploitation (`a-07-ai-system-exploitation`, ATTACK, 9 tools)
+## A-7 · AI System Exploitation (`a-07-ai-system-exploitation`, ATTACK, 0 tools)
 
 **Purpose:** Exploit deployed AI platform services — inference servers, gateways, vector stores (§6.5 pairing thesis).
 
@@ -421,17 +394,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [mlflow-bypass](https://github.com/kailash-os/mlflow-bypass) | LicenseRef-Unknown | `bespoke` · `pkgs/mlflow-bypass/default.nix` | `exp` | MLflow platform exploit — auth-bypass/RCE probes against MLflow tracking servers (pairs with the O-1 lab target). |
-| [triton-pwn](https://github.com/kailash-os/triton-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/triton-pwn/default.nix` | `exp` | Triton Inference Server exploit — unauthenticated API misuse and RCE probes (pairs with the O-2 docker-wrapper target). |
-| [torchserve-pwn](https://github.com/kailash-os/torchserve-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/torchserve-pwn/default.nix` | `exp` | TorchServe exploit — handler deserialization and management-API attack probes against TorchServe deployments. |
-| [ollama-pwn](https://github.com/kailash-os/ollama-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/ollama-pwn/default.nix` | `exp` | Ollama exploit — exposed-API and model-management attack probes against Ollama servers (0.0.0.0 default-bind class). |
-| [vllm-pwn](https://github.com/kailash-os/vllm-pwn) | LicenseRef-Unknown | `bespoke` · `pkgs/vllm-pwn/default.nix` | `exp` | vLLM exploit — inference-server API attack probes: deserialization, distributed-executor and auth surfaces. |
-| [kserve-exploit](https://github.com/kailash-os/kserve-exploit) | LicenseRef-Unknown | `bespoke` · `pkgs/kserve-exploit/default.nix` | `exp` | KServe exploit — serving-runtime and knative-surface attack probes against KServe model deployments. |
-| [shadow-ray](https://github.com/kailash-os/shadow-ray) | LicenseRef-Unknown | `bespoke` · `pkgs/shadow-ray/default.nix` | `exp` | ShadowRay exploit — the ATLAS case study CS0023 Ray-cluster takeover class: job-API RCE on unauthenticated Ray dashboards. |
-| [vector-db-ripper](https://github.com/kailash-os/vector-db-ripper) | LicenseRef-Unknown | `bespoke` · `pkgs/vector-db-ripper/default.nix` | `exp` | Vector-store ripper — unauthenticated dump/exfiltration probes against vector databases (chroma/qdrant/weaviate classes). |
-| [ai-gateway-bypass](https://github.com/kailash-os/ai-gateway-bypass) | LicenseRef-Unknown | `bespoke` · `pkgs/ai-gateway-bypass/default.nix` | `exp` | AI-gateway bypass — auth/quota/routing bypass probes against LLM gateways and proxies. |
 
-## A-8 · Data Poisoning &amp; Dataset Attacks (`a-08-data-poisoning`, ATTACK, 6 tools)
+## A-8 · Data Poisoning &amp; Dataset Attacks (`a-08-data-poisoning`, ATTACK, 1 tools)
 
 **Purpose:** Upstream-of-model attack tooling — dataset poisoning, backdoored training data, split-view replay.
 
@@ -439,12 +403,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [poison-dataset-builder](https://github.com/kailash-os/poison-dataset-builder) | LicenseRef-Unknown | `bespoke` · `pkgs/poison-dataset-builder/default.nix` | `exp` | Dataset-poisoning builder — crafts poisoned training corpora (trigger-embedded samples) for attack simulations (lab-gated). |
 | [trojai-toolkit](https://github.com/trojai/trojai) | Apache-2.0 | `bespoke` · `pkgs/trojai-toolkit/default.nix` | `safe` | TrojAI toolkit — NIST-rounded synthetic trojaned-dataset and trojaned-model generation for backdoor research. |
-| [trojan-lm-toolkit](https://github.com/kailash-os/trojan-lm-toolkit) | LicenseRef-Unknown | `bespoke` · `pkgs/trojan-lm-toolkit/default.nix` | `exp` | Trojan-LM toolkit — backdoor-embedding experiments against language-model training/fine-tuning corpora (lab-gated). |
-| [prompt-backdoor-tool](https://github.com/kailash-os/prompt-backdoor-tool) | LicenseRef-Unknown | `bespoke` · `pkgs/prompt-backdoor-tool/default.nix` | `exp` | Prompt-backdoor tool — trigger-insertion experiments in prompt/instruction corpora (the T0043.004 class at base technique). |
-| [data-exfil-via-poison](https://github.com/kailash-os/data-exfil-via-poison) | LicenseRef-Unknown | `bespoke` · `pkgs/data-exfil-via-poison/default.nix` | `exp` | Exfiltration-via-poisoning — model-behavior poisoning that leaks data at inference time (lab-gated). |
-| [split-view-replay](https://github.com/kailash-os/split-view-replay) | LicenseRef-Unknown | `bespoke` · `pkgs/split-view-replay/default.nix` | `safe` | Split-view replay — dataset split-integrity attacks: train/eval contamination and poisoning-via-replay drills. |
 
 ## O-1 · MLOps &amp; ML Engineering Suite (`o-01-mlops-ml-engineering`, OPS, 18 tools)
 
@@ -473,7 +432,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [xgboost](https://github.com/dmlc/xgboost) | Apache-2.0 | `native` | `safe` | XGBoost — distributed gradient-boosted decision trees. |
 | [lightgbm](https://github.com/microsoft/LightGBM) | MIT | `native` | `safe` | LightGBM — fast gradient-boosting framework (GBDT, GBRT). |
 
-## O-2 · Compute &amp; Serving Infrastructure (`o-02-compute-serving-infrastructure`, OPS, 11 of 13 planned)
+## O-2 · Compute &amp; Serving Infrastructure (`o-02-compute-serving-infrastructure`, OPS, 11 tools)
 
 **Purpose:** Model serving, orchestration and container runtimes — the deployed-AI platform the attack layers target.
 
@@ -511,7 +470,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [elasticsearch](https://github.com/elastic/elasticsearch) | AGPL-3.0-only OR LicenseRef-SSPL-1.0 OR LicenseRef-ELv2 | `module` | `safe` | Elasticsearch — distributed search engine; ships as a service module (AGPL-3.0 / SSPL / Elastic License 2.0 triple licence at the pin). |
 | [milvus](https://github.com/milvus-io/milvus) | Apache-2.0 | `module` | `safe` | Milvus — cloud-native vector database; docker-wrapper module. |
 
-## O-4 · Local LLM &amp; Inference Labs (`o-04-local-llm-inference-labs`, OPS, 5 tools)
+## O-4 · Local LLM &amp; Inference Labs (`o-04-local-llm-inference-labs`, OPS, 4 tools)
 
 **Purpose:** Local model serving and inference lab UIs — the self-hosted generation surface.
 
@@ -523,7 +482,6 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [llama.cpp](https://github.com/ggml-org/llama.cpp)<br>*also:* `o-02-compute-serving-infrastructure` | MIT | `native` | `safe` | llama.cpp — LLM inference in C/C++ (CPU/GPU quantized inference). |
 | [text-generation-webui](https://github.com/oobabooga/text-generation-webui) | AGPL-3.0 | `bespoke` · `pkgs/text-generation-webui/default.nix` | `safe` | text-generation-webui — open-source desktop app for local LLMs. |
 | [open-webui](https://github.com/open-webui/open-webui) | LicenseRef-OpenWebUI | `native` | `safe` | Open WebUI — self-hosted chat UI for local LLMs (branding-clause licence; unfree-class in nixpkgs). |
-| [gguf-quantiser](https://github.com/kailash-os/gguf-quantiser) | LicenseRef-Unknown | `bespoke` · `pkgs/gguf-quantiser/default.nix` | `safe` | GGUF quantiser — planned first-party CLI wrapping llama.cpp quantize workflows (Wave-5 deliverable). |
 
 ## O-5 · AI Engineering SDKs &amp; Dev Environment (`o-05-ai-engineering-sdks-dev-env`, OPS, 26 tools)
 
@@ -560,7 +518,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [mypy](https://github.com/python/mypy) | MIT | `native` | `safe` | mypy — optional static typing for Python. |
 | [python313](https://github.com/python/cpython) | PSF-2.0 | `native` | `safe` | CPython 3.13 (PSF-2.0 licence per upstream). |
 
-## O-6 · Documentation, Reporting &amp; Authoring (`o-06-documentation-reporting-authoring`, OPS, 10 of 12 planned)
+## O-6 · Documentation, Reporting &amp; Authoring (`o-06-documentation-reporting-authoring`, OPS, 10 tools)
 
 **Purpose:** Engagement-report and docs authoring — the quarto/pandoc/typst pipeline behind generated reports.
 
@@ -579,7 +537,7 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [texlive-full](https://github.com/TeX-Live/texlive-source) | GPL-3.0-or-later | `data` | `safe` | TeX Live scheme-full — opt-in data pack; bundle carries a licence mix (plan Appendix A: GPL-class). |
 | [dradis](https://github.com/dradis/dradisframework-ce) | GPL-2.0-only | `module` | `safe` | Dradis Framework CE — collaboration and reporting for IT security teams; ships as a service module. |
 
-## O-7 · Agent &amp; MCP Operability (`o-07-agent-mcp-operability`, OPS, 8 tools)
+## O-7 · Agent &amp; MCP Operability (`o-07-agent-mcp-operability`, OPS, 4 tools)
 
 **Purpose:** Operate AI agents inside the distro — the MCP server surface, container/lab packs, capability grants.
 
@@ -589,14 +547,10 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 |---|---|---|---|---|
 | [hexstrike-ai](https://github.com/0x4m4/hexstrike-ai) | MIT | `bespoke` · `pkgs/hexstrike-ai/default.nix` | `exp` | HexStrike AI — MCP server letting AI agents autonomously run 100+ security tools for offensive security operations. |
 | [mcp-kali-server](https://github.com/Wh0am123/MCP-Kali-Server) | MIT | `bespoke` · `pkgs/mcp-kali-server/default.nix` | `exp` | MCP Kali Server — Kali toolchain exposed over MCP for agent operators (third-party deliverable). |
-| [malicious-mcp-poc](https://github.com/kailash-os/malicious-mcp-poc)<br>*also:* `a-03-agentic-mcp-tool-use` | LicenseRef-Unknown | `data` | `exp` | Malicious MCP server proof-of-concept pack — lab artefacts for the A-3 scanner suite (opt-in lab pack). |
-| [insecure-mcp-lab](https://github.com/kailash-os/insecure-mcp-lab)<br>*also:* `a-03-agentic-mcp-tool-use` | LicenseRef-Unknown | `data` | `exp` | Insecure MCP lab — deliberately vulnerable MCP endpoints for scanner verification (opt-in lab pack). |
-| [kailash-mcp](https://github.com/kailash-os/kailash-mcp) | MIT | `bespoke` · `pkgs/kailash-mcp/default.nix` | `exp` | kailash-mcp — the distro's own MCP server, generated from the manifest; the CI dogfood target. |
-| [kailash-container](https://github.com/kailash-os/kailash-container) | MIT | `bespoke` · `pkgs/kailash-container/default.nix` | `exp` | kailash-container — container image deliverable bundling the distro toolset. |
-| [headless-agent](https://github.com/kailash-os/headless-agent) | MIT | `bespoke` · `pkgs/headless-agent/default.nix` | `exp` | headless-agent — headless agent image deliverable (grants-scoped). |
+| [kailash-mcp](https://github.com/kailash-os/kailash-packages) | MIT | `bespoke` · `pkgs/kailash-mcp/default.nix` | `exp` | kailash-mcp — the distro's own MCP server, generated from the manifest; the CI dogfood target. |
 | [mcp-inspector](https://github.com/modelcontextprotocol/inspector)<br>*also:* `a-03-agentic-mcp-tool-use` | Apache-2.0 | `bespoke` · `pkgs/mcp-inspector/default.nix` | `safe` | MCP Inspector — visual testing tool for MCP servers (dogfood duty in CI; licence MIT→Apache-2.0 transition). |
 
-## D-1 · AI Runtime Defence &amp; Guardrails (`d-01-runtime-defence`, DEFENCE, 7 tools)
+## D-1 · AI Runtime Defence &amp; Guardrails (`d-01-runtime-defence`, DEFENCE, 4 tools)
 
 **Purpose:** Guard and filter LLM traffic at runtime — prompts and completions pass defence rails before reaching the model or the user.
 
@@ -608,11 +562,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [llm-guard](https://github.com/protectai/llm-guard) | MIT | `bespoke` · `pkgs/llm-guard/default.nix` | `safe` | LLM Guard — input/output scanning pipeline for prompts and completions (PII, toxicity, prompt-injection scanners). |
 | [guardrails-ai](https://github.com/guardrails-ai/guardrails) | Apache-2.0 | `bespoke` · `pkgs/guardrails-ai/default.nix` | `safe` | Guardrails AI — validators that enforce structure, type and quality guarantees on LLM outputs. |
 | [rebuff](https://github.com/protectai/rebuff) | Apache-2.0 | `bespoke` · `pkgs/rebuff/default.nix` | `safe` | Rebuff — prompt-injection detector with a canary-token leakage check and multi-stage defence. |
-| [gaskunk](https://github.com/kailash-os/gaskunk) | LicenseRef-Unknown | `bespoke` · `pkgs/gaskunk/default.nix` | `safe` | Gaskunk — runtime LLM output-gating guard (planned first-party pack, KA-06.x derivation target). |
-| [llm-firewall](https://github.com/kailash-os/llm-firewall) | LicenseRef-Unknown | `bespoke` · `pkgs/llm-firewall/default.nix` | `safe` | LLM Firewall — policy firewall in front of LLM endpoints (planned first-party pack, Wave-5 derivation target). |
-| [whisper-gate](https://github.com/kailash-os/whisper-gate) | LicenseRef-Unknown | `bespoke` · `pkgs/whisper-gate/default.nix` | `safe` | Whisper Gate — audio-input LLM-surface gate (planned first-party pack, Wave-5 derivation target). |
 
-## D-2 · AI Detection, Monitoring, Observability &amp; IR (`d-02-detection-monitoring-observability`, DEFENCE, 8 tools)
+## D-2 · AI Detection, Monitoring, Observability &amp; IR (`d-02-detection-monitoring-observability`, DEFENCE, 6 tools)
 
 **Purpose:** Detect and observe AI-system abuse — LLM traffic telemetry, prompt-injection detection models, canary tokens, incident-response hooks.
 
@@ -625,8 +576,6 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [whylogs](https://github.com/whylabs/whylogs)<br>*also:* `o-01-mlops-ml-engineering` | Apache-2.0 | `bespoke` · `pkgs/whylogs/default.nix` | `safe` | WhyLabs whylogs — privacy-preserving data and ML/LLM logging profiles for drift and quality monitoring. |
 | [evidently](https://github.com/evidentlyai/evidently)<br>*also:* `o-01-mlops-ml-engineering` | Apache-2.0 | `bespoke` · `pkgs/evidently/default.nix` | `safe` | Evidently — ML and LLM observability framework: evals, tests and monitoring reports. |
 | [otel-ai](https://github.com/traceloop/openllmetry) | Apache-2.0 | `bespoke` · `pkgs/otel-ai/default.nix` | `safe` | OpenLLMetry — OpenTelemetry instrumentation for LLM applications (traceloop; plumbs AI traces into OTel backends). |
-| [prompt-injection-detector-bert](https://github.com/kailash-os/prompt-injection-detector-bert) | LicenseRef-Unknown | `bespoke` · `pkgs/prompt-injection-detector-bert/default.nix` | `safe` | Prompt-injection classifier pack — DeBERTa-class detector weights + loader for LLM-input gating (planned first-party pack). |
-| [canary-token-generator](https://github.com/kailash-os/canary-token-generator) | LicenseRef-Unknown | `bespoke` · `pkgs/canary-token-generator/default.nix` | `safe` | Canary-token generator — plants verifiable canary strings in prompts, system cards and datasets for leakage tracing (planned first-party… |
 | [giskard](https://github.com/Giskard-AI/giskard) | Apache-2.0 | `bespoke` · `pkgs/giskard/default.nix` | `safe` | Giskard — open-source evaluation and testing library for LLM agents (scan, tests, red-reporting). |
 
 ## D-3 · AI Assurance, Evals &amp; Benchmarks (`d-03-assurance-evals-benchmarks`, DEFENCE, 6 tools)
@@ -637,14 +586,14 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [lm-eval-harness](https://github.com/EleutherAI/lm-evaluation-harness) | MIT | `bespoke` · `pkgs/lm-eval-harness/default.nix` | `safe` | EleutherAI Language Model Evaluation Harness — standard few-shot benchmark runner (lm-eval). |
+| [lm-eval-harness](https://github.com/EleutherAI/lm-evaluation-harness) | MIT | `native` | `safe` | EleutherAI Language Model Evaluation Harness — standard few-shot benchmark runner (lm-eval). |
 | [deepeval](https://github.com/confident-ai/deepeval) | Apache-2.0 | `bespoke` · `pkgs/deepeval/default.nix` | `safe` | DeepEval — LLM evaluation framework with unit-test-style metrics (G-Eval, faithfulness, bias). |
 | [robustbench](https://github.com/RobustBench/robustbench) | MIT | `bespoke` · `pkgs/robustbench/default.nix` | `safe` | RobustBench — standardized adversarial-robustness benchmark suite (model zoo + attacks); MIT code, per-model weight licences vary. |
 | [evaluate](https://github.com/huggingface/evaluate)<br>*also:* `o-05-ai-engineering-sdks-dev-env` | Apache-2.0 | `native` | `safe` | HuggingFace Evaluate — library for easily evaluating ML models and datasets (the hub `evaluate` package). |
 | [fairlearn](https://github.com/fairlearn/fairlearn) | MIT | `bespoke` · `pkgs/fairlearn/default.nix` | `safe` | Fairlearn — fairness metrics and mitigation algorithms for ML models. |
 | [aif360](https://github.com/Trusted-AI/AIF360) | Apache-2.0 | `bespoke` · `pkgs/aif360/default.nix` | `safe` | AI Fairness 360 (AIF360) — comprehensive fairness-metrics and bias-mitigation toolkit. |
 
-## D-4 · Model Provenance, Signing &amp; Trust (`d-04-provenance-signing-trust`, DEFENCE, 10 tools)
+## D-4 · Model Provenance, Signing &amp; Trust (`d-04-provenance-signing-trust`, DEFENCE, 8 tools)
 
 **Purpose:** Prove where models and artefacts came from — provenance attestation, model signing, SBOM/AI-BOM scanning for model supply chains.
 
@@ -658,12 +607,10 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 | [trivy](https://github.com/aquasecurity/trivy) | Apache-2.0 | `native` | `safe` | Aqua Trivy — all-in-one vulnerability/secret/misconfiguration/SBOM scanner. |
 | [cyclonedx-cli](https://github.com/CycloneDX/cyclonedx-cli) | Apache-2.0 | `native` | `safe` | CycloneDX CLI — SBOM validation, merging, diffs and format conversions. |
 | [cdxgen](https://github.com/CycloneDX/cdxgen) | Apache-2.0 | `native` | `safe` | CycloneDX cdxgen — creates CycloneDX SBOMs for source trees and images across languages. |
-| [sigstore-tools](https://github.com/kailash-os/sigstore-tools) | LicenseRef-Unknown | `bespoke` · `pkgs/sigstore-tools/default.nix` | `safe` | Sigstore helper CLI pack — Rekor/fulcio transparency-log queries and bundle verification recipes (planned first-party pack). |
-| [modelsign](https://github.com/sigstore/model-signing) | Apache-2.0 | `bespoke` · `pkgs/modelsign/default.nix` | `safe` | Model signing CLI wrapping sigstore/model-signing — sign and verify model artefacts with Sigstore bundles. |
-| [hf-repo-auditor](https://github.com/kailash-os/hf-repo-auditor) | LicenseRef-Unknown | `bespoke` · `pkgs/hf-repo-auditor/default.nix` | `safe` | Hugging Face repository auditor — scans Hub repos for unsafe pickle/zip-slip artefacts and licence drift (planned first-party pack). |
+| [modelsign](https://github.com/sigstore/model-transparency) | Apache-2.0 | `native` | `safe` | Model signing CLI wrapping sigstore/model-transparency — sign and verify model artefacts with Sigstore bundles. |
 | [model-card-toolkit](https://github.com/tensorflow/model-card-toolkit) | Apache-2.0 | `bespoke` · `pkgs/model-card-toolkit/default.nix` | `safe` | TensorFlow Model Card Toolkit — automates generation of model documentation cards. |
 
-## D-5 · AI Threat Modelling (`d-05-threat-modelling`, DEFENCE, 6 tools)
+## D-5 · AI Threat Modelling (`d-05-threat-modelling`, DEFENCE, 1 tools)
 
 **Purpose:** Threat-model AI systems — ATLAS-mapped worksheet packs, visualisers and playbook templates producing reviewable artefacts.
 
@@ -671,14 +618,9 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [genai-threat-modelling-templates](https://github.com/kailash-os/genai-threat-modelling-templates) | LicenseRef-Unknown | `data` | `safe` | GenAI threat-modelling template pack — per-component worksheets for LLM/agent systems (planned first-party pack). |
-| [atlas-visualiser](https://github.com/kailash-os/atlas-visualiser) | LicenseRef-Unknown | `bespoke` · `pkgs/atlas-visualiser/default.nix` | `safe` | MITRE ATLAS visualiser — renders ATLAS tactic/technique coverage over a target system map (planned first-party pack). |
-| [stride-ai-worksheet](https://github.com/kailash-os/stride-ai-worksheet) | LicenseRef-Unknown | `data` | `safe` | STRIDE-for-AI worksheet pack — per-trust-boundary threat elicitation sheets for AI systems (planned first-party pack). |
 | [maestro](https://github.com/agentic-threat-modeling/MAESTRO) | CC-BY-SA-4.0 | `bespoke` · `pkgs/maestro/default.nix` | `safe` | MAESTRO threat-modelling CLI — agent-system threat elicitation keyed to the OWASP MAESTRO framework. |
-| [atlas-case-study-explorer](https://github.com/kailash-os/atlas-case-study-explorer) | LicenseRef-Unknown | `data` | `safe` | ATLAS case-study explorer — browsable real-world AI-incident case studies (planned first-party pack). |
-| [ai-incident-playbook-packs](https://github.com/kailash-os/ai-incident-playbook-packs)<br>*also:* `c-09-forensics-ir-reporting` | LicenseRef-Unknown | `data` | `safe` | AI incident-response playbook packs — detection/triage/rollback runbooks for AI incidents (planned first-party pack). |
 
-## D-6 · AI Governance &amp; Regulation Mapping (`d-06-governance-regulation-mapping`, DEFENCE, 4 tools)
+## D-6 · AI Governance &amp; Regulation Mapping (`d-06-governance-regulation-mapping`, DEFENCE, 0 tools)
 
 **Purpose:** Map AI deployments to governance regimes — EU AI Act checks, NIST AI RMF tooling, ISO/IEC 42001 templates, vendor review forms.
 
@@ -686,12 +628,8 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [ai-act-compliance-checker](https://github.com/kailash-os/ai-act-compliance-checker) | LicenseRef-Unknown | `bespoke` · `pkgs/ai-act-compliance-checker/default.nix` | `safe` | EU AI Act compliance checker — obligation inventory and gap scoring for AI deployments (planned first-party pack). |
-| [nist-ai-rmf-toolkit](https://github.com/kailash-os/nist-ai-rmf-toolkit) | LicenseRef-Unknown | `data` | `safe` | NIST AI RMF toolkit — Profile templates and mapping worksheets per the AI Risk Management Framework (planned first-party pack). |
-| [iso-42001-templates](https://github.com/kailash-os/iso-42001-templates) | LicenseRef-Unknown | `data` | `safe` | ISO/IEC 42001 template pack — AIMS control templates and evidence checklists (planned first-party pack). |
-| [genai-vendor-review-form](https://github.com/kailash-os/genai-vendor-review-form) | LicenseRef-Unknown | `data` | `safe` | GenAI vendor review form — provider risk questionnaire and scoring sheet (planned first-party pack). |
 
-## D-7 · Standards Verification Toolkit (`d-07-standards-verification`, DEFENCE, 4 of 5 planned)
+## D-7 · Standards Verification Toolkit (`d-07-standards-verification`, DEFENCE, 0 tools)
 
 **Purpose:** Verify against security standards — ASVS 5.0 / AISVS 1.0 / MLSVS / OWASP LLM Top 10 evidence tooling feeding the kailash verifier.
 
@@ -699,19 +637,15 @@ The `update:*` tag on a row is the update-automation cadence class — how aggre
 
 | Tool | Licence | Packaging | Safety | Description |
 |---|---|---|---|---|
-| [aisvs-1.0-toolkit](https://github.com/kailash-os/aisvs-1.0-toolkit)<br>*also:* `c-10-runtime-appsec-ai` | LicenseRef-Unknown | `data` | `safe` | OWASP AISVS 1.0 toolkit — verification checklists and level-mapping data driving the D-7 verifier (planned first-party pack). |
-| [mlsvs-toolkit](https://github.com/kailash-os/mlsvs-toolkit) | LicenseRef-Unknown | `data` | `safe` | OWASP MLSVS toolkit — machine-learning system verification checklists (planned first-party pack). |
-| [llm-top10-toolkit](https://github.com/kailash-os/llm-top10-toolkit) | LicenseRef-Unknown | `data` | `safe` | OWASP LLM Top 10 toolkit — risk-mapping data for both Top-10 epochs (2026 + v2:2025) driving the verifier (planned first-party pack). |
-| [kailash-verifier](https://github.com/kailash-os/kailash-verifier) | BSD-3-Clause | `bespoke` · `pkgs/kailash-verifier/default.nix` | `safe` | Kailash verifier CLI — `kailash verifier --standard aisvs --level N`: renders per-tool standards evidence from the manifest (§3.8; planned… |
 
 ## Per-layer summary
 
 | Layer | Categories | Tool rows |
 |---|---|---|
-| **CLASSIC** | 10 (C-1…C-10) — includes the opt-in SDR data-pack | 146 (of which 6 in the SDR data-pack) |
-| **ATTACK** | 8 (A-1…A-8) | 58 |
-| **OPS** | 7 (O-1…O-7) | 87 |
-| **DEFENCE** | 7 (D-1…D-7) | 45 |
-| **Total** | 31 categories + 1 opt-in data-pack | 336 |
+| **CLASSIC** | 10 (C-1…C-10) — includes the opt-in SDR data-pack | 140 (of which 6 in the SDR data-pack) |
+| **ATTACK** | 8 (A-1…A-8) | 23 |
+| **OPS** | 7 (O-1…O-7) | 82 |
+| **DEFENCE** | 7 (D-1…D-7) | 25 |
+| **Total** | 31 categories + 1 opt-in data-pack | 270 |
 
 The second planned data-pack, `kailash-data.wordlists-mega` (riding C-5), is a manifest plan row, not yet a tool row — the opt-in wordlist pack lands with the KA-07 data work. This page renders the manifest as it stands; regenerate after the next manifest merge and the counts move with it.
