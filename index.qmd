@@ -149,4 +149,5 @@ files; CI validates, builds, and tests every change; signed commits required.
 Open an issue on the [roadmap board](https://github.com/orgs/kailash-os/projects/1)
 or pick up a 2026.01 train item to get started.
 
-Contact: [shain.singh@owasp.org](mailto:shain.singh@owasp.org)
+Contact: **Shain Singh** — [shain.singh@owasp.org](mailto:shain.singh@owasp.org)
+([OpenPGP](security.html): `9CB1781DC2BB28D37A0155DCAAF8226F3F4C1712`)
