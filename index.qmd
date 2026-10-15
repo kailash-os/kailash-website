@@ -114,6 +114,16 @@ as issues `KA-NN` in [`kailash-os/kailash-os`](https://github.com/kailash-os/kai
 with the [dependency graph](https://github.com/kailash-os/kailash-os/issues/61)
 as the canon map.
 
+## Documentation {#documentation}
+
+The docs estate is three sites:
+
+- [kailash.site](https://kailash.site) — project home, paper, and roadmap (this site)
+- [docs.kailash.tools](https://docs.kailash.tools) — the user and administrator guide, with a man-style reference page for every tool in the catalogue
+- [book.kailash.tools](https://book.kailash.tools) — the cookbook: task-oriented recipes in the Problem → Solution → Discussion → See-also format
+
+The guide explains what a tool is; the cookbook shows how to use it.
+
 ## Paper
 
 The design is documented in the paper *"Kailash OS — An Operating System for
