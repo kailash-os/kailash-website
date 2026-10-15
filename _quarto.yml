@@ -34,6 +34,10 @@ website:
         text: Tools
       - href: build.qmd
         text: Build
+      - href: https://docs.kailash.tools
+        text: Docs
+      - href: https://book.kailash.tools
+        text: Cookbook
     right:
       - href: roadmap.qmd
         text: Roadmap
@@ -50,6 +54,10 @@ website:
   page-footer:
     left: "Kailash OS — BSD-3-Clause licensed."
     right:
+      - text: Docs
+        href: https://docs.kailash.tools
+      - text: Cookbook
+        href: https://book.kailash.tools
       - icon: github
         href: https://github.com/kailash-os
 
