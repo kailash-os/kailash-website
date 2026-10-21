@@ -7,17 +7,16 @@ subtitle: "A NixOS-based Linux distribution for AI security — one declarativel
 
 
 Kailash OS keeps the distribution contract that made Kali Linux the default
-environment for security work — curated tooling, category navigation, live
-images, self-consistent surfaces — and points it at a surface Kali has never
-mapped: the AI systems stack. Everything that attacks AI systems, defends
-them, or builds and deploys them is expressed exactly once, in Nix flakes, in
-a single reproducible environment.
+security environment: curated tooling, category navigation, live images, and
+self-consistent surfaces. The AI systems stack is the surface Kali Linux never
+mapped. Kailash OS extends the same contract to this stack. Everything that
+attacks AI systems, defends it, or runs it is expressed exactly once, in Nix
+flakes, in a single reproducible environment.
 
 ## The four pillars
 
-Kailash targets four domains, and each pillar ships twice — as offensive tooling
-in the ATTACK layer, and as build-side or defensive tooling in the DEFENCE and
-OPS layers:
+Kailash targets four domains. Each pillar ships twice: offensive tooling in the
+ATTACK layer; build-side or defensive tooling in the DEFENCE and OPS layers:
 
 - **AppSec** — classic application security assessment (CLASSIC layer, software only)
 - **APISec** — web, API, and AI-endpoint runtime assessment
@@ -26,11 +25,11 @@ OPS layers:
 
 ## Taxonomy
 
-The tool set is organised as a **CORE substrate plus four named tool layers, 32
-census categories (31 shippable categories + 1 opt-in data pack), ~337 curated
-tool slots**. CORE — kernel, base userland, hardening,
-safety defaults, desktop, CLI and menu engines — hosts no tool categories; every
-image inherits it.
+The tool set is organised as a **CORE substrate plus four named tool layers and
+32 census categories (31 shippable categories + 1 opt-in data pack)**. CORE —
+kernel, base userland, hardening, safety defaults, desktop, CLI and menu
+engines — hosts no tool categories; every image inherits it. The generated
+[Tools page](tools.html) carries the slot census at the current pin.
 
 | Layer | Ids | Purpose | Categories |
 |---|---|---|---|
@@ -40,10 +39,10 @@ image inherits it.
 | **DEFENCE** | D-1…D-7 | AI defensive and assurance tooling | Runtime Defence & Guardrails · Detection & Observability · Evals & Benchmarks · Provenance & Signing · Threat Modelling · Governance Mapping · Standards Verification |
 | **OPS** | O-1…O-7 | the platform the other layers attack and defend | MLOps · Compute & Serving · Vector Stores · Local LLM · SDKs & Dev Env · Docs & Authoring · Agent & MCP Operability |
 
-Navigation is generated from one manifest and offered three ways, mirroring the
-practitioner's three questions: **layer-first** (menu), **tactic-first**
-(MITRE ATLAS matrix), and **standard-first** (ASVS / AISVS / MLSVS / OWASP LLM
-Top 10 evidence views).
+Navigation is generated from one manifest. Three views mirror the
+practitioner's three questions: **layer-first** (the menu), **tactic-first**
+(the MITRE ATLAS matrix), and **standard-first** (the ASVS / AISVS / MLSVS /
+OWASP LLM Top 10 evidence views).
 
 ## Architecture
 
@@ -57,62 +56,69 @@ Two repositories and a website mirror the nixpkgs↔NixOS split:
 - `kailash-website` — this site: generated docs and governance pages, built
   from a pinned manifest revision.
 
-One manifest drives **six system views** — overlay, module tree, desktop menu,
-CLI, docs, and the verification evidence matrix — so no two surfaces can drift.
-Every category is an opt-in NixOS module (`kailash.layers.<layer>.categories.<id>`),
-generated from the manifest, VM-tested, never hand-maintained.
+One manifest drives **six system views**: overlay, module tree, desktop menu,
+CLI, docs, and the verification evidence matrix. No two surfaces drift. Every
+category is an opt-in NixOS module
+(`kailash.layers.<layer>.categories.<id>`), generated from the manifest,
+VM-tested, never hand-maintained.
 
-Releases are lockfile states: the lockfile is the version — releases tag
-`2026.01-alpha.1` first (staged cuts), with bare `2026.01` reserved for GA;
-the two-digit release index counts releases within the year (01, 02, …,
-2026.10, …), nixpkgs inputs refresh monthly, tool updates arrive as
-reviewed PRs by staleness class, and a release train departs every six
-weeks with its images, checksums, and signed changelog.
+Releases are lockfile states: the lockfile is the version. Releases tag
+`2026.01-alpha.1` first (staged cuts); bare `2026.01` stays reserved for GA.
+The two-digit release index counts releases within the year (01, 02, …,
+2026.10, …). Nixpkgs inputs refresh monthly. Tool updates arrive as reviewed
+PRs by staleness class. A release train departs every 6 weeks with its images,
+checksums, and signed changelog.
 
 ## The lab thesis
 
 The platform and the attack tooling ship together. OPS deploys MLflow, vLLM,
-TorchServe, vector stores, and agent runtimes as documented lab configurations;
-ATTACK carries the platform-exploitation probes validated against those same
-deployments. Builders learn to break, breakers learn to build — in one pinned
-environment, with the distribution as its own verification harness.
+TorchServe, vector stores, and agent runtimes as documented lab
+configurations. ATTACK carries the platform-exploitation probes validated
+against those same deployments. Builders learn to break; breakers learn to
+build. One pinned environment carries the distribution's own verification
+harness.
 
 ## Verification standards
 
-Assurance work binds to the OWASP stack — ASVS 5.0, AISVS 1.0, MLSVS / ML Top
+Assurance work binds to the OWASP stack: ASVS 5.0, AISVS 1.0, MLSVS / ML Top
 10, and both epochs of the OWASP LLM Top 10 (2026 and v2-2025). Each standard
-chapter resolves to the tools and data packs that test it; `kailash verifier`
-emits the chapter-by-chapter evidence matrix, turning "verified against the
-standard" from a spreadsheet exercise into an executable command.
+chapter resolves to the tools and data packs that test it. `kailash verifier`
+emits the chapter-by-chapter evidence matrix
+([KA-35](https://github.com/kailash-os/kailash-os/issues/35)); the claim
+"verified against the standard" becomes an executable command.
 
 ## Governance
 
 Kailash ships offensive AI-security tooling for **authorised security work
 only** — red-team engagements with written authorisation, academic research,
-and defender validation of one's own systems. Users are responsible for the law
-in their jurisdiction (in Australia: Cyber Security Act 2024 (Cth); Criminal
-Code Act 1995 (Cth), Div 474). Safety is part of the OS rather than
-documentation beside it: `KAILASH_LAB_MODE` defaults off, active-exploit
-tooling is double-gated behind explicit host and shell opt-in (the host
-key `kailash.labMode = true` plus the shell key `KAILASH_LAB_MODE=1` per
-invocation), no service
-auto-starts, secrets are sops-nix-managed and read at runtime.
+and defender validation of one's own systems. Users are responsible for the
+law in their jurisdiction (in Australia: Cyber Security Act 2024 (Cth);
+Criminal Code Act 1995 (Cth), Div 474).
+
+Safety is part of the OS rather than documentation beside it. `KAILASH_LAB_MODE`
+defaults off. Active-exploit tooling is double-gated behind explicit host and
+shell opt-in: the host key `kailash.labMode = true` plus the shell key
+`KAILASH_LAB_MODE=1` per invocation. No service auto-starts. Secrets are
+sops-nix-managed and read at runtime.
 
 ## Roadmap
 
-The first release train is on the tracks: **[2026.01-alpha.1](https://github.com/kailash-os/kailash-os/releases/tag/2026.01-alpha.1)**
-published 13 October 2026 — the full four-layer catalogue (32 census
-categories, 337 tool slots) on a pinned NixOS base, every release artefact
-carrying SLSA provenance and an SBOM attestation. The docs estate is live:
-the [Kailash OS Guide](https://docs.kailash.tools) and the
+The first release train ran: **[2026.01-alpha.1](https://github.com/kailash-os/kailash-os/releases/tag/2026.01-alpha.1)**
+published on 13 October 2026. The tag carries the full four-layer catalogue on
+a pinned NixOS base; the generated [Tools page](tools.html) states the census
+at each pin. Every release artefact carries SLSA provenance and an SBOM
+attestation. The docs estate is live: the
+[Kailash OS Guide](https://docs.kailash.tools) and the
 [Kailash OS Cookbook](https://book.kailash.tools).
 
-The project timeline and the release-train plan — every item with its tracking
-issue and evidence — are maintained on the [Roadmap](roadmap.html) page. Work
-is tracked on the [Kailash Roadmap project board](https://github.com/orgs/kailash-os/projects/1)
-as issues `KA-NN` in [`kailash-os/kailash-os`](https://github.com/kailash-os/kailash-os),
-with the [dependency graph](https://github.com/kailash-os/kailash-os/issues/61)
-as the canon map.
+The [Roadmap](roadmap.html) page maintains the project timeline and the
+release-train plan: every item with its tracking issue and evidence. Work sits
+tracked on the
+[Kailash Roadmap project board](https://github.com/orgs/kailash-os/projects/1)
+as issues `KA-NN` in
+[`kailash-os/kailash-os`](https://github.com/kailash-os/kailash-os). The
+[dependency graph](https://github.com/kailash-os/kailash-os/issues/61) is the
+canon map.
 
 ## Documentation {#documentation}
 
@@ -126,28 +132,29 @@ The guide explains what a tool is; the cookbook shows how to use it.
 
 ## Paper
 
-The design is documented in the paper *"Kailash OS — An Operating System for
-Building and Securing AI"* — covering the taxonomy derivation from MITRE ATLAS
-and the OWASP standards, the manifest-driven architecture, the release
+The paper *"Kailash OS — An Operating System for Building and Securing AI"*
+documents the design. It covers the taxonomy derivation from MITRE ATLAS and
+the OWASP standards, the manifest-driven architecture, the release
 engineering of a reproducible OS, and the explicit scope exclusions.
 
 **Read the current revision: [paper.pdf](paper.pdf)** (Revision 1.3, 9 October 2026
-— updated as the implementation progresses; the live copy always reflects the
-latest revision).
+— updated as the implementation progresses; the live copy reflects the latest
+revision).
 
-The implementation specification (phase gates, packaging shapes, manifest
-schema, verification bindings) is
+The implementation specification carries the phase gates, the packaging
+shapes, the manifest schema, and the verification bindings. It is
 [`docs/spec.md`](https://github.com/kailash-os/kailash-os/blob/master/docs/spec.md)
 in the [project repository](https://github.com/kailash-os/kailash-os).
 
 ## Get involved
 
-Kailash is open source under **BSD-3-Clause** (bundled tools keep
-their upstream licences). The packaging harness, taxonomy, and CLI are built to
-accept contributors: add a tool via manifest entry, not hand-edited module
-files; CI validates, builds, and tests every change; signed commits required.
-Open an issue on the [roadmap board](https://github.com/orgs/kailash-os/projects/1)
-or pick up a 2026.01 train item to get started.
+Kailash is open source under **BSD-3-Clause**. Bundled tools keep their
+upstream licences. The packaging harness, the taxonomy, and the CLI accept
+contributors: add a tool via a manifest entry, not via hand-edited module
+files. CI validates, builds, and tests every change. Signed commits stay
+required. Open an issue on the
+[roadmap board](https://github.com/orgs/kailash-os/projects/1), or pick up a
+2026.01 train item.
 
 Contact: **Shain Singh** — [shain.singh@owasp.org](mailto:shain.singh@owasp.org)
 ([OpenPGP](security.html): `9CB1781DC2BB28D37A0155DCAAF8226F3F4C1712`)

@@ -4,7 +4,7 @@ toc: false
 ---
 
 The single source of truth for humans and coding agents (Copilot, Claude,
-Cursor, Hermes, etc.) working on Kailash OS is
+Cursor, Hermes) working on Kailash OS is
 [`AGENTS.md`](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md)
 in the [`kailash-os`](https://github.com/kailash-os/kailash-os) repository
 (default branch `master`). The companion guide for the
@@ -12,10 +12,10 @@ in the [`kailash-os`](https://github.com/kailash-os/kailash-os) repository
 repo is
 [`AGENTS.md`](https://github.com/kailash-os/kailash-packages/blob/main/AGENTS.md)
 there. Tool-specific files (`CLAUDE.md`,
-`.github/copilot-instructions.md`) point at these; when anything disagrees,
+`.github/copilot-instructions.md`) point at these. On any disagreement,
 **AGENTS.md wins**.
 
-Read them at the source — the GitHub-rendered pages are always current:
+Read the files at the source — the GitHub-rendered pages stay current:
 
 - [`kailash-os`](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md):
   project map, layer model and the manifest single-home rule, TDD standard
@@ -25,30 +25,33 @@ Read them at the source — the GitHub-rendered pages are always current:
   tooling — the safety posture is deliberate and testable).
 - [`kailash-packages`](https://github.com/kailash-os/kailash-packages/blob/main/AGENTS.md):
   the overlay flake — pins, packaging shapes and the manifest rules that
-  every other artifact generates from.
+  every other artefact generates from.
 
 ## Architecture Decision Records
 
 Structural changes carry an ADR in the same PR. Most slices are
-leaf-sized — the issue's plan reference IS the design record, no ADR
-needed — write one only when the change **introduces a new persistent
-artifact** or **removes or changes one**: a manifest schema field whose
+leaf-sized: the issue's plan reference IS the design record, and no ADR
+is needed. Write one only when the change **introduces a new persistent
+artefact**, or **removes or changes one**: a manifest schema field whose
 semantics lock, a profile contract, a wire format, a gate script.
 
-The record home is deliberately **single**:
+The structural record home is deliberately **single**:
 [`kailash-os` `docs/adr/`](https://github.com/kailash-os/kailash-os/tree/master/docs/adr) —
 [the process](https://github.com/kailash-os/kailash-os/blob/master/docs/adr/0000-architecture-decision-records.md)
 and [the record format](https://github.com/kailash-os/kailash-os/blob/master/docs/adr/0001-record-format.md).
 Overlay decisions land there too, with the PR that makes the change.
 
-Rules with teeth:
+The rules:
 
 - **Accepted ADRs are immutable.** A change that contradicts an accepted
-  ADR supersedes it with a new one; the accepted record is never rewritten.
-- **Never invent discussion, deciders or quotes.** Cite commit/issue
+  ADR supersedes it with a new one. The accepted record is never rewritten.
+- **Never invent discussion, deciders, or quotes.** Cite commit/issue
   permalinks, or write "No substantive technical discussion recorded".
-- Dependency bumps, docs and CI tweaks don't need ADRs.
+- Dependency bumps, docs tweaks, and CI tweaks need no ADR.
 
-This page intentionally does not mirror either file: a mirror drifts the
-moment the repos move, and the source-of-truth rule (AGENTS.md wins)
-already says where to look.
+This repo also records repo-local prose decisions in its own
+[`docs/adr/`](https://github.com/kailash-os/kailash-website/tree/main/docs/adr)
+(the writing-standard record).
+
+This page does not mirror either file. A mirror drifts the moment the repos
+move. The source-of-truth rule (AGENTS.md wins) states the place to look.
