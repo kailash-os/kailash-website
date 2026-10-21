@@ -183,9 +183,9 @@ def category_section(cat, tools):
     if kind == "data-pack":
         pack_ref = cat.get("data", "")
         lines.append(
-            "**Opt-in data-pack.** This category ships as the opt-in data-pack `%s` "
-            "— its tools are absent from default profiles and ISOs by design; the "
-            "module stub exists but is switched off on every default surface. "
+            "**Opt-in data-pack.** This category ships as the opt-in data-pack `%s`. "
+            "Its tools stay absent from default profiles and ISOs by design. The "
+            "module stub exists. It stays off on every default surface. "
             "Manifest note: %s" % (md_cell(pack_ref), md_cell(cat.get("notes", "")))
         )
         lines.append("")
@@ -230,19 +230,17 @@ def field_glossary(tools):
         ("`id`", "%d/%d" % (in_counts["id"], total),
          "Unique slug — the row's key on every generated surface (menu, CLI, modules, docs, derivations)."),
         ("`layer`", "%d/%d" % (in_counts["layer"], total),
-         "`CLASSIC` · `ATTACK` · `DEFENCE` · `OPS` (the platform layer, formerly BUILD — os#121). All four ride a CORE substrate with no tool categories."),
+         "`CLASSIC` · `ATTACK` · `DEFENCE` · `OPS` (the platform layer, formerly BUILD — [kailash-os#121](https://github.com/kailash-os/kailash-os/issues/121)). All four ride a CORE substrate with no tool categories."),
         ("`category`", "%d/%d" % (in_counts["category"], total),
-         "Primary category id — exactly one per row (the one-tool-one-primary invariant); orders the 31 sections on this page."),
+         "Primary category id — exactly one per row (the one-tool-one-primary invariant). The id orders the 31 sections on this page."),
         ("`secondary_categories`", "%d/%d" % (in_counts["secondary_categories"], total),
-         "Optional cross-refs where dual-use is real — never a second primary. Shown as the *also* line in the tables."),
+         "Optional cross-refs where dual-use is real — never a second primary. The tables show it as the *also* line."),
         ("`name`", "%d/%d" % (in_counts["name"], total),
-         "Human name (menu/docs surface); equals `id` on all rows but one."),
+         "Human name (menu/docs surface). It equals `id` on all rows but one."),
         ("`description`", "%d/%d" % (in_counts["description"], total),
-         "One-line what-it-does, hand-written in the manifest; truncated in the tables."),
+         "One line: what the tool does. The manifest holds the text. The tables truncate it."),
         ("`source`", "%d/%d" % (in_counts["source"], total),
-         "Upstream coordinates `{vcs_owner, repo, vcs_url}`; research-grade tools pin "
-         "commit-exact (nvfetcher, `_sources/`). Absent on %d rows with no declared "
-         "upstream URL — those render unlinked."
+         "Upstream coordinates `{vcs_owner, repo, vcs_url}`. Research-grade tools pin commit-exact (nvfetcher, `_sources/`). The field is absent on %d rows with no declared upstream URL. Those rows render unlinked."
          % (total - in_counts["source"])),
         ("`license`", "%d/%d" % (in_counts["license"], total),
          "SPDX identifier (`GPL-2.0-only`, `MIT`, …)."),
@@ -250,7 +248,7 @@ def field_glossary(tools):
          "`status` (vocabulary below) + `derivation` path on bespoke rows (%d)."
          % (derivations,)),
         ("`safety`", "%d/%d" % (in_counts["safety"], total),
-         "`level` (vocabulary below) + `target-required` bool — inert without a declared target; keys the OS-side double gate."),
+         "`level` (vocabulary below) + `target-required` bool. The pair is inert without a declared target. The OS-side double gate reads the pair."),
         ("`nixos_menu`", "%d/%d" % (in_counts["nixos_menu"], total),
          "Desktop-menu surface `{icon, exec, category}`."),
         ("`docs`", "%d/%d" % (in_counts["docs"], total),
@@ -260,14 +258,15 @@ def field_glossary(tools):
         ("`atlas_tactics`", "%d/%d" % (in_counts["atlas_tactics"], total),
          "≥1 MITRE ATLAS tactic id (`AML.T…`, 2026.05 matrix) — ATTACK rows only."),
         ("`owasp_llm`", "%d/%d" % (in_counts["owasp_llm"], total),
-         "Dual-epoch OWASP LLM Top 10 map `{2026: […], v2: […]}` — ATTACK rows only; the epochs are recorded separately and never mixed (§2.4)."),
+         "Dual-epoch OWASP LLM Top 10 map `{2026: […], v2: […]}` — ATTACK rows only. The epochs stay separate and never mix (§2.4)."),
     ]
 
     lines = [
         "## What every value means", "",
-        "Every field a tool row can carry, in manifest order. The *In* column is the "
-        "live count of the %d tool rows carrying the field at this revision; a smaller "
-        "count means the field is optional and present only where it applies." % total,
+        "Every field a tool row can carry, in manifest order. The *In* column "
+        "is the live count of the %d tool rows carrying the field at this "
+        "revision. A smaller count marks an optional field. The field appears "
+        "only where it applies." % total,
         "",
         "| Field | In | Meaning |",
         "|---|---|---|",
@@ -283,15 +282,15 @@ def field_glossary(tools):
     ])
     status_meanings = [
         ("native", lambda: in_counts["packaging"],
-         "nixpkgs ships it; the row records the upstream coordinates the lock builds from."),
+         "nixpkgs ships the tool. The row records the upstream coordinates that the lock builds from."),
         ("stale", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "stale"),
-         "nixpkgs-native; the packaged version trails upstream (tracked through the update cadence, not forked)."),
+         "nixpkgs-native. The packaged version trails upstream. The update cadence tracks the lag. No fork exists."),
         ("bespoke", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "bespoke"),
-         "Packaged in this overlay: nvfetcher commit-exact pin, `pkgs/<tool>/default.nix`, `_sources/` committed."),
+         "Packaged in this overlay: the nvfetcher commit-exact pin, `pkgs/<tool>/default.nix`, and a committed `_sources/`."),
         ("module", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "module"),
-         "Delivered as a bundled module/component (service- or library-shape), not a single menu executable."),
+         "Ships as a bundled module/component (service- or library-shape). It is not a single menu executable."),
         ("data", lambda: count_of(lambda t: (t.get("packaging") or {}).get("status") == "data"),
-         "Data artefact — wordlists, corpora, pack seeds; typically an opt-in data-pack row."),
+         "Data artefact: wordlists, corpora, pack seeds. Typically an opt-in data-pack row."),
     ]
     for status, count_fn, meaning in status_meanings:
         lines.append("| `%s` | %d | %s |" % (status, count_fn(), meaning))
@@ -306,23 +305,23 @@ def field_glossary(tools):
         ("safe", lambda: count_of(lambda t: (t.get("safety") or {}).get("level") == "safe"),
          "Runs as-is — works on artefacts, local models, or one's own systems."),
         ("requires-target", lambda: count_of(lambda t: (t.get("safety") or {}).get("level") == "requires-target"),
-         "Must be pointed at a system under test — authorised engagements only."),
+         "Needs a system under test as its target — authorised engagements only."),
         ("exp", lambda: count_of(lambda t: (t.get("safety") or {}).get("level") == "exp"),
-         "Experimental research code — lab releases; double-gated on the OS side (`kailash.labMode = true` + `KAILASH_LAB_MODE=1`)."),
+         "Experimental research code — lab releases. The OS side double-gates it (`kailash.labMode = true` + `KAILASH_LAB_MODE=1`)."),
     ]
     for level, count_fn, meaning in level_meanings:
         lines.append("| `%s` | %d | %s |" % (level, count_fn(), meaning))
     lines.append("")
     lines.extend([
-        "`target-required` (%d of %d rows, all ATTACK) — inert without a target; renders as the `· target-required` marker in the Safety column." % (count_of(lambda t: (t.get("safety") or {}).get("target-required")), total),
+        "`target-required` (%d of %d rows, all ATTACK) — inert without a target. It renders as the `· target-required` marker in the Safety column." % (count_of(lambda t: (t.get("safety") or {}).get("target-required")), total),
         "",
     ])
 
     lines.extend([
         "### Tag update classes", "",
-        "The `update:*` tag on a row is the update-automation cadence class — how "
-        "aggressively the tool's pin follows upstream. Live distribution at this "
-        "revision:",
+        "The `update:*` tag on a row is the update-automation cadence class. "
+        "The class sets how fast the tool's pin follows upstream. Live "
+        "distribution at this revision:",
         "",
         "| Tag | Rows |",
         "|---|---|",
@@ -331,7 +330,7 @@ def field_glossary(tools):
         ("update:slow", "The bulk cadence — steady availability, not per-commit tracking."),
         ("update:steady", "Tighter tracking, not release-pinned."),
         ("update:weekly", "Weekly follow — fast-moving attack tooling."),
-        ("update:fast", "Tightest follow — pinned-reference tools kept near upstream head."),
+        ("update:fast", "Tightest follow — pinned-reference tools stay near upstream head."),
     ]
     for tag, meaning in update_meanings:
         lines.append("| `%s` | %d — %s |" % (tag, update_tags[tag], meaning))
@@ -377,10 +376,11 @@ def layer_summary(categories, tools):
     lines.append("| **Total** | %s | %d |" % (total_desc, len(tools)))
     lines += [
         "",
-        "The second planned data-pack, `kailash-data.wordlists-mega` (riding C-5), is a "
-        "manifest plan row, not yet a tool row — the opt-in wordlist pack lands with the "
-        "KA-07 data work. This page renders the manifest as it stands; regenerate after "
-        "the next manifest merge and the counts move with it.",
+        "The second planned data-pack, `kailash-data.wordlists-mega` (riding "
+        "C-5), is a manifest plan row. It is not yet a tool row. The opt-in "
+        "wordlist pack lands with the KA-07 data work. This page renders the "
+        "manifest as it stands. Regenerate after the next manifest merge. "
+        "The counts then move with it.",
         "",
     ]
     return "\n".join(lines)
@@ -388,34 +388,37 @@ def layer_summary(categories, tools):
 
 INTRO_PARAGRAPHS = [
     # Provenance — where the tools come from.
-    "Three provenance streams: the **CLASSIC** layer follows the Kali heritage "
-    "catalog re-derived for a software-only scope; **DEFENCE/OPS** draw on "
-    "nixpkgs' own staple set (reproducible infrastructure, not curated exotica); "
-    "**ATTACK** and the specialised edges of every layer draw on upstream "
-    "research tooling (garak, PyRIT, promptfoo, ART, counterfit), pinned "
-    "commit-exact through nvfetcher — never floated.",
+    "The page has three provenance streams. The **CLASSIC** layer follows the "
+    "Kali heritage catalog, re-derived for a software-only scope. **DEFENCE** "
+    "and **OPS** draw on the nixpkgs staple set: reproducible infrastructure, "
+    "not curated exotica. **ATTACK** and the specialised edges of every layer "
+    "draw on upstream research tooling: garak, PyRIT, promptfoo, ART, "
+    "counterfit. nvfetcher pins these tools commit-exact. A pin moves only "
+    "with an upstream commit.",
     # Method — how selection works.
-    "Selection criterion: fit to the four pillars — **AppSec** (classic "
-    "software assessment), **APISec** (web/API/AI-endpoint runtime assessment), "
-    "**MLSec** (adversarial ML against predictive models), **AISec** (LLM, "
-    "agentic, MCP security). Every tool lands in exactly one primary category; "
-    "dual-use tools carry `secondary_categories` cross-refs, never duplicate "
-    "rows.",
+    "The selection criterion is fit to the four pillars: **AppSec**, "
+    "**APISec**, **MLSec**, **AISec**. **AppSec** is classic software "
+    "assessment. **APISec** is web/API/AI-endpoint runtime assessment. "
+    "**MLSec** is adversarial ML against predictive models. **AISec** is "
+    "LLM, agentic, and MCP security. Every tool lands in exactly one primary "
+    "category. A dual-use tool carries `secondary_categories` cross-refs. "
+    "Duplicate rows never render.",
     # Exclusions — §3.7.
-    "Excluded (the §3.7 no-resurrection guard): hardware/RF/wifi/bluetooth "
-    "tooling (one opt-in exception: the c-07 SDR data-pack), paid-licence "
-    "tools, cloud-only SaaS, unmaintained tools, and classic-network attack "
-    "tooling (lateral movement, C2 frameworks, social engineering) — Kali's "
-    "network-arsenal territory, not the four pillars.",
+    "The §3.7 no-resurrection guard holds. The distribution excludes "
+    "hardware/RF/wifi/bluetooth tooling (one opt-in exception: the c-07 SDR "
+    "data-pack). It also excludes paid-licence tools, cloud-only SaaS, "
+    "unmaintained tools, and classic-network attack tooling (lateral "
+    "movement, C2 frameworks, social engineering). The last group is Kali's "
+    "network-arsenal territory. It is not the four pillars.",
     # The census.
     "%d taxonomy rows — %d categories + %d opt-in data-pack (%s) — and %d "
-    "tool rows: %s. The §3.6 census projected ~337 primary slots; %d are "
-    "filled, the open planned slots noted per section below.",
+    "tool rows: %s. The §3.6 census projected ~337 primary slots. The rows "
+    "fill %d of them. Each section heading shows its open planned slots.",
     # The generation statement.
     "Generated — never hand-maintained. `python3 tools/generate-tools-page.py` "
-    "fetches `tools.yaml` + `categories.yaml` from kailash-packages and "
-    "renders every number, table, and link here at generation time; manifest "
-    "merges regenerate this page.",
+    "fetches `tools.yaml` + `categories.yaml` from kailash-packages. The "
+    "script renders every number, table, and link at generation time. A "
+    "manifest merge regenerates this page.",
 ]
 
 
@@ -449,10 +452,11 @@ Regenerate from the tool manifest with:
 
     python3 tools/generate-tools-page.py
 
-(run from the repository root; fetches manifest/tools.yaml and
-manifest/categories.yaml from kailash-os/kailash-packages main and rewrites
-tools.qmd. No number or table on this page is hand-maintained — regenerate
-after every manifest merge and commit the result.) -->"""
+Run the command from the repository root. The command fetches
+manifest/tools.yaml and manifest/categories.yaml from
+kailash-os/kailash-packages main, then rewrites tools.qmd. No number or
+table on this page is hand-maintained. Regenerate after every manifest
+merge, then commit the result. -->"""
 
 
 def render_page(categories, tools):
@@ -658,9 +662,10 @@ def self_test():
     for tag in ("update:slow", "update:steady", "update:weekly", "update:fast"):
         assert "`%s`" % tag in text
 
-    # --- dual-epoch owasp map glossed, atlas glossed ---
+    # --- dual-epoch owasp map glossed, atlas glossed --- (wording per 02425ce)
     assert "Dual-epoch OWASP LLM Top 10 map" in text
-    assert ("2026.05 16-tactic" in text) or ("16-tactic" in text)
+    assert "≥1 MITRE ATLAS tactic id" in text
+    assert "2026.05 matrix" in text
 
     # --- per-layer summary ---
     assert "## Per-layer summary" in text

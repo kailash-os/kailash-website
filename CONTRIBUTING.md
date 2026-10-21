@@ -1,42 +1,44 @@
 # Contributing
 
-Contributions are welcome. This document defines the working agreement: how
-changes are proposed, reviewed, and merged, and what the continuous-integration
-gates enforce. This is the docs-only Quarto site repo — no nix, no manifest;
-the distribution working agreements live in
+Contributions are welcome. This document is the working agreement. It states
+how changes move: proposal, review, merge. It also states what the
+continuous-integration gates enforce. This repo is the docs-only Quarto site.
+It carries no nix code and no manifest. The distribution working agreements
+live in
 [kailash-os](https://github.com/kailash-os/kailash-os/blob/master/CONTRIBUTING.md)
 and
 [kailash-packages](https://github.com/kailash-os/kailash-packages/blob/main/CONTRIBUTING.md).
 
 ## Ground rules
 
-1. **Never commit to `main`.** All work happens on a branch, one change per
-   branch, merged via pull request. Branch names follow
+1. **Never commit to `main`.** All work happens on a branch. One branch
+   carries one change. A pull request merges the branch. Branch names follow
    `<type>/<short-description>` with kebab-case — e.g. `site/tools-page`,
    `docs/paper-render`, `agents/page-refresh`.
 2. **Conventional Commits.** Every commit subject follows
-   the [specification](https://www.conventionalcommits.org/en/v1.0.0):
-   `type: subject` (scope optional on a docs-only site).
+   the [specification](https://www.conventionalcommits.org/en/v1.0.0). The
+   form: `type: subject` (scope optional on a docs-only site).
    - Standard types: `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `ci`,
      `chore`, `perf`, `revert`.
    - Site-surface types (this repo's extension, carried by its history):
      `site` (rendered-page content/layout) and `agents` (the coding-agents
      guide page).
-   - Subject: imperative, no trailing period. Body (optional): what changed
-     and why; wrap at 72 columns.
-   - PR titles follow the same form; site-track items carry their roadmap id
+   - Subject: imperative, no trailing period. The body (optional) records
+     the change and the reason. Wrap the body at 72 columns.
+   - PR titles follow the same form. Site-track items carry their roadmap id
      in the subject — `site: KA-WS-x — …`. Squash merges use the PR title as
-     the commit subject (`squash_merge_commit_title: COMMIT_OR_PR_TITLE`), so
-     the PR title is the commit record. A CI gate checks the form on every
-     PR; bot/dependency PRs (renovate, pre-commit.ci autoupdate) keep their
-     canonical titles.
-3. **Sign everything.** Commits must be GPG- or SSH-signed; the
-   `protect-default` ruleset requires signatures (`required_signatures`) —
-   an unsigned commit blocks the PR. Verify with `git log --show-signature`.
+     the commit subject (`squash_merge_commit_title: COMMIT_OR_PR_TITLE`).
+     The PR title is then the commit record. A CI gate checks the form on
+     every PR. Bot and dependency PRs keep their canonical titles: renovate,
+     pre-commit.ci autoupdate.
+3. **Sign everything.** Commits must be GPG- or SSH-signed. The
+   `protect-default` ruleset requires signatures (`required_signatures`). An
+   unsigned commit blocks the PR. Check signatures with
+   `git log --show-signature`.
 4. **One logical change per PR.** Small, reviewable diffs merge faster.
-5. **Pre-commit runs locally.** Install the hooks once per clone —
-   `pre-commit install && pre-commit install --hook-type pre-push` —
-   then every `git commit` and `git push` runs the same hook set CI runs.
+5. **Pre-commit runs locally.** Install the hooks once per clone:
+   `pre-commit install && pre-commit install --hook-type pre-push`. Every
+   `git commit` and `git push` then runs the hook set that CI runs.
    pre-commit.ci still gates every PR.
 
 ## CI gates
@@ -50,27 +52,28 @@ Every pull request runs:
 | `scorecard` | OpenSSF Scorecard |
 | `pre-commit.ci` | the [.pre-commit-config.yaml](.pre-commit-config.yaml) hook set |
 
-The branch ruleset `protect-default` (active) enforces: no deletions, no
-non-fast-forward pushes, required signatures, and the PR rule (code-owner
-review; extra approval for unattributed changes). Merges to `main` deploy the
-site via the Pages workflow (`pages.yml`); the live page is
-[kailash.site](https://kailash.site).
+The branch ruleset `protect-default` (active) enforces the rules. The rules:
+no deletions, no non-fast-forward pushes, required signatures, and the PR
+rule. The PR needs code-owner review. Unattributed changes need extra
+approval. Merges to `main` deploy the site. The deploy rides the Pages
+workflow (`pages.yml`). The live page is [kailash.site](https://kailash.site).
 
 ## Commits and pull requests
 
-- Cut the branch from current `origin/main`, push, and open the PR against
-  `main`; the description states what changed, why (the issue), and how the
-  rendered output was verified.
-- Verify rendered output, not configuration: `quarto render`, then parse the
-  built `_site/*.html` (nav order/labels, TOC anchors) before pushing.
-- Merges happen on review; the merge is the maintainer's action.
+- Cut the branch from current `origin/main`. Push it. Open the PR against
+  `main`. The PR description states the change, the reason (the issue), and
+  the render check.
+- Check rendered output, not configuration. Run `quarto render`. Then parse
+  the built `_site/*.html` for nav order, labels, and TOC anchors. Do this
+  check before pushing.
+- A merge happens on review. The maintainer merges.
 
 ## Reporting bugs
 
-Open a [GitHub issue](https://github.com/kailash-os/kailash-website/issues/new)
-describing the page, the observed vs expected render, and the commit where the
-behaviour appeared. Security issues never go here —
-[SECURITY.md](SECURITY.md) instead.
+Open a [GitHub issue](https://github.com/kailash-os/kailash-website/issues/new).
+The issue names the page, the observed render, and the expected render. It
+also cites the commit where the behaviour appeared. Security issues never go
+here. Use [SECURITY.md](SECURITY.md) instead.
 
 ## Writing standard
 
