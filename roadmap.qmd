@@ -4,8 +4,9 @@ title: "Roadmap"
 
 
 Delivered scope from inception to the first staged release, with the tracking issue for each
-step. Every item below was completed as a tested pull request and verified by execution; the
-dates are the issue-close dates.
+step. Every item was completed as a tested pull request and verified by execution. The
+dates are the issue-close dates. The timeline below is a historical record; it keeps its
+filed wording.
 
 ## Project timeline
 
@@ -88,7 +89,7 @@ dates are the issue-close dates.
   mcp-scan, guarddog, picklescan, modelscan) and A-5…A-8, with the MLflow-exploit integration
   leg — the pairing thesis executed against the platform's own lab deployment via the real
   MLflow API protocol ([KA-22/23](https://github.com/kailash-os/kailash-os/issues/22), [integration leg](https://github.com/kailash-os/kailash-os/pull/185);
-  the pre-#210 tool name rides the [os#210 registry](https://github.com/kailash-os/kailash-os/issues/210)).
+  the pre-210 tool name rides the [kailash-os#210 registry](https://github.com/kailash-os/kailash-os/issues/210)).
 - O-7 ships agent and MCP operability with short-lived, human-minted capability grants —
   read-class defaults for unsupervised agents ([KA-25](https://github.com/kailash-os/kailash-os/issues/25), [PR](https://github.com/kailash-os/kailash-os/pull/182)).
 - GVM/OpenVAS arrives as a service module, and the kailash.data.* wordlists and data packs
@@ -126,14 +127,15 @@ dates are the issue-close dates.
   taxonomy census, the build's security and governance model, the administrator guide and the
   manifest-generated category directory — and the [Kailash OS Cookbook](https://book.kailash.tools)
   with task-oriented recipes (first image, the garak LLM01 prompt-injection scan,
-  attack-then-verify, administrator procedures) ([KA-WS-5](https://github.com/kailash-os/kailash-book/issues/1), [KA-WS-6](https://github.com/kailash-os/kailash-guide/issues/1)).
+  attack-then-verify, administrator procedures) ([KA-WS-5](https://github.com/kailash-os/kailash-book/issues/1), [KA-WS-6](https://github.com/kailash-os/kailash-docs/issues/1)).
 
 ## Roadmap
 
 Work is tracked on the [Kailash Roadmap board](https://github.com/orgs/kailash-os/projects/1)
-as issues KA-01…KA-51 across the kailash-os organisation — the OS, the packages overlay and the
-website are separate repositories with a single dependency graph
-([the canon map](https://github.com/kailash-os/kailash-os/issues/61)). Every issue lands a runnable artefact with an exit criterion.
+as issues `KA-NN` across the kailash-os organisation. The OS, the packages overlay, and
+the website are separate repositories with a single dependency graph
+([the canon map](https://github.com/kailash-os/kailash-os/issues/61)). Every issue lands
+a runnable artefact with an exit criterion.
 
 ::: {.roadmap-table .column-page}
 | Train | Items | Status |
@@ -146,13 +148,15 @@ website are separate repositories with a single dependency graph
 
 ## Engineering discipline
 
-Hypothesis-first TDD with watched-RED commits is the engineering standard: the failing test is
-written first and committed watched-failing, then made to pass — the RED→GREEN pair is visible
-in every item's history. Harness-before-capability: the check that would catch a regression
-ships in the same pull request as the capability it guards. Each roadmap item decomposes into
-hour-scale leaf slices; every commit and tag is GPG-signed, merge-verified against branch
-protection. Releases follow the [cadence policy](https://github.com/kailash-os/kailash-os/blob/master/docs/guide/releases.md): a train every six weeks, alpha → rc.1 →
-GA, the lockfile as the version, and nothing updates itself in the background. The loop is
+Hypothesis-first TDD with watched-RED commits is the engineering standard. The failing
+test is written first and committed watched-failing, then made to pass. The RED→GREEN
+pair stays visible in every item's history. Harness-before-capability: the check that
+would catch a regression ships in the same pull request as the capability it guards.
+Each roadmap item decomposes into hour-scale leaf slices. Every commit and tag is
+GPG-signed; branch protection verifies at merge. Releases follow the
+[cadence policy](https://github.com/kailash-os/kailash-os/blob/master/docs/guide/releases.md):
+a train every 6 weeks, alpha → rc.1 → GA, the lockfile as the version. Nothing updates
+itself in the background. The loop is
 [documented on the Build page](https://kailash.site/build.html).
 
 ## Documentation
@@ -164,8 +168,10 @@ against the same pinned manifest revision:
   standards, governance) and the generated [tools catalogue](https://kailash.site/tools.html).
 - **[docs.kailash.tools](https://docs.kailash.tools)** — the Kailash OS Guide, generated from the
   manifest: Part I–IV with the taxonomy census, the build's security and governance model, the
-  administrator guide, and the per-category directory ([KA-WS-6](https://github.com/kailash-os/kailash-guide/issues/1)); the per-tool
-  reference-page generator, with the exemplar reference page live, is the open lane ([KA-WS-6.6](https://github.com/kailash-os/kailash-guide/issues/17)).
+  administrator guide, and the per-category directory
+  ([KA-WS-6](https://github.com/kailash-os/kailash-docs/issues/1)); the per-tool
+  reference-page generator, with the exemplar reference page live, is the open lane
+  ([KA-WS-6.6](https://github.com/kailash-os/kailash-docs/issues/17)).
 - **[book.kailash.tools](https://book.kailash.tools)** — the Kailash OS Cookbook: worked, task-
   oriented recipes with real commands and expected output ([KA-WS-5](https://github.com/kailash-os/kailash-book/issues/1)); the recipe
   directory and per-family walkthroughs continue on the book ([book upkeep](https://github.com/kailash-os/kailash-book/issues/12)).
@@ -173,8 +179,9 @@ against the same pinned manifest revision:
 ## Contributing
 
 Contributions follow the [contributing guide](https://kailash.site/contributing.html) and the
-[engineering standard](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md) — add tools through a manifest entry, never hand-edited
-module files; CI validates, builds and VM-tests every change; commits and tags are GPG-signed;
-work lands on leaf branches cut from the default branch. Pick an item from the [2026.01
-completion](https://github.com/orgs/kailash-os/projects/1) or the next train — the spec section
-cited in the issue body is the design source. Kailash OS is BSD-3-Clause.
+[engineering standard](https://github.com/kailash-os/kailash-os/blob/master/AGENTS.md).
+Add tools through a manifest entry, never through hand-edited module files. CI validates,
+builds, and VM-tests every change. Commits and tags are GPG-signed. Work lands on leaf
+branches cut from the default branch. Pick an item from the
+[2026.01 completion](https://github.com/orgs/kailash-os/projects/1) or the next train. The
+spec section cited in the issue body is the design source. Kailash OS is BSD-3-Clause.
