@@ -71,3 +71,14 @@ Open a [GitHub issue](https://github.com/kailash-os/kailash-website/issues/new)
 describing the page, the observed vs expected render, and the commit where the
 behaviour appeared. Security issues never go here —
 [SECURITY.md](SECURITY.md) instead.
+
+## Writing standard
+
+Every written text in this repo follows ASD-STE100 Simplified Technical
+English. The rules: one thought per sentence, 20 words per sentence or
+fewer, active voice, present tense. The canonical decision record lives in
+the kailash-os repo:
+[`docs/adr/0004-asd-ste100-standard.md`](https://github.com/kailash-os/kailash-os/blob/master/docs/adr/0004-asd-ste100-standard.md)
+([kailash-os#217](https://github.com/kailash-os/kailash-os/pull/217) carries
+it). The conversion lane:
+[kailash-website#46](https://github.com/kailash-os/kailash-website/issues/46).
