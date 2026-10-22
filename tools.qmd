@@ -16,19 +16,19 @@ merge, then commit the result. -->
 
 # Kailash tool set
 
-The page has three provenance streams. The **CLASSIC** layer follows the Kali heritage catalog, re-derived for a software-only scope. **DEFENCE** and **OPS** draw on the nixpkgs staple set: reproducible infrastructure, not curated exotica. **ATTACK** and the specialised edges of every layer draw on upstream research tooling: garak, PyRIT, promptfoo, ART, counterfit. nvfetcher pins these tools commit-exact. A pin moves only with an upstream commit.
+The page has three provenance streams. The **CLASSIC** layer follows the Kali heritage catalog, re-derived for a software-only scope. **DEFENCE** and **OPS** use the nixpkgs staple set: reproducible infrastructure, not curated exotica. **ATTACK** and the specialised edges of every layer use upstream research tooling: garak, PyRIT, promptfoo, ART, counterfit. nvfetcher pins these tools commit-exact. A pin moves only with an upstream commit.
 
 The selection criterion is fit to the four pillars: **AppSec**, **APISec**, **MLSec**, **AISec**. **AppSec** is classic software assessment. **APISec** is web/API/AI-endpoint runtime assessment. **MLSec** is adversarial ML against predictive models. **AISec** is LLM, agentic, and MCP security. Every tool lands in exactly one primary category. A dual-use tool carries `secondary_categories` cross-refs. Duplicate rows never render.
 
 The §3.7 no-resurrection guard holds. The distribution excludes hardware/RF/wifi/bluetooth tooling (one opt-in exception: the c-07 SDR data-pack). It also excludes paid-licence tools, cloud-only SaaS, unmaintained tools, and classic-network attack tooling (lateral movement, C2 frameworks, social engineering). The last group is Kali's network-arsenal territory. It is not the four pillars.
 
-32 taxonomy rows — 31 categories + 1 opt-in data-pack (`c-07-signal-sdr`) — and 270 tool rows: CLASSIC 140, ATTACK 23, OPS 82, DEFENCE 25. The §3.6 census projected ~337 primary slots. The rows fill 264 of them. Each section heading shows its open planned slots.
+The census holds 32 taxonomy rows: 31 categories + 1 opt-in data-pack (`c-07-signal-sdr`). Tool rows: 270 — CLASSIC 140, ATTACK 23, OPS 82, DEFENCE 25. The §3.6 census projected ~337 primary slots. The rows fill 264 of them. Each section heading shows its open planned slots.
 
 Generated — never hand-maintained. `python3 tools/generate-tools-page.py` fetches `tools.yaml` + `categories.yaml` from kailash-packages. The script renders every number, table, and link at generation time. A manifest merge regenerates this page.
 
-## What every value means
+## Field meanings
 
-Every field a tool row can carry, in manifest order. The *In* column is the live count of the 270 tool rows carrying the field at this revision. A smaller count marks an optional field. The field appears only where it applies.
+Every field a tool row can carry, in manifest order. The *In* column shows the live count of the 270 tool rows carrying the field at this revision. A smaller count marks an optional field. A row shows the field only when the row carries it.
 
 | Field | In | Meaning |
 |---|---|---|

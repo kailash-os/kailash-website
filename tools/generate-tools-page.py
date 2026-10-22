@@ -195,7 +195,7 @@ def category_section(cat, tools):
 
 
 def field_glossary(tools):
-    """'What every value means': the full row-field glossary + vocabularies."""
+    """'Field meanings': the full row-field glossary + vocabularies."""
     total = len(tools)
 
     def count_of(pred):
@@ -262,11 +262,11 @@ def field_glossary(tools):
     ]
 
     lines = [
-        "## What every value means", "",
+        "## Field meanings", "",
         "Every field a tool row can carry, in manifest order. The *In* column "
-        "is the live count of the %d tool rows carrying the field at this "
-        "revision. A smaller count marks an optional field. The field appears "
-        "only where it applies." % total,
+        "shows the live count of the %d tool rows carrying the field at this "
+        "revision. A smaller count marks an optional field. A row shows the "
+        "field only when the row carries it." % total,
         "",
         "| Field | In | Meaning |",
         "|---|---|---|",
@@ -390,9 +390,9 @@ INTRO_PARAGRAPHS = [
     # Provenance — where the tools come from.
     "The page has three provenance streams. The **CLASSIC** layer follows the "
     "Kali heritage catalog, re-derived for a software-only scope. **DEFENCE** "
-    "and **OPS** draw on the nixpkgs staple set: reproducible infrastructure, "
+    "and **OPS** use the nixpkgs staple set: reproducible infrastructure, "
     "not curated exotica. **ATTACK** and the specialised edges of every layer "
-    "draw on upstream research tooling: garak, PyRIT, promptfoo, ART, "
+    "use upstream research tooling: garak, PyRIT, promptfoo, ART, "
     "counterfit. nvfetcher pins these tools commit-exact. A pin moves only "
     "with an upstream commit.",
     # Method — how selection works.
@@ -411,8 +411,8 @@ INTRO_PARAGRAPHS = [
     "movement, C2 frameworks, social engineering). The last group is Kali's "
     "network-arsenal territory. It is not the four pillars.",
     # The census.
-    "%d taxonomy rows — %d categories + %d opt-in data-pack (%s) — and %d "
-    "tool rows: %s. The §3.6 census projected ~337 primary slots. The rows "
+    "The census holds %d taxonomy rows: %d categories + %d opt-in data-pack "
+    "(%s). Tool rows: %d — %s. The §3.6 census projected ~337 primary slots. The rows "
     "fill %d of them. Each section heading shows its open planned slots.",
     # The generation statement.
     "Generated — never hand-maintained. `python3 tools/generate-tools-page.py` "
