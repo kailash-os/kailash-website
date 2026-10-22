@@ -2,10 +2,10 @@
 title: "Building Kailash"
 ---
 
-Kailash is built and verified with a small, reproducible toolchain. Nix
+A small, reproducible toolchain builds and verifies Kailash. Nix
 flakes evaluate the whole distribution declaratively. A single tool manifest
 drives every generated surface. Every claim traces to a merge-verified pull
-request. This page documents that loop. The same loop produces the evidence
+request. This page documents that loop. The same loop gives the evidence
 records cited across the [roadmap](roadmap.html) and its
 [dependency graph](https://github.com/kailash-os/kailash-os/issues/61).
 
@@ -24,7 +24,7 @@ The runners carry the gates because **CI is the acceptance surface**. The
 overlay's `flake-check` matrix
 ([workflow](https://github.com/kailash-os/kailash-packages/blob/main/.github/workflows/flake-check.yml))
 evaluates every declared system and builds the manifest gate on hosted
-hardware. The OS repo runs the same shape from the root flake. It grows the
+hardware. The OS repo runs the same shape from the root flake. It carries the
 per-package build matrix, the disk-bound image builds (self-hosted, by
 design), and the VM tests at
 [KA-15](https://github.com/kailash-os/kailash-os/issues/15). Contributor
@@ -33,20 +33,20 @@ record.
 
 ## Verification standard
 
-Every build item follows a hypothesis-first test-driven loop (the
+Every build item uses a hypothesis-first test-driven loop (the
 [engineering standard](https://github.com/kailash-os/kailash-os/issues/51),
 scope clauses and hosted-runner authority in
 [#119](https://github.com/kailash-os/kailash-os/issues/119), encoded in both
 repos' [CONTRIBUTING](https://github.com/kailash-os/kailash-os/blob/master/CONTRIBUTING.md)):
 
-1. **Spec** — the issue's plan-ref and acceptance line are the design source; the [canon register](https://github.com/kailash-os/kailash-os/issues/61) maps each item to its plan sections.
-2. **RED** — the failing test is written first and committed watched-failing. A manifest contract is frozen by its validator *before* the data lands: schema, invariants, reconcile counts.
+1. **Spec** — the issue's plan-ref and acceptance line are the design source. The [canon register](https://github.com/kailash-os/kailash-os/issues/61) maps each item to its plan sections.
+2. **RED** — write the failing test first, and commit it watched-failing. The validator freezes the manifest contract *before* the data lands: schema, invariants, reconcile counts.
 3. **GREEN** — the minimal implementation makes the gate pass; nothing more.
 4. **PR** — branch per change, GPG-signed commits, and the CI gates: the flake-check matrix, dependency review, pre-commit. Every PR carries the hypothesis and the RED/GREEN evidence in the body.
-5. **Close on acceptance** — an issue closes only when its own acceptance line is verified against the tree. Run the check; paste the evidence. Harness before capability: nothing merges ahead of the check that would catch its regression.
+5. **Close on acceptance** — an issue closes only when the tree verifies its acceptance line. Run the check; paste the evidence. Harness before capability: nothing merges ahead of its regression check.
 
-This gives the property that matters: every roadmap artefact is **proved by
-a runnable check**, not asserted by prose.
+The loop gives the property that matters: a runnable check proves
+every roadmap artefact, not prose.
 
 ## The gate loop in practice
 
@@ -68,7 +68,7 @@ predicted:
 - a cross-arch `--all-systems` run demanded an aarch64 builder the x86_64
   runner does not have (fixed by the runner-per-system matrix);
 - the manifest gate's first hosted execution exposed source-context
-  assumptions that local green had masked (fixed by running the gate against
+  assumptions. Local green had masked them (fixed by running the gate against
   the flake source with its dependencies declared).
 
 The gate that gates the manifest also gates itself.
