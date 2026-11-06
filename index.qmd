@@ -136,7 +136,7 @@ records the design. It carries the taxonomy derivation from MITRE ATLAS and
 the OWASP standards, the manifest-driven architecture, the release
 engineering of a reproducible OS, and the explicit scope exclusions.
 
-**Read the current revision: [paper.pdf](paper.pdf)** (Revision 1.5, 5 November 2026
+**Read the current revision: [kailash-paper.pdf](kailash-paper.pdf)** (Revision 1.5, 5 November 2026
 — updated as the implementation progresses; the live copy reflects the latest
 revision).
 
